@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/home.dart';
 import 'screens/messages.dart';
-import 'screens/map.dart';
+import 'screens/map/map.dart';
 import 'screens/settings.dart';
 
 class Home extends StatefulWidget {
