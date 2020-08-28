@@ -29,6 +29,8 @@ dependencies:
   provider: ^4.0.5
   badges: ^1.1.1
   easy_localization: ^2.3.2
+  flutter_platform_widgets: ^0.60.1
+
 
 dev_dependencies:
   flutter_test:

@@ -54,7 +54,15 @@ class AppLightTheme {
 class AppCupertinoTheme {
   static get theme {
     Fimber.d("Setting theme: cupertino");
-    final original = CupertinoThemeData();
+    Brightness brightness = Brightness.light;
+
+    final original = CupertinoThemeData(
+      brightness: brightness,
+      primaryColor: CupertinoDynamicColor.withBrightness(
+        color: Colors.grey[700],
+        darkColor: Colors.grey[900],
+      ),
+    );
 
     return original.copyWith();
   }
