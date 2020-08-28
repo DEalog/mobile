@@ -29,7 +29,6 @@ dependencies:
   provider: ^4.0.5
   badges: ^1.1.1
   easy_localization: ^2.3.2
-  mockito: ^4.1.1
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +38,7 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: any
+  mockito: ^4.1.1
 
 flutter:
   uses-material-design: true
