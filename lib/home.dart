@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'screens/home.dart';
 import 'screens/messages.dart';
@@ -12,11 +13,15 @@ import 'screens/map.dart';
 import 'screens/settings.dart';
 
 class Home extends StatefulWidget {
+  Home(this.toggleBrightness);
+
+  final void Function() toggleBrightness;
+
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     HomeScreen(),
@@ -28,83 +33,59 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Fimber.d("Building app");
-    return _buildPlatformScaffold(context);
+    return _buildGenericPlatformScaffold(context);
   }
 
-  Widget _buildPlatformScaffold(context) {
-    if (Platform.isIOS) {
-      return CupertinoTabScaffold(
-        tabBar: CupertinoTabBar(
-          items: _cupertinoNavigation,
+  Widget _buildGenericPlatformScaffold(context) {
+    final tabController = PlatformTabController(
+      initialIndex: 1,
+    );
+    final items = _navigation(context);
+
+    return PlatformTabScaffold(
+      iosContentPadding: true,
+      tabController: tabController,
+      appBarBuilder: (_, index) => PlatformAppBar(
+        title: items[index].title,
+        cupertino: (_, __) => CupertinoNavigationBarData(
+          title: items[index].title,
+          //   only required if useCupertinoTabView = false,
+          transitionBetweenRoutes: false,
         ),
-        tabBuilder: (context, index) {
-          return CupertinoTabView(
-            builder: (context) {
-              return _buildScreen(index, context);
-            },
-          );
-        },
-      );
-    }
-    return Scaffold(
-      body: _buildScreen(_currentIndex, context),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 10.0,
-        items: _materialNavigation,
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      ),
+      bodyBuilder: (context, index) => _children[index],
+      items: items,
+      cupertino: (_, __) => CupertinoTabScaffoldData(
+        //   Having this property as false (default true) forces it not to use CupertinoTabView which will show
+        //   the back button, but does required transitionBetweenRoutes set to false (see above)
+        useCupertinoTabView: false,
       ),
     );
+
   }
 
-  List<BottomNavigationBarItem> get _materialNavigation {
+  List<BottomNavigationBarItem> _navigation(BuildContext context) {
     return [
       BottomNavigationBarItem(
-        icon: Icon(Icons.home),
+        icon: Icon(context.platformIcons.home),
         title: Text('navigation.home').tr(),
       ),
       BottomNavigationBarItem(
-        icon: _buildMessagesIcon(),
+        icon: _buildMessagesIcon(context),
         title: Text('navigation.messages').tr(),
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.map),
+        icon: Icon(context.platformIcons.location),
         title: Text('navigation.map').tr(),
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.settings),
+        icon: Icon(context.platformIcons.settings),
         title: Text('navigation.settings').tr(),
       ),
     ];
   }
 
-  List<BottomNavigationBarItem> get _cupertinoNavigation {
-    return [
-      BottomNavigationBarItem(
-        icon: Icon(CupertinoIcons.home),
-        title: Text('navigation.home').tr(),
-      ),
-      BottomNavigationBarItem(
-        icon: _buildMessagesIcon(),
-        title: Text('navigation.messages').tr(),
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(CupertinoIcons.location),
-        title: Text('navigation.map').tr(),
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(CupertinoIcons.settings),
-        title: Text('navigation.settings').tr(),
-      ),
-    ];
-  }
-
-  Badge _buildMessagesIcon() {
+  Badge _buildMessagesIcon(BuildContext context) {
     return Badge(
       animationDuration: Duration.zero,
       shape: BadgeShape.square,
@@ -122,7 +103,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       child: Icon(
-        Platform.isIOS ? CupertinoIcons.news : Icons.list,
+        isMaterial(context) ? Icons.list : CupertinoIcons.news,
       ),
     );
   }
