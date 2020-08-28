@@ -271,6 +271,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.3"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
@@ -694,6 +701,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  streaming_shared_preferences:
+    dependency: "direct main"
+    description:
+      name: streaming_shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   string_scanner:
     dependency: transitive
     description:

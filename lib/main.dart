@@ -8,7 +8,6 @@ import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 import 'package:mobile/generated/codegen_loader.g.dart';
-
 import 'home.dart';
 import 'locator.dart';
 import 'themes.dart';
@@ -65,8 +64,10 @@ class App extends StatelessWidget {
               );
             },
             cupertino: (_, __) => new CupertinoAppData(
-              theme: AppCupertinoTheme.theme,
-            ),
+                theme: AppCupertinoTheme.theme,
+                localizationsDelegates: [
+                  DefaultCupertinoLocalizations.delegate
+                ]),
             home: Home(),
           ),
         ));
