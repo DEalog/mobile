@@ -36,6 +36,10 @@ For translation and localization we use the [Easy Localization](https://pub.dev/
 
 The application supports dark mode via Flutter's embedded support.
 
+### Platform Abstraction
+
+We use [Platform Widgets](https://pub.dev/packages/flutter_platform_widgets) to simplify the codebase regading the platform specific styles (Material for Android devices and Cupertino for iOS devices).
+
 ### Testing
 Testing is done on all 3 levels that are supported by the [flutter framework](https://flutter.dev/docs/testing)
 
