@@ -5,6 +5,9 @@
     "map": "Karte",
     "settings": "Einstellungen"
   },
+  "toast": {
+    "first_run": "Bitte konfigurieren sie die App initial"
+  },
   "The contents": "Die Inhalte"
 }
 

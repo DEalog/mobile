@@ -25,11 +25,14 @@ dependencies:
   cupertino_icons: ^0.1.3
 
   fimber: ^0.4.4
-  shared_preferences: ^0.5.10
+  streaming_shared_preferences: ^1.0.1
+  get_it: ^4.0.4
   provider: ^4.3.2+1
   badges: ^1.1.1
   easy_localization: ^2.3.3
   flutter_platform_widgets: ^0.60.2
+  package_info: '>=0.4.3 <2.0.0'
+  fluttertoast: ^3.1.3
 
 
 dev_dependencies:

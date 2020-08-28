@@ -4,6 +4,9 @@
     "messages": "Messages",
     "map": "Map",
     "settings": "Settings"
+  },
+  "toast": {
+    "first_run": "Please fill out your initial settings"
   }
 }
 

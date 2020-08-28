@@ -42,20 +42,31 @@ The application supports dark mode via Flutter's embedded support.
 
 We use [Platform Widgets](https://pub.dev/packages/flutter_platform_widgets) to simplify the codebase regading the platform specific styles (Material for Android devices and Cupertino for iOS devices).
 
+### Service Locator
+
+We use [get_it](https://pub.dev/packages/get_it) as a service locator (a simple dependency injection mechanism) to define how to create  objects with all their dependencies. The definitions can be found in the `lib/locator.dart` source file.
+
 ### Testing
+
 Testing is done on all 3 levels that are supported by the [flutter framework](https://flutter.dev/docs/testing)
 
 #### Unit
-For unit tests we use [mockito](https://pub.dev/packages/mockito) to mock dynamic data. Complex functions/computations are tested here. This tests are executed within the framework itself and are very fast.
+
+For unit tests we use [mockito](https://pub.dev/packages/mockito) to mock dynamic data. Complex functions/computations are tested here. These tests are executed within the framework itself and are very fast.
 
 #### Widget
+
 Widget tests cover the UI behavior for a dedicated widget. It allows us to develop test driven. This tests are executed within the framework itself and are very fast.
+
 #### Integration
+
 Integration tests allows to test a whole app, so the interaction between multiple widgets. The integration tests are executed in a platform emulator e.g. Android(AVD) so they need more time because the test needs a started emulator and needs to flash the app on the virtual device.
 
 #### Test Execution
+
 - Unit and widget tests will be executed by the "flutter test" command within the app root directory.
 - Integration tests will be executed by the "flutter drive --target=test_driver/app.dart" command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
 
 ### Logging
+
 For extensible logging we use [fimber](https://pub.dev/packages/fimber) package.

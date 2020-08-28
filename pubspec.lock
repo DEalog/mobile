@@ -187,11 +187,25 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct main"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.3"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.4"
   glob:
     dependency: transitive
     description:
@@ -332,6 +346,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
+  package_info:
+    dependency: "direct main"
+    description:
+      name: package_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.3"
   path:
     dependency: transitive
     description:
@@ -410,7 +431,7 @@ packages:
     source: hosted
     version: "1.4.4"
   shared_preferences:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
@@ -512,6 +533,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  streaming_shared_preferences:
+    dependency: "direct main"
+    description:
+      name: streaming_shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   string_scanner:
     dependency: transitive
     description:
