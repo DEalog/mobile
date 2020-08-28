@@ -3,7 +3,10 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile/version.dart';
 
+import 'main.dart';
 import 'screens/home.dart';
 import 'screens/settings.dart';
 
@@ -13,20 +16,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static const int MAIN_TAB_INDEX = 0;
+  static const int SETTINGS_TAB_INDEX = 1;
+
   final List<Widget> _children = [
     HomeScreen(),
     SettingsScreen(),
   ];
 
-  static final _titles = ['navigation.home', 'navigation.settings'];
   final _items = (BuildContext context) => [
         BottomNavigationBarItem(
-          title: Text(_titles[0]).tr(),
-          icon: Icon(PlatformIcons(context).home),
+          title: Text('navigation.home').tr(),
+          icon: Icon(context.platformIcons.home),
         ),
         BottomNavigationBarItem(
-          title: Text(_titles[1]).tr(),
-          icon: Icon(PlatformIcons(context).settings),
+          title: Text('navigation.settings').tr(),
+          icon: Icon(context.platformIcons.settings),
         ),
       ];
 
@@ -37,12 +42,24 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    // If you want further control of the tabs have one of these
     if (tabController == null) {
-      tabController = PlatformTabController(
-        initialIndex: 0,
-      );
+      tabController = PlatformTabController(initialIndex: MAIN_TAB_INDEX);
     }
+
+    getIt.isReady<Version>().then((_) {
+      final version = getIt<Version>();
+      Fimber.i("version is ready: ${version.state.toString()}");
+
+      if (version.state == VersionState.INITIAL) {
+        Fimber.i("Open settings and start onboarding");
+        tabController.setIndex(context, SETTINGS_TAB_INDEX);
+        Fluttertoast.showToast(
+          msg: Text("toast.first_run").tr().data,
+          textColor: Colors.white,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
+    });
   }
 
   @override

@@ -1,16 +1,21 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'home.dart';
+import 'locator.dart';
 import 'themes.dart';
+
+// This is our global ServiceLocator
+GetIt getIt = GetIt.instance;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Fimber.plantTree(DebugTree());
+  register(getIt);
+
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('de', 'DE'), Locale('en', 'US')],
@@ -20,6 +25,8 @@ void main() {
     ),
   );
 }
+
+
 
 class App extends StatelessWidget {
   final Brightness brightness = Brightness.light;
@@ -52,6 +59,7 @@ class App extends StatelessWidget {
             },
             cupertino: (_, __) => new CupertinoAppData(
               theme: AppCupertinoTheme.theme,
+              localizationsDelegates: [DefaultCupertinoLocalizations.delegate]
             ),
             home: Home(),
           ),
