@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:mobile/api/feed_message.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
-import 'package:provider/provider.dart';
-import 'feed_message.dart';
 
 class FeedService {
   @required
