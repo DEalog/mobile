@@ -1,3 +1,5 @@
+[![Build Status](https://app.bitrise.io/app/e1572c13734b4305/status.svg?token=L2hi96aZiyJMveEO2iu_dA&branch=master)](https://app.bitrise.io/app/e1572c13734b4305)
+
 # DEalog mobile
 
 This is the mobile app for the DEalog project.
