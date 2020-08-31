@@ -5,9 +5,26 @@
     "map": "Karte",
     "settings": "Einstellungen"
   },
-  "toast": {
-    "first_run": "Bitte konfigurieren sie die App initial"
+  "model": {
+    "category": {
+      "GEO": "Geophysical",
+      "MET": "Meteorological",
+      "SAFETY": "General emergency",
+      "RESCUE": "Rescue",
+      "FIRE": "Fire",
+      "HEALTH": "Health",
+      "ENV": "Environment",
+      "TRANSPORT": "Transportation",
+      "INFRA": "Infrastructure",
+      "CBRNE": "Threat",
+      "OTHER": "Other"
+    }
   },
-  "The contents": "Die Inhalte"
+  "settings": {
+    "channel": {
+      "title": "Abonnierte Kanäle",
+      "none_defined": "Bitte abonnieren Sie einen Kanal!"
+    }
+  }
 }
 

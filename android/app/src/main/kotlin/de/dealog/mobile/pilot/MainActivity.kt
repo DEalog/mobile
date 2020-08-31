@@ -1,4 +1,4 @@
-package com.example.mobile
+package de.dealog.mobile.pilot
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -3,7 +3,6 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile/version.dart';
 
 import 'main.dart';
@@ -53,11 +52,6 @@ class _HomeState extends State<Home> {
       if (version.state == VersionState.INITIAL) {
         Fimber.i("Open settings and start onboarding");
         tabController.setIndex(context, SETTINGS_TAB_INDEX);
-        Fluttertoast.showToast(
-          msg: Text("toast.first_run").tr().data,
-          textColor: Colors.white,
-          toastLength: Toast.LENGTH_LONG,
-        );
       }
     });
   }

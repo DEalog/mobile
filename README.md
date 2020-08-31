@@ -34,6 +34,18 @@ install the Android SDK manually then.
 
 For translation and localization we use the [Easy Localization](https://pub.dev/packages/easy_localization) plugin.
 
+  * Regenerate configuration:
+    ```shell script
+flutter pub run easy_localization:generate -S ./assets/translations   
+    ```
+
+  * Regenerate key classes:
+    ```shell script
+flutter pub run easy_localization:generate -S ./assets/translations -f keys -o locale_keys.g.dart
+     ```
+
+  * Regenerate
+
 ### Theming
 
 The application supports dark mode via Flutter's embedded support.
@@ -70,3 +82,11 @@ Integration tests allows to test a whole app, so the interaction between multipl
 ### Logging
 
 For extensible logging we use [fimber](https://pub.dev/packages/fimber) package.
+
+## Create builds
+
+  * Android App Bundle:
+    ```shell script
+    $ flutter build appbundle
+    ```
+

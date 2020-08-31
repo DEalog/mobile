@@ -4,6 +4,7 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobile/generated/codegen_loader.g.dart';
 import 'home.dart';
 import 'locator.dart';
 import 'themes.dart';
@@ -20,6 +21,7 @@ void main() {
     EasyLocalization(
       supportedLocales: [Locale('de', 'DE'), Locale('en', 'US')],
       path: 'assets/translations',
+      assetLoader: CodegenLoader(),
       fallbackLocale: Locale('de', 'DE'),
       child: App(),
     ),
@@ -39,12 +41,7 @@ class App extends StatelessWidget {
             : AppDarkTheme.theme,
         child: PlatformProvider(
           builder: (context) => PlatformApp(
-            // Old - localizationsDelegates: context.localizationDelegates,
-            localizationsDelegates: <LocalizationsDelegate<dynamic>>[
-              DefaultMaterialLocalizations.delegate,
-              DefaultWidgetsLocalizations.delegate,
-              DefaultCupertinoLocalizations.delegate,
-            ],
+            localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             title: 'Dealog',
@@ -59,7 +56,6 @@ class App extends StatelessWidget {
             },
             cupertino: (_, __) => new CupertinoAppData(
               theme: AppCupertinoTheme.theme,
-              localizationsDelegates: [DefaultCupertinoLocalizations.delegate]
             ),
             home: Home(),
           ),
