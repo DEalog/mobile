@@ -5,8 +5,26 @@
     "map": "Map",
     "settings": "Settings"
   },
-  "toast": {
-    "first_run": "Please fill out your initial settings"
+  "model": {
+    "category": {
+      "GEO": "Geophysical",
+      "MET": "Meteorological",
+      "SAFETY": "General emergency",
+      "RESCUE": "Rescue",
+      "FIRE": "Fire",
+      "HEALTH": "Health",
+      "ENV": "Environment",
+      "TRANSPORT": "Transportation",
+      "INFRA": "Infrastructure",
+      "CBRNE": "Threat",
+      "OTHER": "Other"
+    }
+  },
+  "settings": {
+    "channel": {
+      "title": "Subscribed Channels",
+      "none_defined": "Please subscribe a channel!"
+    }
   }
 }
 
