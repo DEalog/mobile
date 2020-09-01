@@ -1,17 +1,23 @@
-import 'package:flutter/foundation.dart';
 import 'package:mobile/api/feed_message.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 
 class FeedService {
-  @required
   Serializer _serializer;
-  @required
   RestClient _restClient;
+  static final FeedService _inst = FeedService._internal();
+  FeedService._internal();
 
-  FeedService(RestClient restClient, Serializer serializer) {
-    _restClient = restClient;
-    _serializer = serializer;
+  factory FeedService() {
+    return _inst;
+  }
+
+  void setSerializer(Serializer serializer) {
+    _inst._serializer = serializer;
+  }
+
+  void setRestClient(RestClient restClient) {
+    _inst._restClient = restClient;
   }
 
   Future<List<FeedMessage>> getFeed() async {

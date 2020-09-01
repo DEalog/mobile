@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobile/api/feed_service.dart';
+import 'package:mobile/api/rest_client.dart';
+import 'package:mobile/api/serializer.dart';
 import 'package:mobile/generated/codegen_loader.g.dart';
 
 import 'home.dart';
@@ -14,6 +17,12 @@ import 'themes.dart';
 GetIt getIt = GetIt.instance;
 
 void main() {
+  RestClient restClient = RestClient();
+  Serializer serializer = Serializer();
+  FeedService feedService = FeedService();
+  feedService.setSerializer(serializer);
+  feedService.setRestClient(restClient);
+
   WidgetsFlutterBinding.ensureInitialized();
   Fimber.plantTree(DebugTree());
   register(getIt);
