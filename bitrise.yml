@@ -21,15 +21,12 @@ workflows:
             - content: >-
                 #!/usr/bin/env bash
 
-                # fail if any commands fails set -e # debug log set -x
-
                 if [ x$BITRISE_GIT_TAG == "x" ]; then
                   echo "No tag found. Exiting"
                   exit 1
                 fi
 
-                if [ $BITRISE_GIT_TAG !=
-                "${PUBSPEC_VERSION_NAME}_${PUBSPEC_BUILD_NUMBER}" ]; then
+                if [ $BITRISE_GIT_TAG != "${PUBSPEC_VERSION_NAME}_${PUBSPEC_BUILD_NUMBER}" ]; then
                   echo "Project version does not match tag"
                   exit 1
                 fi
@@ -69,8 +66,8 @@ workflows:
           inputs:
             - webhook_url: $SLACK_WEBHOOK_URL
             - channel: '#deployment'
-            - message: 'Successful deployment \U0001F4AA'
-            - message_on_error: 'Failed to deploy \U0001F631'
+            - message: Successful deployment \U0001F4AA
+            - message_on_error: Failed to deploy \U0001F631
   primary:
     steps:
       - activate-ssh-key@4:
@@ -88,7 +85,7 @@ workflows:
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
       - slack@3:
-          run_if: ".IsBuildFailed"
+          run_if: .IsBuildFailed
           inputs:
             - webhook_url: $SLACK_WEBHOOK_URL
             - channel: '#mobile'
