@@ -26,10 +26,6 @@ workflows:
                 # debug log
                 set -x
 
-                echo "tag $BITRISE_GIT_TAG"
-                echo "version $PUBSPEC_VERSION_NAME"
-                echo "version code $PUBSPEC_BUILD_NUMBER"
-
                 if [ x$BITRISE_GIT_TAG == "x" ]; then
                   echo "No tag found. Exiting"
                   exit 1
