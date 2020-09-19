@@ -89,4 +89,21 @@ For extensible logging we use [fimber](https://pub.dev/packages/fimber) package.
     ```shell script
     $ flutter build appbundle
     ```
+### Build
 
+The Bitrise workflows can be executed locally. E. g. nstall the bitrise CLI executable and run:
+
+```
+bitrise run <workflow name>
+```
+
+To provide the secrets for the build, create a file `.bitrise.secrets.yml` with the following content:
+
+```
+envs:
+- BITRISEIO_ANDROID_KEYSTORE_URL: file://<path to keystore>
+- BITRISEIO_ANDROID_KEYSTORE_ALIAS: key
+- BITRISEIO_ANDROID_KEYSTORE_PASSWORD: <keystore password>
+- BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL: file://<path to google play service account 
+- SLACK_WEBHOOK_URL: <stlack webhook url>
+```
