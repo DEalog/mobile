@@ -56,12 +56,9 @@ class App extends StatelessWidget {
             title: 'Dealog',
             material: (_, __) {
               return new MaterialAppData(
-                theme: AppLightTheme.theme,
-                darkTheme: AppDarkTheme.theme,
-                themeMode: brightness == Brightness.light
-                    ? ThemeMode.light
-                    : ThemeMode.dark,
-              );
+                  theme: AppLightTheme.theme,
+                  darkTheme: AppDarkTheme.theme,
+                  themeMode: ThemeMode.system);
             },
             cupertino: (_, __) => new CupertinoAppData(
                 theme: AppCupertinoTheme.theme,
