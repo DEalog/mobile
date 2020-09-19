@@ -63,6 +63,7 @@ workflows:
       - deploy-to-itunesconnect-deliver@2:
           inputs:
             - app_password: $APPLE_APP_SPECIFIC_PASSWORD
+            - password: $APPLE_ID_PASSWORD
             - itunescon_user: $APPLE_ID
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
