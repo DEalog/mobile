@@ -69,11 +69,10 @@ workflows:
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
       - slack@3:
+          run_if: ".IsBuildFailed"
           inputs:
             - webhook_url: $SLACK_WEBHOOK_URL
-            - channel: ''
-            - channel_on_error: '#mobile'
-            - message_on_error: Build failed
+            - channel: '#mobile'
   integration:
     steps:
       - avd-manager@1: {}
