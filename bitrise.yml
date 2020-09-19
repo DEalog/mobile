@@ -15,6 +15,24 @@ workflows:
       - activate-ssh-key@4:
           run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
       - git-clone@4: {}
+      - get-pubspec-version-and-build-number@1: {}
+      - script@1:
+          inputs:
+            - content: >-
+                #!/usr/bin/env bash
+
+                # fail if any commands fails set -e # debug log set -x
+
+                if [ x$BITRISE_GIT_TAG == "x" ]; then
+                  echo "No tag found. Exiting"
+                  exit 1
+                fi
+
+                if [ $BITRISE_GIT_TAG !=
+                "${PUBSPEC_VERSION_NAME}_${PUBSPEC_BUILD_NUMBER}" ]; then
+                  echo "Project version does not match tag"
+                  exit 1
+                fi
       - certificate-and-profile-installer@1: {}
       - flutter-installer@0: {}
       - cache-pull@2: {}
@@ -44,6 +62,7 @@ workflows:
             - scheme: $BITRISE_SCHEME
             - export_method: $BITRISE_EXPORT_METHOD
             - configuration: Release
+      - ios-auto-provision@1: {}
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
       - slack@3:
