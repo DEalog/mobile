@@ -59,7 +59,7 @@ workflows:
             - scheme: $BITRISE_SCHEME
             - export_method: $BITRISE_EXPORT_METHOD
             - configuration: Release
-      - ios-auto-provision@1: {}
+      - ios-auto-provision-appstoreconnect@0: {}
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
       - slack@3:
