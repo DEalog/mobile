@@ -7,6 +7,8 @@ trigger_map:
   workflow: primary
 - pull_request_source_branch: '*'
   workflow: integration
+- tag: "*"
+  workflow: deploy
 workflows:
   deploy:
     steps:
@@ -46,6 +48,12 @@ workflows:
         - configuration: Release
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
+    - slack@3:
+        inputs:
+          - webhook_url: $SLACK_WEBHOOK_URL
+          - channel: "#deployment"
+          - message: "Successful deployment \U0001F4AA"
+          - message_on_error: "Failed to deploy \U0001F631"
   primary:
     steps:
     - activate-ssh-key@4:
@@ -65,7 +73,7 @@ workflows:
     - slack@3:
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
-        - channel: $SLACK_CHANNEL
+        - channel: "#mobile"
         - message: "Yay! Build was successful! \U0001F4AA"
         - message_on_error: "Ah! Something went wrong \U0001F631"
   integration:
@@ -108,7 +116,4 @@ app:
   - opts:
       is_expand: false
     BITRISE_EXPORT_METHOD: development
-  - opts:
-      is_expand: false
-    SLACK_CHANNEL: '#mobile'
 
