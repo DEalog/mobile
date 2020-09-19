@@ -10,6 +10,7 @@
       "GEO": "Geophysical",
       "MET": "Meteorological",
       "SAFETY": "General emergency",
+      "SECURITY": "Security",
       "RESCUE": "Rescue",
       "FIRE": "Fire",
       "HEALTH": "Health",

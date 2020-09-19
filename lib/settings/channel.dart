@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
@@ -7,46 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
-import 'package:mobile/model/category.dart';
+import 'package:mobile/model/channel.dart';
+import 'package:mobile/ui_kit/channel.dart';
+import 'package:mobile/ui_kit/settings.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:streaming_shared_preferences/src/preference/preference.dart';
-
-class HeadingItem {
-  final String heading;
-
-  HeadingItem(this.heading);
-
-  Widget build(BuildContext context) {
-    final child = Text(
-      heading,
-      style: Theme.of(context).textTheme.headline5,
-    ).tr();
-    return Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(top: 8.0, bottom: 2.0),
-        child: child);
-  }
-}
-
-class AlertItem {
-  final String message;
-
-  AlertItem(this.message);
-
-  Widget build(BuildContext context) {
-    final child = Text(
-      message,
-      style: Theme.of(context).textTheme.headline6,
-    ).tr();
-    return Container(
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(top: 8.0, bottom: 2.0),
-        color: Theme.of(context).focusColor,
-        child: child);
-  }
-}
 
 class ChannelForm extends StatefulWidget {
   final Function(String) _addChannel;
@@ -79,9 +45,8 @@ class _ChannelFormState extends State<ChannelForm> {
     });
 
     Iterable<Map<String, String>> map = values.map((category) {
-      final name = describeEnum(category);
-      final text = Text("model.category.$name").tr().data;
-      return {"display": text, "value": name};
+      final text = Text(categoryLocalizationKey(category)).tr().data;
+      return {"display": text, "value": describeEnum(category)};
     });
 
     _categoryDisplayMap = map.toList();
@@ -95,7 +60,7 @@ class _ChannelFormState extends State<ChannelForm> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(5.0),
               child: Column(children: [
                 CheckboxListTile(
                   title: Text("Device location"),
@@ -118,7 +83,7 @@ class _ChannelFormState extends State<ChannelForm> {
                         }))
               ])),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(5.0),
             child: MultiSelectFormField(
               autovalidate: false,
               titleText: 'Selected categories',
@@ -144,13 +109,13 @@ class _ChannelFormState extends State<ChannelForm> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: RaisedButton(
               child: Text("Add"),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  _addChannel(getEntry().toJson().toString());
+                  _addChannel(getEntry().toJson());
                   Navigator.of(context).pop();
                 }
               },
@@ -164,7 +129,8 @@ class _ChannelFormState extends State<ChannelForm> {
 
   CategoryEntry getEntry() {
     final categories = _categories.map((value) => _categoryMap[value]).toList();
-    return CategoryEntry(this._useLocation ? null : this._customLocation, categories);
+    return CategoryEntry(
+        this._useLocation ? null : this._customLocation, categories);
   }
 }
 
@@ -174,11 +140,12 @@ class CategoryEntry {
 
   CategoryEntry(this.location, this.categories);
 
-  Map<String, dynamic> toJson() {
-    return {
+  String toJson() {
+    var object = {
       'location': location,
-      'categories': categories.map((e) => describeEnum(e))
+      'categories': categories.map((e) => describeEnum(e)).toList()
     };
+    return jsonEncode(object);
   }
 }
 
@@ -242,9 +209,8 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     children.add(Divider(color: Theme.of(context).focusColor));
 
     children.add(
-      ListView(
+      Column(
         children: mapChannels(context),
-        shrinkWrap: true,
       ),
     );
     if (channels.length < 3) {
@@ -271,11 +237,20 @@ class _ChannelSettingsState extends State<ChannelSettings> {
   List<Widget> mapChannels(BuildContext context) {
     final elements = <Widget>[];
     for (var entry in channels) {
-      elements.add(FlatButton(
-          child: Text(entry, style: Theme.of(context).textTheme.headline6),
-          onPressed: () => removeChannel(entry)));
+      elements.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(child: ChannelView(Channel.fromJson(entry))),
+          FlatButton(
+              child: Icon(context.platformIcons.delete),
+              padding: EdgeInsets.all(2.0),
+              onPressed: () => removeChannel(entry))
+        ],
+      ));
       elements.add(Divider(
         color: Theme.of(context).focusColor,
+        height: 4.0,
       ));
     }
     return elements;

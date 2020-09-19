@@ -9,6 +9,7 @@ abstract class  LocaleKeys {
   static const model_category_GEO = 'model.category.GEO';
   static const model_category_MET = 'model.category.MET';
   static const model_category_SAFETY = 'model.category.SAFETY';
+  static const model_category_SECURITY = 'model.category.SECURITY';
   static const model_category_RESCUE = 'model.category.RESCUE';
   static const model_category_FIRE = 'model.category.FIRE';
   static const model_category_HEALTH = 'model.category.HEALTH';

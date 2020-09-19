@@ -7,17 +7,18 @@
   },
   "model": {
     "category": {
-      "GEO": "Geophysical",
-      "MET": "Meteorological",
-      "SAFETY": "General emergency",
-      "RESCUE": "Rescue",
-      "FIRE": "Fire",
-      "HEALTH": "Health",
-      "ENV": "Environment",
-      "TRANSPORT": "Transportation",
-      "INFRA": "Infrastructure",
-      "CBRNE": "Threat",
-      "OTHER": "Other"
+      "GEO": "Erdbeben",
+      "MET": "Wetter",
+      "SAFETY": "Warnung",
+      "SECURITY": "Sicherheit",
+      "RESCUE": "Rettung",
+      "FIRE": "Feuer",
+      "HEALTH": "Gesundheit",
+      "ENV": "Umwelt",
+      "TRANSPORT": "Transport",
+      "INFRA": "Infrastruktur",
+      "CBRNE": "Bedrohung",
+      "OTHER": "Andere"
     }
   },
   "settings": {

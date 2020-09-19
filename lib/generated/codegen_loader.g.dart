@@ -14,36 +14,7 @@ class CodegenLoader extends AssetLoader{
     return Future.value(mapLocales[locale.toString()]);
   }
 
-  static const Map<String,dynamic> de_DE = {
-  "navigation": {
-    "home": "Home",
-    "messages": "Meldungen",
-    "map": "Karte",
-    "settings": "Einstellungen"
-  },
-  "model": {
-    "category": {
-      "GEO": "Geophysical",
-      "MET": "Meteorological",
-      "SAFETY": "General emergency",
-      "RESCUE": "Rescue",
-      "FIRE": "Fire",
-      "HEALTH": "Health",
-      "ENV": "Environment",
-      "TRANSPORT": "Transportation",
-      "INFRA": "Infrastructure",
-      "CBRNE": "Threat",
-      "OTHER": "Other"
-    }
-  },
-  "settings": {
-    "channel": {
-      "title": "Abonnierte Kanäle",
-      "none_defined": "Bitte abonnieren Sie einen Kanal!"
-    }
-  }
-};
-static const Map<String,dynamic> en_US = {
+  static const Map<String,dynamic> en_US = {
   "navigation": {
     "home": "Home",
     "messages": "Messages",
@@ -55,6 +26,7 @@ static const Map<String,dynamic> en_US = {
       "GEO": "Geophysical",
       "MET": "Meteorological",
       "SAFETY": "General emergency",
+      "SECURITY": "Security",
       "RESCUE": "Rescue",
       "FIRE": "Fire",
       "HEALTH": "Health",
@@ -72,5 +44,35 @@ static const Map<String,dynamic> en_US = {
     }
   }
 };
-static const Map<String, Map<String,dynamic>> mapLocales = {"de_DE": de_DE, "en_US": en_US};
+static const Map<String,dynamic> de_DE = {
+  "navigation": {
+    "home": "Home",
+    "messages": "Meldungen",
+    "map": "Karte",
+    "settings": "Einstellungen"
+  },
+  "model": {
+    "category": {
+      "GEO": "Erdbeben",
+      "MET": "Wetter",
+      "SAFETY": "Warnung",
+      "SECURITY": "Sicherheit",
+      "RESCUE": "Rettung",
+      "FIRE": "Feuer",
+      "HEALTH": "Gesundheit",
+      "ENV": "Umwelt",
+      "TRANSPORT": "Transport",
+      "INFRA": "Infrastruktur",
+      "CBRNE": "Bedrohung",
+      "OTHER": "Andere"
+    }
+  },
+  "settings": {
+    "channel": {
+      "title": "Abonnierte Kanäle",
+      "none_defined": "Bitte abonnieren Sie einen Kanal!"
+    }
+  }
+};
+static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US, "de_DE": de_DE};
 }
