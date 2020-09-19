@@ -74,8 +74,7 @@ workflows:
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
         - channel: "#mobile"
-        - message: "Yay! Build was successful! \U0001F4AA"
-        - message_on_error: "Ah! Something went wrong \U0001F631"
+        - message_on_error: "Build failed"
   integration:
     steps:
     - avd-manager@1: {}
