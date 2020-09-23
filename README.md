@@ -34,17 +34,15 @@ install the Android SDK manually then.
 
 For translation and localization we use the [Easy Localization](https://pub.dev/packages/easy_localization) plugin.
 
-  * Regenerate configuration:
-    ```shell script
+Regenerate configuration:
+```shell script
 flutter pub run easy_localization:generate -S ./assets/translations   
-    ```
+```
 
-  * Regenerate key classes:
-    ```shell script
+Regenerate key classes:
+```shell script
 flutter pub run easy_localization:generate -S ./assets/translations -f keys -o locale_keys.g.dart
-     ```
-
-  * Regenerate
+```
 
 ### Theming
 

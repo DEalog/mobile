@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
@@ -15,7 +14,7 @@ import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:streaming_shared_preferences/src/preference/preference.dart';
 
 class ChannelForm extends StatefulWidget {
-  final Function(String) _addChannel;
+  final Function(Channel) _addChannel;
 
   ChannelForm(this._addChannel);
 
@@ -26,7 +25,7 @@ class ChannelForm extends StatefulWidget {
 }
 
 class _ChannelFormState extends State<ChannelForm> {
-  final Function(String) _addChannel;
+  final Function(Channel) _addChannel;
   final _formKey = GlobalKey<FormState>();
   bool _useLocation = false;
   String _customLocation;
@@ -115,7 +114,7 @@ class _ChannelFormState extends State<ChannelForm> {
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  _addChannel(getEntry().toJson());
+                  _addChannel(getEntry());
                   Navigator.of(context).pop();
                 }
               },
@@ -127,30 +126,19 @@ class _ChannelFormState extends State<ChannelForm> {
     );
   }
 
-  CategoryEntry getEntry() {
+  Channel getEntry() {
     final categories = _categories.map((value) => _categoryMap[value]).toList();
-    return CategoryEntry(
-        this._useLocation ? null : this._customLocation, categories);
+    return Channel(
+        this._useLocation ? null : mapLocation(_customLocation), categories);
   }
-}
 
-class CategoryEntry {
-  final List<ChannelCategory> categories;
-  final String location;
-
-  CategoryEntry(this.location, this.categories);
-
-  String toJson() {
-    var object = {
-      'location': location,
-      'categories': categories.map((e) => describeEnum(e)).toList()
-    };
-    return jsonEncode(object);
+  mapLocation(String customLocation) {
+    return null;
   }
 }
 
 class AddChannelDialog extends StatelessWidget {
-  final Function(String) addChannel;
+  final Function(Channel) addChannel;
 
   AddChannelDialog(this.addChannel);
 
@@ -191,10 +179,10 @@ class ChannelSettings extends StatefulWidget {
 
 class _ChannelSettingsState extends State<ChannelSettings> {
   final Preference<List<String>> settings;
-  List<String> channels;
+  List<Channel> channels;
 
   _ChannelSettingsState(this.settings) {
-    this.channels = settings.getValue();
+    this.channels = fromStrings(settings.getValue());
   }
 
   @override
@@ -236,16 +224,16 @@ class _ChannelSettingsState extends State<ChannelSettings> {
 
   List<Widget> mapChannels(BuildContext context) {
     final elements = <Widget>[];
-    for (var entry in channels) {
+    for (var channel in channels) {
       elements.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(child: ChannelView(Channel.fromJson(entry))),
+          Expanded(child: ChannelView(channel)),
           FlatButton(
               child: Icon(context.platformIcons.delete),
               padding: EdgeInsets.all(2.0),
-              onPressed: () => removeChannel(entry))
+              onPressed: () => removeChannel(channel))
         ],
       ));
       elements.add(Divider(
@@ -256,20 +244,24 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     return elements;
   }
 
-  void addChannel(String channel) {
+  void addChannel(Channel channel) {
     final updatedChannels = List.of(channels);
     updatedChannels.add(channel);
-    settings.setValue(updatedChannels);
-    setState(() {
-      channels = settings.getValue();
-    });
-  }
-
-  void removeChannel(String channel) {
-    final updatedChannels = List.of(channels);
-    updatedChannels.removeAt(channels.indexOf(channel));
+    settings.setValue(updatedChannels.map((e) => e.toJson()).toList());
     setState(() {
       channels = updatedChannels;
     });
   }
+
+  void removeChannel(Channel channel) {
+    final updatedChannels = List.of(channels);
+    updatedChannels.removeAt(channels.indexOf(channel));
+    settings.setValue(updatedChannels.map((e) => e.toJson()).toList());
+    setState(() {
+      channels = updatedChannels;
+    });
+  }
+
+  List<Channel> fromStrings(List<String> channelValues) =>
+      channelValues.expand((element) => Channel.fromJson(element)).toList();
 }
