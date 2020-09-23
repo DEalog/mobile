@@ -8,6 +8,25 @@ import 'package:mobile/model/channel.dart';
 String categoryLocalizationKey(ChannelCategory category) =>
     "model.category.${describeEnum(category)}";
 
+class LocationView extends StatelessWidget {
+  final Location location;
+
+  LocationView(this.location);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget locationView;
+    if (location == null) {
+      locationView = Icon(PlatformIcons(context).location);
+    } else {
+      locationView =
+          Padding(padding: EdgeInsets.all(5.0), child: Text(location.name));
+    }
+    return Container(
+        child: Center(child: locationView), padding: EdgeInsets.all(3.0));
+  }
+}
+
 class ChannelView extends StatelessWidget {
   final Channel channel;
 
@@ -15,17 +34,6 @@ class ChannelView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget location;
-
-    if (channel.location == null) {
-      location = Icon(context.platformIcons.location);
-    } else {
-      location = Padding(
-          padding: EdgeInsets.all(5.0), child: Text(channel.location.name));
-    }
-    location =
-        Container(child: Center(child: location), padding: EdgeInsets.all(3.0));
-
     var categories = Wrap(
       children: channel.categories
           .map((e) => Padding(
@@ -36,7 +44,7 @@ class ChannelView extends StatelessWidget {
     );
 
     return Row(
-      children: <Widget>[location, categories],
+      children: <Widget>[LocationView(channel.location), categories],
     );
   }
 }

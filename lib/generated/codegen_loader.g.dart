@@ -14,37 +14,7 @@ class CodegenLoader extends AssetLoader{
     return Future.value(mapLocales[locale.toString()]);
   }
 
-  static const Map<String,dynamic> en_US = {
-  "navigation": {
-    "home": "Home",
-    "messages": "Messages",
-    "map": "Map",
-    "settings": "Settings"
-  },
-  "model": {
-    "category": {
-      "GEO": "Geophysical",
-      "MET": "Meteorological",
-      "SAFETY": "General emergency",
-      "SECURITY": "Security",
-      "RESCUE": "Rescue",
-      "FIRE": "Fire",
-      "HEALTH": "Health",
-      "ENV": "Environment",
-      "TRANSPORT": "Transportation",
-      "INFRA": "Infrastructure",
-      "CBRNE": "Threat",
-      "OTHER": "Other"
-    }
-  },
-  "settings": {
-    "channel": {
-      "title": "Subscribed Channels",
-      "none_defined": "Please subscribe a channel!"
-    }
-  }
-};
-static const Map<String,dynamic> de_DE = {
+  static const Map<String,dynamic> de = {
   "navigation": {
     "home": "Home",
     "messages": "Meldungen",
@@ -74,5 +44,35 @@ static const Map<String,dynamic> de_DE = {
     }
   }
 };
-static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US, "de_DE": de_DE};
+static const Map<String,dynamic> en = {
+  "navigation": {
+    "home": "Home",
+    "messages": "Messages",
+    "map": "Map",
+    "settings": "Settings"
+  },
+  "model": {
+    "category": {
+      "GEO": "Geophysical",
+      "MET": "Meteorological",
+      "SAFETY": "General emergency",
+      "SECURITY": "Security",
+      "RESCUE": "Rescue",
+      "FIRE": "Fire",
+      "HEALTH": "Health",
+      "ENV": "Environment",
+      "TRANSPORT": "Transportation",
+      "INFRA": "Infrastructure",
+      "CBRNE": "Threat",
+      "OTHER": "Other"
+    }
+  },
+  "settings": {
+    "channel": {
+      "title": "Subscribed Channels",
+      "none_defined": "Please subscribe a channel!"
+    }
+  }
+};
+static const Map<String, Map<String,dynamic>> mapLocales = {"de": de, "en": en};
 }

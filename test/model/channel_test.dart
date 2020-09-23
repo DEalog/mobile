@@ -7,21 +7,28 @@ void main() {
   test('Construct from empty JSON', () async {
     var channel = Channel.fromJson("{}");
 
-    expect(channel.location, null);
-    expect(channel.categories, List.empty());
+    expect(channel.isPresent, true);
+    expect(channel.value.location, null);
+    expect(channel.value.categories, List.empty());
+  });
+
+  test('Construct from invalid JSON', () async {
+    var channel = Channel.fromJson("bad");
+
+    expect(channel.isPresent, false);
   });
 
   test('Construct with category', () async {
     var channel = Channel.fromJson("{\"categories\":[\"FIRE\"]}");
 
-    expect(channel.categories, contains(ChannelCategory.FIRE));
+    expect(channel.value.categories, contains(ChannelCategory.FIRE));
   });
 
   test('Construct with category', () async {
     var channel = Channel.fromJson("{\"location\":\"Town\"}");
 
-    expect(channel.location.name, "Town");
-    expect(channel.location.longitude, 0.0);
-    expect(channel.location.latitude, 0.0);
+    expect(channel.value.location.name, "Town");
+    expect(channel.value.location.longitude, 0.0);
+    expect(channel.value.location.latitude, 0.0);
   });
 }
