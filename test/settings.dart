@@ -22,9 +22,7 @@ void main() {
 
     var result = uut.getValue(prefs, key);
 
-    Channel channel = result[0];
-    expect(channel.location, null);
-    expect(channel.categories, List.empty());
+    expect(result, List.empty());
   });
 
   test('Read ingores channel with invalid JSON', () async {

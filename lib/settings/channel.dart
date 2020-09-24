@@ -133,7 +133,8 @@ class _ChannelFormState extends State<ChannelForm> {
   }
 
   mapLocation(String customLocation) {
-    return null;
+    // TODO determine correct coordinates
+    return Location(customLocation, 0.0, 0.0);
   }
 }
 

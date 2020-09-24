@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:optional/optional_internal.dart';
+import 'package:optional/optional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
@@ -34,39 +33,25 @@ class ChannelAdapter extends PreferenceAdapter<List<Channel>> {
   @override
   List<Channel> getValue(SharedPreferences preferences, String key) {
     var stringList = preferences.getStringList(key);
-    return stringList.expand((element) => _fromJson(element)).toList();
+    return stringList.expand((e) => _fromJson(e)).toList();
   }
 
   Optional<Channel> _fromJson(String json) {
-    Map decoded;
     try {
-      decoded = jsonDecode(json);
-    } on FormatException {
+      return Optional.of(Channel.fromJson(jsonDecode(json)));
+    } catch (e) {
       return Optional.empty();
     }
-
-    String location = decoded['location'];
-    List<dynamic> categories = decoded['categories'];
-    if (categories == null) {
-      categories = List.empty();
-    }
-    return Optional.of(Channel(
-        location != null ? Location(location, 0.0, 0.0) : null,
-        categories.map((e) => categoryMap[e]).toList(growable: false)));
   }
 
   @override
   Future<bool> setValue(
       SharedPreferences preferences, String key, List<Channel> channels) {
     return preferences.setStringList(
-        key, channels.map((e) => _toJson(e)).toList());
+        key, channels.map((channel) => _toJson(channel)).toList());
   }
 
   String _toJson(Channel channel) {
-    var object = {
-      'location': channel.location.name,
-      'categories': channel.categories.map((e) => describeEnum(e)).toList()
-    };
-    return jsonEncode(object);
+    return jsonEncode(channel.toJson());
   }
 }
