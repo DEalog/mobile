@@ -83,6 +83,11 @@ workflows:
           inputs:
             - generate_code_coverage_files: 'yes'
             - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+      - custom-test-results-export@0:
+          inputs:
+            - test_name: Test
+            - search_pattern: '*'
+            - base_path: $BITRISE_FLUTTER_TESTRESULT_PATH
       - deploy-to-bitrise-io@1: {}
       - cache-push@2: {}
       - slack@3:
