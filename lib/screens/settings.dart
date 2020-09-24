@@ -9,6 +9,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appSettings = getIt<AppSettings>();
     return Container(
-        child: ListView(children: [ChannelSettings(appSettings.locations)]));
+        child: ListView(children: [ChannelSettings(appSettings.channels)]));
   }
 }

@@ -169,7 +169,7 @@ class AddChannelDialog extends StatelessWidget {
 }
 
 class ChannelSettings extends StatefulWidget {
-  final Preference<List<String>> channels;
+  final Preference<List<Channel>> channels;
 
   ChannelSettings(this.channels);
 
@@ -178,11 +178,11 @@ class ChannelSettings extends StatefulWidget {
 }
 
 class _ChannelSettingsState extends State<ChannelSettings> {
-  final Preference<List<String>> settings;
+  final Preference<List<Channel>> settings;
   List<Channel> channels;
 
   _ChannelSettingsState(this.settings) {
-    this.channels = fromStrings(settings.getValue());
+    this.channels = settings.getValue();
   }
 
   @override
@@ -247,7 +247,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
   void addChannel(Channel channel) {
     final updatedChannels = List.of(channels);
     updatedChannels.add(channel);
-    settings.setValue(updatedChannels.map((e) => e.toJson()).toList());
+    settings.setValue(updatedChannels);
     setState(() {
       channels = updatedChannels;
     });
@@ -256,12 +256,9 @@ class _ChannelSettingsState extends State<ChannelSettings> {
   void removeChannel(Channel channel) {
     final updatedChannels = List.of(channels);
     updatedChannels.removeAt(channels.indexOf(channel));
-    settings.setValue(updatedChannels.map((e) => e.toJson()).toList());
+    settings.setValue(updatedChannels);
     setState(() {
       channels = updatedChannels;
     });
   }
-
-  List<Channel> fromStrings(List<String> channelValues) =>
-      channelValues.expand((element) => Channel.fromJson(element)).toList();
 }
