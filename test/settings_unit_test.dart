@@ -44,8 +44,9 @@ void main() {
   });
 
   test('Read channel with location name only', () async {
-    when(prefs.getStringList(key))
-        .thenReturn(List.of(["{\"location\":\"Town\"}"]));
+    when(prefs.getStringList(key)).thenReturn([
+      "{\"location\":{\"name\":\"Town\",\"longitude\":0.0,\"latitude\":0.0},\"categories\":[]}"
+    ]);
 
     var result = uut.getValue(prefs, key);
 
@@ -60,14 +61,18 @@ void main() {
       Channel(null, [ChannelCategory.FIRE, ChannelCategory.MET])
     ]);
 
-    verify(prefs.setStringList(key, ["{\"location\":null,\"categories\":[\"FIRE\",\"MET\"]}"]));
+    verify(prefs.setStringList(
+        key, ["{\"location\":null,\"categories\":[\"FIRE\",\"MET\"]}"]));
   });
 
   test('Write all channel data', () async {
     uut.setValue(prefs, key, [
-      Channel(Location("Location", 1.0, 2.0), [ChannelCategory.FIRE, ChannelCategory.MET])
+      Channel(Location("Location", 1.0, 2.0),
+          [ChannelCategory.FIRE, ChannelCategory.MET])
     ]);
 
-    verify(prefs.setStringList(key, ["{\"location\":\"Location\",\"categories\":[\"FIRE\",\"MET\"]}"]));
+    verify(prefs.setStringList(key, [
+      "{\"location\":{\"longitude\":1.0,\"latitude\":2.0,\"name\":\"Location\"},\"categories\":[\"FIRE\",\"MET\"]}"
+    ]));
   });
 }

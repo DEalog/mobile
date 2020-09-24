@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fimber/fimber_base.dart';
 import 'package:optional/optional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
@@ -40,6 +41,7 @@ class ChannelAdapter extends PreferenceAdapter<List<Channel>> {
     try {
       return Optional.of(Channel.fromJson(jsonDecode(json)));
     } catch (e) {
+      Fimber.w("Could not parse JSON string $json", ex: e);
       return Optional.empty();
     }
   }
