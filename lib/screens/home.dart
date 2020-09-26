@@ -19,28 +19,28 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   HashMap<Channel, Future<List<FeedMessage>>> futureFeedMessages = HashMap();
-  FeedService feedService = FeedService();
-  Preference<List<String>> channelsJsonPref;
+  FeedService feedService;
+  Preference<List<Channel>> channelsPref;
   List<Channel> channels = List();
 
   HomeScreenState() {
-    channelsJsonPref = getIt<AppSettings>().locations;
+    feedService = getIt<FeedService>();
+    channelsPref = getIt<AppSettings>().channels;
   }
 
   @override
   void initState() {
     super.initState();
-    channelsJsonPref.listen(
-      (channelsJson) {
+    channelsPref.listen(
+      (newChannels) {
         setState(
           () {
-            channels = channelsJson.map(
-              (channelJson) {
-                final Channel channel = Channel.fromJson(channelJson);
+            channels = newChannels;
+            channels.forEach(
+              (channel) {
                 futureFeedMessages[channel] = feedService.getFeed();
-                return channel;
               },
-            ).toList();
+            );
           },
         );
       },

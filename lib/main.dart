@@ -16,12 +16,6 @@ import 'themes.dart';
 GetIt getIt = GetIt.instance;
 
 void main() {
-  RestClient restClient = RestClient();
-  Serializer serializer = Serializer();
-  FeedService feedService = FeedService();
-  feedService.setSerializer(serializer);
-  feedService.setRestClient(restClient);
-
   WidgetsFlutterBinding.ensureInitialized();
   Fimber.plantTree(DebugTree());
   register(getIt);

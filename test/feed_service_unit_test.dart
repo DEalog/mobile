@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
+import 'package:mobile/main.dart';
 import 'package:mockito/mockito.dart';
 
 // Mock class
@@ -10,7 +11,7 @@ class MockRestClient extends Mock implements RestClient {}
 void main() {
   RestClient restClient;
   Serializer serializer;
-  FeedService feedService = FeedService();
+  FeedService feedService;
   String message1 =
       '{ "identifier": "Message Heading 1", "description": "Message Content 1" }';
   String message2 =
@@ -19,8 +20,10 @@ void main() {
   setUp(() {
     restClient = MockRestClient();
     serializer = Serializer();
-    feedService.setRestClient(restClient);
-    feedService.setSerializer(serializer);
+    getIt.registerSingleton(serializer);
+    getIt.registerSingleton(restClient);
+    feedService = FeedService();
+    getIt.registerSingleton(feedService);
   });
 
   test(
