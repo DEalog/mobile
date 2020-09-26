@@ -13,9 +13,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
+import 'package:mobile/main.dart';
+import 'package:mobile/model/channel.dart';
 import 'package:mobile/screens/home.dart';
+import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'test_utils.dart';
 
 // Mock class
@@ -24,12 +28,36 @@ class MockRestClient extends Mock implements RestClient {}
 void main() {
   RestClient restClient;
   Serializer serializer;
-  FeedService feedService = FeedService();
+  FeedService feedService;
+  AppSettings appSettings;
+  StreamingSharedPreferences streamingSharedPreferences;
+
   final String message1 =
       '{ "identifier": "Message Heading 1", "description": "Message Content 1" }';
   final String message2 =
       '{ "identifier": "Message Heading 2", "description": "Message Content 2" }';
   final messageKey = Key('Message');
+
+  final Channel channelWithoutCategory = 
+    Channel(
+      Location("", 0.0, 0.0), 
+      [],
+    );
+
+  setUpAll(
+    () async {
+      streamingSharedPreferences = await StreamingSharedPreferences.instance;
+      feedService = FeedService();
+      appSettings = AppSettings(streamingSharedPreferences);
+      getIt.registerSingleton<AppSettings>(appSettings);
+    },
+  );
+
+  tearDownAll(
+    () {
+      getIt.reset();
+    },
+  );
 
   group('Bottom button bar', () {
     setUp(() {
@@ -37,10 +65,15 @@ void main() {
       serializer = Serializer();
       feedService.setRestClient(restClient);
       feedService.setSerializer(serializer);
+      streamingSharedPreferences.setString(AppSettings.LOCATIONS_KEY, "");
     });
 
     testWidgets('Home screen show Home text', (WidgetTester tester) async {
-      //
+      setUp(() {
+        // channels = Preference.$$_private(ch, _key, defaultValue, _adapter, _keyChanges)
+      });
+      // mock app settings
+      when(appSettings.locations.).thenReturn();
       await createWidget(tester, HomeScreen());
 
       // Verify home screen

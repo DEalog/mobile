@@ -27,8 +27,17 @@ Android works on every major platform.
 Flutter has broad support on various platforms. The easiest solution is to use
 Android Studio with the Flutter plugin.
 
-Alternatively you can use the VScode Flutter plugin. Note that you need to
+Alternatively you can use the VS Code Flutter plugin. Note that you need to
 install the Android SDK manually then.
+
+### Json Serializer
+
+For json serialization we are using [json_serializable](https://pub.dev/packages/json_serializable).
+
+* One-time code generation
+  ```flutter pub run build_runner build```
+* Generating code continuously
+  ```flutter pub run build_runner watch``` 
 
 ### i18n & l10n
 
