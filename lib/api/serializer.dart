@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:mobile/api/feed_message.dart';
+import 'package:mobile/model/feed_message.dart';
 
 class Serializer {
   FeedMessage getSerializedMessage(String jsonString) {

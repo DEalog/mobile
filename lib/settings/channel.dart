@@ -1,6 +1,8 @@
+import 'dart:collection';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -28,9 +30,19 @@ class _ChannelFormState extends State<ChannelForm> {
   final _formKey = GlobalKey<FormState>();
   bool _useLocation = true;
   String _customLocation;
-  Set<ChannelCategory> _categories;
+  List<dynamic> _categories;
 
-  _ChannelFormState(this._addChannel);
+  Map<String, ChannelCategory> _categoryMap = HashMap();
+  List<Map<String, String>> _categoryDisplayMap;
+
+  _ChannelFormState(this._addChannel) {
+    List<ChannelCategory> values = ChannelCategory.values;
+
+    values.forEach((element) {
+      final name = describeEnum(element);
+      _categoryMap[name] = element;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +74,30 @@ class _ChannelFormState extends State<ChannelForm> {
               ])),
           Padding(
             padding: EdgeInsets.all(5.0),
-            child: Column(children: [
-              Text(LocaleKeys.model_category,
-                      style: Theme.of(context).textTheme.caption)
-                  .tr(),
-              MultiSelectFormField<ChannelCategory>(
-                elements: ChannelCategory.values,
-                selected: _categories,
-                elementName: categoryName,
-                validator: (value) {
-                  Fimber.i("Validate Categories: $value");
-                  if (value == null || value.length == 0) {
-                    return 'Please select one or more options';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  Fimber.i("Categories saved: $value");
-                  if (value == null) return;
-                  setState(() {
-                    _categories = value;
-                  });
-                },
-              )
-            ]),
+            child: MultiSelectFormField(
+              autovalidate: false,
+              title: Text('Selected categories'),
+              validator: (value) {
+                if (value == null || value.length == 0) {
+                  return 'Please select one or more options';
+                }
+                return null;
+              },
+              dataSource: _categoryDisplayMap,
+              textField: 'display',
+              valueField: 'value',
+              okButtonLabel: 'OK',
+              cancelButtonLabel: 'CANCEL',
+              // required: true,
+              hintWidget: Text('Please choose one or more'),
+              initialValue: _categories,
+              onSaved: (value) {
+                if (value == null) return;
+                setState(() {
+                  _categories = value;
+                });
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),

@@ -1,4 +1,4 @@
-import 'package:mobile/api/feed_message.dart';
+import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 import 'package:mobile/main.dart';

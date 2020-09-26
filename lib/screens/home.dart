@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mobile/api/feed_message.dart';
+import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
