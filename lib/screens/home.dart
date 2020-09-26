@@ -33,16 +33,18 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
     channelsPref.listen(
       (newChannels) {
-        setState(
-          () {
-            channels = newChannels;
-            channels.forEach(
-              (channel) {
-                futureFeedMessages[channel] = feedService.getFeed();
-              },
-            );
-          },
-        );
+        if (mounted) {
+          setState(
+            () {
+              channels = newChannels;
+              channels.forEach(
+                (channel) {
+                  futureFeedMessages[channel] = feedService.getFeed();
+                },
+              );
+            },
+          );
+        }
       },
     );
   }
