@@ -76,7 +76,7 @@ class _ChannelFormState extends State<ChannelForm> {
             padding: EdgeInsets.all(5.0),
             child: MultiSelectFormField(
               autovalidate: false,
-              title: Text('Selected categories'),
+              titleText: 'Selected categories',
               validator: (value) {
                 if (value == null || value.length == 0) {
                   return 'Please select one or more options';
@@ -89,7 +89,7 @@ class _ChannelFormState extends State<ChannelForm> {
               okButtonLabel: 'OK',
               cancelButtonLabel: 'CANCEL',
               // required: true,
-              hintWidget: Text('Please choose one or more'),
+              hintText: 'Please choose one or more',
               initialValue: _categories,
               onSaved: (value) {
                 if (value == null) return;
