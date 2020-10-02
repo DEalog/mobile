@@ -34,6 +34,13 @@ void main() {
     expect(find.text("Foo"), findsOneWidget);
   });
 
+  testWidgets('Shows category', (WidgetTester tester) async {
+    await createWidget(tester, ChannelCategoryView(ChannelCategory.FIRE));
+    await tester.pumpAndSettle();
+
+    expect(find.text("Fire"), findsOneWidget);
+  });
+
   testWidgets('Shows single category in channel', (WidgetTester tester) async {
     var channel = Channel(null, List.of([ChannelCategory.FIRE]));
 

@@ -6,7 +6,8 @@
     "settings": "Settings"
   },
   "model": {
-    "category": {
+    "category": "Category",
+    "categories": {
       "GEO": "Geophysical",
       "MET": "Meteorological",
       "SAFETY": "General emergency",
@@ -19,13 +20,15 @@
       "INFRA": "Infrastructure",
       "CBRNE": "Threat",
       "OTHER": "Other"
-    }
+    },
+    "location": "Location"
   },
   "settings": {
     "channel": {
       "title": "Subscribed Channels",
       "none_defined": "Please subscribe a channel!"
-    }
+    },
+    "use_location": "Use device location"
   }
 }
 

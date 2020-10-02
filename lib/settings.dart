@@ -34,7 +34,11 @@ class ChannelAdapter extends PreferenceAdapter<List<Channel>> {
   @override
   List<Channel> getValue(SharedPreferences preferences, String key) {
     var stringList = preferences.getStringList(key);
-    return stringList.expand((e) => _fromJson(e)).toList();
+    if (stringList != null) {
+      return stringList.expand((e) => _fromJson(e)).toList();
+    } else {
+      return List.empty();
+    }
   }
 
   Optional<Channel> _fromJson(String json) {

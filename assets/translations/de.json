@@ -6,7 +6,8 @@
     "settings": "Einstellungen"
   },
   "model": {
-    "category": {
+    "category": "Kategorie",
+    "categories": {
       "GEO": "Erdbeben",
       "MET": "Wetter",
       "SAFETY": "Warnung",
@@ -19,13 +20,15 @@
       "INFRA": "Infrastruktur",
       "CBRNE": "Bedrohung",
       "OTHER": "Andere"
-    }
+    },
+    "location": "Ort"
   },
   "settings": {
     "channel": {
       "title": "Abonnierte Kanäle",
       "none_defined": "Bitte abonnieren Sie einen Kanal!"
-    }
+    },
+    "use_location": "Gerätestandort nutzen"
   }
 }
 

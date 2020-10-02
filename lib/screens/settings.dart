@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobile/settings.dart';
 import 'package:mobile/settings/channel.dart';
 

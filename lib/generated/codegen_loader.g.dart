@@ -22,7 +22,8 @@ class CodegenLoader extends AssetLoader{
     "settings": "Einstellungen"
   },
   "model": {
-    "category": {
+    "category": "Kategorie",
+    "categories": {
       "GEO": "Erdbeben",
       "MET": "Wetter",
       "SAFETY": "Warnung",
@@ -35,13 +36,15 @@ class CodegenLoader extends AssetLoader{
       "INFRA": "Infrastruktur",
       "CBRNE": "Bedrohung",
       "OTHER": "Andere"
-    }
+    },
+    "location": "Ort"
   },
   "settings": {
     "channel": {
       "title": "Abonnierte Kanäle",
       "none_defined": "Bitte abonnieren Sie einen Kanal!"
-    }
+    },
+    "use_location": "Gerätestandort nutzen"
   }
 };
 static const Map<String,dynamic> en = {
@@ -52,7 +55,8 @@ static const Map<String,dynamic> en = {
     "settings": "Settings"
   },
   "model": {
-    "category": {
+    "category": "Category",
+    "categories": {
       "GEO": "Geophysical",
       "MET": "Meteorological",
       "SAFETY": "General emergency",
@@ -65,13 +69,15 @@ static const Map<String,dynamic> en = {
       "INFRA": "Infrastructure",
       "CBRNE": "Threat",
       "OTHER": "Other"
-    }
+    },
+    "location": "Location"
   },
   "settings": {
     "channel": {
       "title": "Subscribed Channels",
       "none_defined": "Please subscribe a channel!"
-    }
+    },
+    "use_location": "Use device location"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"de": de, "en": en};

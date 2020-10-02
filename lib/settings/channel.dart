@@ -1,16 +1,15 @@
-import 'dart:collection';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/ui_kit/channel.dart';
+import 'package:mobile/ui_kit/platform/select.dart';
+import 'package:mobile/ui_kit/platform/switch.dart';
 import 'package:mobile/ui_kit/settings.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:streaming_shared_preferences/src/preference/preference.dart';
 
 class ChannelForm extends StatefulWidget {
@@ -27,29 +26,11 @@ class ChannelForm extends StatefulWidget {
 class _ChannelFormState extends State<ChannelForm> {
   final Function(Channel) _addChannel;
   final _formKey = GlobalKey<FormState>();
-  bool _useLocation = false;
+  bool _useLocation = true;
   String _customLocation;
-  List<dynamic> _categories;
-  final _textEditingController = TextEditingController();
+  Set<ChannelCategory> _categories;
 
-  Map<String, ChannelCategory> _categoryMap = HashMap();
-  List<Map<String, String>> _categoryDisplayMap;
-
-  _ChannelFormState(this._addChannel) {
-    List<ChannelCategory> values = ChannelCategory.values;
-
-    values.forEach((element) {
-      final name = describeEnum(element);
-      _categoryMap[name] = element;
-    });
-
-    Iterable<Map<String, String>> map = values.map((category) {
-      final text = Text(categoryLocalizationKey(category)).tr().data;
-      return {"display": text, "value": describeEnum(category)};
-    });
-
-    _categoryDisplayMap = map.toList();
-  }
+  _ChannelFormState(this._addChannel);
 
   @override
   Widget build(BuildContext context) {
@@ -61,61 +42,63 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
               padding: EdgeInsets.all(5.0),
               child: Column(children: [
-                CheckboxListTile(
-                  title: Text("Device location"),
+                Text(LocaleKeys.model_location,
+                        style: Theme.of(context).textTheme.caption)
+                    .tr(),
+                PlatformSwitchListTile(
+                  label: LocaleKeys.settings_use_location,
                   value: _useLocation,
-                  onChanged: (value) {
-                    Fimber.d("onChanged($value)");
+                  onChanged: (bool value) {
                     setState(() {
+                      Fimber.i("useLocation: $value");
                       _useLocation = value;
                     });
                   },
                 ),
-                Visibility(
-                    visible: !_useLocation,
-                    child: TextFormField(
-                        initialValue: _customLocation,
-                        onChanged: (value) {
-                          setState(() {
-                            _customLocation = value;
-                          });
-                        }))
+                (_useLocation
+                    ? Icon(PlatformIcons(context).locationSolid)
+                    : buildTextForm(context))
               ])),
           Padding(
             padding: EdgeInsets.all(5.0),
-            child: MultiSelectFormField(
-              autovalidate: false,
-              titleText: 'Selected categories',
-              validator: (value) {
-                if (value == null || value.length == 0) {
-                  return 'Please select one or more options';
-                }
-              },
-              dataSource: _categoryDisplayMap,
-              textField: 'display',
-              valueField: 'value',
-              okButtonLabel: 'OK',
-              cancelButtonLabel: 'CANCEL',
-              // required: true,
-              hintText: 'Please choose one or more',
-              initialValue: _categories,
-              onSaved: (value) {
-                if (value == null) return;
-                setState(() {
-                  _categories = value;
-                });
-              },
-            ),
+            child: Column(children: [
+              Text(LocaleKeys.model_category,
+                      style: Theme.of(context).textTheme.caption)
+                  .tr(),
+              MultiSelectFormField<ChannelCategory>(
+                elements: ChannelCategory.values,
+                selected: _categories,
+                elementName: categoryName,
+                validator: (value) {
+                  Fimber.i("Validate Categories: $value");
+                  if (value == null || value.length == 0) {
+                    return 'Please select one or more options';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  Fimber.i("Categories saved: $value");
+                  if (value == null) return;
+                  setState(() {
+                    _categories = value;
+                  });
+                },
+              )
+            ]),
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
-            child: RaisedButton(
+            child: PlatformButton(
               child: Text("Add"),
               onPressed: () {
+                Fimber.i("Add pressed");
                 if (_formKey.currentState.validate()) {
+                  Fimber.i("Form validates");
                   _formKey.currentState.save();
-                  _addChannel(getEntry());
+                  _addChannel(buildResult());
                   Navigator.of(context).pop();
+                } else {
+                  Fimber.i("Form does not validate");
                 }
               },
             ),
@@ -126,14 +109,31 @@ class _ChannelFormState extends State<ChannelForm> {
     );
   }
 
-  Channel getEntry() {
-    final categories = _categories.map((value) => _categoryMap[value]).toList();
-    return Channel(
-        this._useLocation ? null : mapLocation(_customLocation), categories);
+  Widget buildTextForm(BuildContext context) {
+    Function(String) onChanged = (value) {
+      setState(() {
+        _customLocation = value;
+      });
+    };
+
+    if (isMaterial(context)) {
+      return TextFormField(initialValue: _customLocation, onChanged: onChanged);
+    } else {
+      final _controller = new TextEditingController(text: _customLocation);
+      return PlatformTextField(
+        controller: _controller,
+        onChanged: onChanged,
+      );
+    }
+  }
+
+  Channel buildResult() {
+    return Channel(this._useLocation ? null : mapLocation(_customLocation),
+        _categories.toList());
   }
 
   mapLocation(String customLocation) {
-    // TODO determine correct coordinates
+    Fimber.i("mapLocation: $customLocation");
     return Location(customLocation, 0.0, 0.0);
   }
 }
@@ -145,25 +145,11 @@ class AddChannelDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return PlatformAlertDialog(
+      material: (_, __) => MaterialAlertDialogData(scrollable: true),
       content: Stack(
         overflow: Overflow.visible,
-        children: <Widget>[
-          Positioned(
-            right: -40.0,
-            top: -40.0,
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: CircleAvatar(
-                child: Icon(Icons.close),
-                backgroundColor: Colors.red,
-              ),
-            ),
-          ),
-          ChannelForm(addChannel)
-        ],
+        children: [ChannelForm(addChannel)],
       ),
     );
   }
@@ -203,10 +189,11 @@ class _ChannelSettingsState extends State<ChannelSettings> {
       ),
     );
     if (channels.length < 3) {
-      children.add(RaisedButton(
+      children.add(PlatformButton(
         child: Icon(context.platformIcons.add),
+        materialFlat: (_, __) => MaterialFlatButtonData(),
         onPressed: () {
-          showDialog(
+          showPlatformDialog(
               context: context,
               builder: (BuildContext context) {
                 return AddChannelDialog(addChannel);
@@ -231,7 +218,8 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(child: ChannelView(channel)),
-          FlatButton(
+          PlatformButton(
+              materialFlat: (_, __) => MaterialFlatButtonData(),
               child: Icon(context.platformIcons.delete),
               padding: EdgeInsets.all(2.0),
               onPressed: () => removeChannel(channel))

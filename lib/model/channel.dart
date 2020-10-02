@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'channel.g.dart';
@@ -17,6 +19,12 @@ enum ChannelCategory {
   CBRNE,
   OTHER
 }
+
+String categoryLocalizationKey(ChannelCategory category) =>
+    "model.categories.${describeEnum(category)}";
+
+String categoryName(ChannelCategory category) =>
+    Text(categoryLocalizationKey(category)).tr().data;
 
 class Coordinate {
   final double longitude;

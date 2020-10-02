@@ -1,12 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/model/channel.dart';
-
-String categoryLocalizationKey(ChannelCategory category) =>
-    "model.category.${describeEnum(category)}";
 
 class LocationView extends StatelessWidget {
   final Location location;
@@ -19,8 +16,9 @@ class LocationView extends StatelessWidget {
     if (location == null) {
       locationView = Icon(PlatformIcons(context).location);
     } else {
+      var name = location.name;
       locationView =
-          Padding(padding: EdgeInsets.all(5.0), child: Text(location.name));
+          Padding(padding: EdgeInsets.all(5.0), child: Text(name != null ? name : "n/a"));
     }
     return Container(
         child: Center(child: locationView), padding: EdgeInsets.all(3.0));
