@@ -25,12 +25,13 @@ class _HomeState extends State<Home> {
 
   final _items = (BuildContext context) => [
         BottomNavigationBarItem(
-          title: Text('navigation.home').tr(),
-          icon: Icon(context.platformIcons.home),
+          label: Text('navigation.home').tr().data,
+          icon: Icon(context.platformIcons.home, key: Key("navigate_home")),
         ),
         BottomNavigationBarItem(
-          title: Text('navigation.settings').tr(),
-          icon: Icon(context.platformIcons.settings),
+          label: Text('navigation.settings').tr().data,
+          icon: Icon(context.platformIcons.settings,
+              key: Key("navigate_settings")),
         ),
       ];
 

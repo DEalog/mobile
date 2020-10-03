@@ -2,25 +2,26 @@ import 'dart:collection';
 
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class MultiSelectFormField<E> extends FormField<Set<E>> {
-  final Iterable<E> elements;
-  final Iterable<E> selected;
-  final String Function(E) elementName;
+class MultiSelectFormField<T> extends FormField<Set<T>> {
+  final Iterable<T> elements;
+  final Iterable<T> selected;
+  final String Function(T) elementName;
 
   MultiSelectFormField(
       {this.elements,
       this.selected,
       this.elementName,
       Key key,
-      Set<E> initialValue,
-      FormFieldValidator<Set<E>> validator,
-      FormFieldSetter<Set<E>> onSaved})
+      Set<T> initialValue,
+      FormFieldValidator<Set<T>> validator,
+      FormFieldSetter<Set<T>> onSaved})
       : super(
-            builder: (FormFieldState<Set<E>> field) {
-              void onChangedHandler(Set<E> value) {
+            builder: (FormFieldState<Set<T>> field) {
+              void onChangedHandler(Set<T> value) {
                 Fimber.i("Multiselect changed $value");
                 field.didChange(value);
               }
@@ -38,19 +39,19 @@ class MultiSelectFormField<E> extends FormField<Set<E>> {
             onSaved: onSaved);
 }
 
-class MultiSelect<E> extends StatefulWidget {
-  final List<E> elements;
-  final Iterable<E> selected;
-  final String Function(E) elementName;
-  final ValueChanged<Set<E>> onChanged;
+class MultiSelect<T> extends StatefulWidget {
+  final List<T> elements;
+  final Iterable<T> selected;
+  final String Function(T) elementName;
+  final ValueChanged<Set<T>> onChanged;
 
   MultiSelect({this.elements, this.selected, this.elementName, this.onChanged});
 
   @override
   State<StatefulWidget> createState() {
     final selected =
-        HashSet<E>.from(this.selected != null ? this.selected : []);
-    return _MultiSelectState<E>(
+        HashSet<T>.from(this.selected != null ? this.selected : []);
+    return _MultiSelectState<T>(
         this.elements, selected.toSet(), this.elementName, this.onChanged);
   }
 }
@@ -81,7 +82,8 @@ class _MultiSelectState<E> extends State {
             });
             onChanged.call(selected);
           },
-          label: elementName.call(e));
+          label: elementName.call(e),
+          keyId: describeEnum(e));
     }).toList();
 
     return Column(
@@ -91,6 +93,7 @@ class _MultiSelectState<E> extends State {
 
 class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
   final String label;
+  final String keyId;
   final bool value;
   final void Function() onChanged;
 
@@ -98,40 +101,60 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
     this.label,
     this.value,
     this.onChanged,
+    this.keyId,
     Key key,
   }) : super(key: key);
 
   @override
   createCupertinoWidget(BuildContext context) {
-    return GestureDetector(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(this.label),
-          Spacer(),
-          Container(
-            padding: EdgeInsets.all(5.0),
-            child: Icon(value ? PlatformIcons(context).checkMark : null),
-          )
-        ],
-      ),
-      onTap: onChanged,
-    );
+    var iconTheme = IconTheme.of(context);
+    return Container(
+        padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(this.label),
+              Spacer(),
+              Container(
+                padding: EdgeInsets.all(4.0),
+                child: value
+                    ? Icon(
+                        CupertinoIcons.check_mark,
+                        key: getStateKey(),
+                      )
+                    : Container(
+                        width: iconTheme.size,
+                        height: iconTheme.size,
+                        key: getStateKey(),
+                      ),
+              )
+            ],
+          ),
+          onTap: () {
+            Fimber.i("Tap Gesture detected");
+            onChanged();
+          },
+        ));
   }
 
   @override
   createMaterialWidget(BuildContext context) {
-    var themeData = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(this.label),
         Checkbox(
+          key: getStateKey(),
           value: value,
           onChanged: (e) => onChanged(),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         )
       ],
     );
+  }
+
+  Key getStateKey() {
+    return Key("state_$keyId");
   }
 }

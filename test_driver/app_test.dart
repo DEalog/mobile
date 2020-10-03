@@ -10,8 +10,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Mobile App Navigation', () {
-    final homeTextFinder = find.text('Home');
-    final settingsTextFinder = find.text('Settings');
     FlutterDriver driver;
 
     // Connect to the Flutter driver before running any tests.
@@ -25,15 +23,95 @@ void main() {
         driver.close();
       }
     });
-    test('Switch between home screen and setting screen', () async {
-      // Verify home screen
-      expect(await driver.getText(settingsTextFinder), "Settings");
 
-      // Tap the settings button
-      await driver.tap(settingsTextFinder);
+    test('Should start with settings at first run', () async {
+      await driver.waitFor(find.text("Please subscribe a channel!"));
+      await driver.waitFor(find.text("Subscribed Channels"));
+      await driver.waitFor(find.byValueKey("add_channel"));
+    });
 
-      // Verify home screen
-      expect(await driver.getText(homeTextFinder), "Home");
+    test('Should show navigation', () async {
+      await driver.waitFor(find.byValueKey("navigate_home"));
+      await driver.waitFor(find.byValueKey("navigate_settings"));
+    });
+
+    test('Add device location fire channel', () async {
+      await driver.tap(find.byValueKey("navigate_settings"));
+
+      await driver.waitForAbsent(find.text("Fire"));
+
+      await driver.tap(find.byValueKey("add_channel"));
+
+      await driver.tap(find.byValueKey("state_FIRE"));
+
+      var submitChannel = find.byValueKey("submit_channel");
+      await driver.scrollIntoView(submitChannel);
+      await driver.tap(submitChannel);
+
+      await driver.waitFor(find.text("Fire"));
+      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+    });
+
+    test('Add custom location weather and env channel', () async {
+      await driver.tap(find.byValueKey("navigate_settings"));
+
+      await driver.waitForAbsent(find.text("Meteorological"));
+      await driver.waitForAbsent(find.text("Environment"));
+
+      await driver.tap(find.byValueKey("add_channel"));
+
+      await driver.tap(find.byValueKey("use_location_toggle"));
+
+      await driver.tap(find.byValueKey("location_input"));
+      await driver.enterText("my location");
+
+      await driver.tap(find.byValueKey("state_MET"));
+      await driver.tap(find.byValueKey("state_ENV"));
+
+      var submitChannel = find.byValueKey("submit_channel");
+      await driver.scrollIntoView(submitChannel);
+      await driver.tap(submitChannel);
+
+      await driver.waitFor(find.text("Meteorological"));
+      await driver.waitFor(find.text("Environment"));
+    });
+
+    test('Add another channel removes add channel button', () async {
+      print("### go to settingsl");
+      await driver.tap(find.byValueKey("navigate_settings"));
+
+      print("### check non existent Health text");
+      await driver.waitForAbsent(find.text("Health"));
+
+      print("### add channel");
+      await driver.tap(find.byValueKey("add_channel"));
+
+      print("### tap state_Infra");
+      await driver.tap(find.byValueKey("state_HEALTH"));
+
+      print("### submit channel");
+      var submitChannel = find.byValueKey("submit_channel");
+      await driver.scrollIntoView(submitChannel);
+      await driver.tap(submitChannel);
+
+      print("### check existent Health text");
+      await driver.waitFor(find.text("Health"));
+      await driver.waitForAbsent(find.byValueKey("add_channel"));
+    });
+
+    test('Deleting all channels should show message', () async {
+      await driver.tap(find.byValueKey("navigate_settings"));
+
+      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+      await driver.tap(find.byValueKey("delete_channel_0"));
+
+      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+      await driver.tap(find.byValueKey("delete_channel_0"));
+
+      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+      await driver.tap(find.byValueKey("delete_channel_0"));
+
+      await driver.waitFor(find.text("Please subscribe a channel!"));
     });
   });
 }
