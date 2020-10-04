@@ -10,7 +10,7 @@ import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
 import 'package:mobile/ui_kit/platform/switch.dart';
 import 'package:mobile/ui_kit/settings.dart';
-import 'package:streaming_shared_preferences/src/preference/preference.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class ChannelForm extends StatefulWidget {
   final Function(Channel) _addChannel;
@@ -46,6 +46,7 @@ class _ChannelFormState extends State<ChannelForm> {
                         style: Theme.of(context).textTheme.caption)
                     .tr(),
                 PlatformSwitchListTile(
+                  key: Key("use_location"),
                   label: LocaleKeys.settings_use_location,
                   value: _useLocation,
                   onChanged: (bool value) {
@@ -89,6 +90,7 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: PlatformButton(
+              key: Key("submit_channel"),
               child: Text("Add"),
               onPressed: () {
                 Fimber.i("Add pressed");
@@ -116,11 +118,14 @@ class _ChannelFormState extends State<ChannelForm> {
       });
     };
 
+    final key = Key("location_input");
     if (isMaterial(context)) {
-      return TextFormField(initialValue: _customLocation, onChanged: onChanged);
+      return TextFormField(
+          key: key, initialValue: _customLocation, onChanged: onChanged);
     } else {
       final _controller = new TextEditingController(text: _customLocation);
       return PlatformTextField(
+        key: key,
         controller: _controller,
         onChanged: onChanged,
       );
@@ -190,6 +195,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
     );
     if (channels.length < 3) {
       children.add(PlatformButton(
+        key: Key("add_channel"),
         child: Icon(context.platformIcons.add),
         materialFlat: (_, __) => MaterialFlatButtonData(),
         onPressed: () {
@@ -212,13 +218,15 @@ class _ChannelSettingsState extends State<ChannelSettings> {
 
   List<Widget> mapChannels(BuildContext context) {
     final elements = <Widget>[];
-    for (var channel in channels) {
+    for (var i = 0; i < channels.length; i++) {
+      var channel = channels[i];
       elements.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(child: ChannelView(channel)),
           PlatformButton(
+              key: Key("delete_channel_$i"),
               materialFlat: (_, __) => MaterialFlatButtonData(),
               child: Icon(context.platformIcons.delete),
               padding: EdgeInsets.all(2.0),

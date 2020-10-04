@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -17,8 +16,9 @@ class LocationView extends StatelessWidget {
       locationView = Icon(PlatformIcons(context).location);
     } else {
       var name = location.name;
-      locationView =
-          Padding(padding: EdgeInsets.all(5.0), child: Text(name != null ? name : "n/a"));
+      locationView = Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Text(name != null ? name : "n/a"));
     }
     return Container(
         child: Center(child: locationView), padding: EdgeInsets.all(3.0));

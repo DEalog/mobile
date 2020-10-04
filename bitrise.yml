@@ -116,7 +116,7 @@ workflows:
       - wait-for-android-emulator@1: {}
       - flutter@0:
           inputs:
-            - version: 1.20.2
+            - version: 1.22.0
             - commands: drive --target=test_driver/app.dart
           title: Flutter Drive
       - deploy-to-bitrise-io@1: {}
