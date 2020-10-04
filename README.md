@@ -86,6 +86,10 @@ Integration tests allows to test a whole app, so the interaction between multipl
 - Unit and widget tests will be executed by the "flutter test" command within the app root directory.
 - Integration tests will be executed by the "flutter drive --target=test_driver/app.dart" command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
 
+#### Best Practices
+
+- When testing a widget that is using ```StreamingSharedPreferences``` make sure the underlaying ```Shared.Preferences``` are initially mocked with ```SharedPreferences.setMockInitialValues```.
+
 ### Logging
 
 For extensible logging we use [fimber](https://pub.dev/packages/fimber) package.

@@ -1,12 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
-import 'package:mobile/main.dart';
 import 'package:mockito/mockito.dart';
 
 // Mock class
 class MockRestClient extends Mock implements RestClient {}
+
+// This is our global ServiceLocator
+GetIt getIt = GetIt.instance;
 
 void main() {
   RestClient restClient;

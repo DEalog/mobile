@@ -11,19 +11,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
-import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/screens/home.dart';
 import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'test_utils.dart';
 
 // Mock class
 class MockRestClient extends Mock implements RestClient {}
+
+// This is our global ServiceLocator
+GetIt getIt = GetIt.instance;
 
 void main() {
   RestClient restClient = MockRestClient();
@@ -48,6 +52,7 @@ void main() {
 
   setUpAll(
     () async {
+      SharedPreferences.setMockInitialValues({});
       streamingSharedPreferences = await StreamingSharedPreferences.instance;
       appSettings = AppSettings(streamingSharedPreferences);
       getIt.registerSingleton(appSettings);
