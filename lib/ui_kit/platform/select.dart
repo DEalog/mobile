@@ -68,7 +68,7 @@ class _MultiSelectState<E> extends State {
 
   @override
   Widget build(BuildContext context) {
-    var entries = elements.map((e) {
+    List<Widget> entries = elements.map((e) {
       final isSelected = selected.contains(e);
       return PlatformSelectListTile(
           value: isSelected,
@@ -85,6 +85,14 @@ class _MultiSelectState<E> extends State {
           label: elementName.call(e),
           keyId: describeEnum(e));
     }).toList();
+
+    if (isCupertino(context)) {
+      final number = entries.length;
+      entries = entries
+          .expand((element) => [element, Divider()])
+          .take(number * 2 - 1)
+          .toList();
+    }
 
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start, children: entries);
@@ -111,29 +119,22 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
     return Container(
         padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
         child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
+          behavior: HitTestBehavior.opaque,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(this.label),
+              Text(
+                this.label,
+              ),
               Spacer(),
               Container(
                 padding: EdgeInsets.all(4.0),
-                child: value
-                    ? Icon(
-                        CupertinoIcons.check_mark,
-                        key: getStateKey(),
-                      )
-                    : Container(
-                        width: iconTheme.size,
-                        height: iconTheme.size,
-                        key: getStateKey(),
-                      ),
+                child: Icon(value ? CupertinoIcons.check_mark : IconData(32),
+                    color: Colors.blueAccent, key: getStateKey()),
               )
             ],
           ),
           onTap: () {
-            Fimber.i("Tap Gesture detected");
             onChanged();
           },
         ));

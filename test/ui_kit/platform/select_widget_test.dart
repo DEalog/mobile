@@ -81,11 +81,13 @@ void main() {
 
     expect((tester.firstElement(fooCheckmark).widget as Icon).icon,
         CupertinoIcons.check_mark);
-    expect((tester.firstElement(barCheckmark).widget as Container), isNotNull);
+    var emptyIcon = IconData(32);
+    expect((tester.firstElement(barCheckmark).widget as Icon).icon, emptyIcon);
 
     expect(currentValue, null);
     /* TODO this needs to be fixed, the tap action seems not to work
     var barChange = find.text("bar");
+    await tester.ensureVisible(barChange);
     await tester.tap(barChange);
     expect((tester.firstElement(barCheckmark).widget as Icon).icon,
         CupertinoIcons.check_mark);

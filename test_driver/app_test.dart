@@ -77,24 +77,18 @@ void main() {
     });
 
     test('Add another channel removes add channel button', () async {
-      print("### go to settingsl");
       await driver.tap(find.byValueKey("navigate_settings"));
 
-      print("### check non existent Health text");
       await driver.waitForAbsent(find.text("Health"));
 
-      print("### add channel");
       await driver.tap(find.byValueKey("add_channel"));
 
-      print("### tap state_Infra");
       await driver.tap(find.byValueKey("state_HEALTH"));
 
-      print("### submit channel");
       var submitChannel = find.byValueKey("submit_channel");
       await driver.scrollIntoView(submitChannel);
       await driver.tap(submitChannel);
 
-      print("### check existent Health text");
       await driver.waitFor(find.text("Health"));
       await driver.waitForAbsent(find.byValueKey("add_channel"));
     });
