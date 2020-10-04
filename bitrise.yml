@@ -44,8 +44,6 @@ workflows:
           inputs:
             - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
             - platform: both
-            - ios_additional_params: '--release --no-codesign --no-tree-shake-icons'
-            - android_additional_params: '--release --no-tree-shake-icons'
             - android_output_type: appbundle
       - sign-apk@1:
           inputs:
