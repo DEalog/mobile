@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+const _EMPTY_ICON = IconData(32);
+
 class MultiSelectFormField<T> extends FormField<Set<T>> {
   final Iterable<T> elements;
   final Iterable<T> selected;
@@ -115,7 +117,6 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   createCupertinoWidget(BuildContext context) {
-    var iconTheme = IconTheme.of(context);
     return Container(
         padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
         child: GestureDetector(
@@ -129,7 +130,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
               Spacer(),
               Container(
                 padding: EdgeInsets.all(4.0),
-                child: Icon(value ? CupertinoIcons.check_mark : IconData(32),
+                child: Icon(value ? CupertinoIcons.check_mark : _EMPTY_ICON,
                     color: Colors.blueAccent, key: getStateKey()),
               )
             ],
