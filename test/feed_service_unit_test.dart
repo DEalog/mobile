@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/api/feed_message.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
@@ -8,17 +8,25 @@ import 'package:mockito/mockito.dart';
 // Mock class
 class MockRestClient extends Mock implements RestClient {}
 
-class MockSerializer extends Mock implements Serializer {}
+// This is our global ServiceLocator
+GetIt getIt = GetIt.instance;
 
 void main() {
   RestClient restClient;
   Serializer serializer;
   FeedService feedService;
+  String message1 =
+      '{ "identifier": "Message Heading 1", "description": "Message Content 1" }';
+  String message2 =
+      '{ "identifier": "Message Heading 2", "description": "Message Content 2" }';
 
   setUp(() {
     restClient = MockRestClient();
-    serializer = MockSerializer();
-    feedService = FeedService(restClient, serializer);
+    serializer = Serializer();
+    getIt.registerSingleton(serializer);
+    getIt.registerSingleton(restClient);
+    feedService = FeedService();
+    getIt.registerSingleton(feedService);
   });
 
   test(
@@ -30,30 +38,29 @@ void main() {
     when(restClient.fetchRawFeed()).thenAnswer(
       (_) => Future.value(
         Future.value(
-          ["Test1", "Test2"],
+          [
+            message1,
+            message2,
+          ],
         ),
       ),
     );
 
-    // mock serializer
-    FeedMessage feedMessage1 = new FeedMessage("TestId1");
-    FeedMessage feedMessage2 = new FeedMessage("TestId2");
-
-    when(serializer.getSerializedMessage("Test1")).thenReturn(feedMessage1);
-    when(serializer.getSerializedMessage("Test2")).thenReturn(feedMessage2);
-
     // test getFeed
     var test = await feedService.getFeed();
 
-    expect(
-      test,
-      [feedMessage1, feedMessage2],
-    );
+    // Get mocked Message 1 from feedService
+    expect(test[0].identifier, "Message Heading 1");
+    expect(test[0].description, "Message Content 1");
+
+    // Get mocked Message 2 from feedService
+    expect(test[1].identifier, "Message Heading 2");
+    expect(test[1].description, "Message Content 2");
 
     verifyInOrder([
       restClient.fetchRawFeed(),
-      serializer.getSerializedMessage("Test1"),
-      serializer.getSerializedMessage("Test2")
+      serializer.getSerializedMessage(message1),
+      serializer.getSerializedMessage(message2)
     ]);
   });
 }

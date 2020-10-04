@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/generated/codegen_loader.g.dart';
-
 import 'home.dart';
 import 'locator.dart';
 import 'themes.dart';
@@ -48,16 +47,15 @@ class App extends StatelessWidget {
             title: 'Dealog',
             material: (_, __) {
               return new MaterialAppData(
-                theme: AppLightTheme.theme,
-                darkTheme: AppDarkTheme.theme,
-                themeMode: brightness == Brightness.light
-                    ? ThemeMode.light
-                    : ThemeMode.dark,
-              );
+                  theme: AppLightTheme.theme,
+                  darkTheme: AppDarkTheme.theme,
+                  themeMode: ThemeMode.system);
             },
             cupertino: (_, __) => new CupertinoAppData(
-              theme: AppCupertinoTheme.theme,
-            ),
+                theme: AppCupertinoTheme.theme,
+                localizationsDelegates: [
+                  DefaultCupertinoLocalizations.delegate
+                ]),
             home: Home(),
           ),
         ));

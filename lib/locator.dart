@@ -1,4 +1,7 @@
 import 'package:get_it/get_it.dart';
+import 'package:mobile/api/feed_service.dart';
+import 'package:mobile/api/rest_client.dart';
+import 'package:mobile/api/serializer.dart';
 import 'package:mobile/settings.dart';
 import 'package:mobile/version.dart';
 import 'package:package_info/package_info.dart';
@@ -8,6 +11,12 @@ void register(GetIt getIt) {
   getIt.registerSingletonAsync(() => StreamingSharedPreferences.instance);
 
   getIt.registerSingletonAsync(() => PackageInfo.fromPlatform());
+
+  getIt.registerSingleton(Serializer());
+
+  getIt.registerSingleton(RestClient());
+
+  getIt.registerSingleton(FeedService());
 
   getIt.registerSingletonWithDependencies(
       () => AppSettings(getIt<StreamingSharedPreferences>()),

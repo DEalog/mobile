@@ -27,8 +27,17 @@ Android works on every major platform.
 Flutter has broad support on various platforms. The easiest solution is to use
 Android Studio with the Flutter plugin.
 
-Alternatively you can use the VScode Flutter plugin. Note that you need to
+Alternatively you can use the VS Code Flutter plugin. Note that you need to
 install the Android SDK manually then.
+
+### Json Serializer
+
+For json serialization we are using [json_serializable](https://pub.dev/packages/json_serializable).
+
+* One-time code generation
+  ```flutter pub run build_runner build```
+* Generating code continuously
+  ```flutter pub run build_runner watch``` 
 
 ### i18n & l10n
 
@@ -76,6 +85,10 @@ Integration tests allows to test a whole app, so the interaction between multipl
 
 - Unit and widget tests will be executed by the "flutter test" command within the app root directory.
 - Integration tests will be executed by the "flutter drive --target=test_driver/app.dart" command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
+
+#### Best Practices
+
+- When testing a widget that is using ```StreamingSharedPreferences``` make sure the underlaying ```Shared.Preferences``` are initially mocked with ```SharedPreferences.setMockInitialValues```.
 
 ### Logging
 
