@@ -26,13 +26,12 @@ class AppLightTheme {
 class AppCupertinoTheme {
   static get theme {
     Fimber.d("Setting theme: cupertino");
-    Brightness brightness = Brightness.light;
 
     final original = CupertinoThemeData(
-      brightness: brightness,
+      brightness: Brightness.light,
       primaryColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.white,
-        darkColor: Colors.black,
+        color: Colors.black,
+        darkColor: Colors.white,
       ),
     );
 

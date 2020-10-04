@@ -1,10 +1,12 @@
 class RestClient {
-  final String message1 =
-      '{ "identifier": "Message Heading 1", "description": "Message Content 1" }';
-  final String message2 =
-      '{ "identifier": "Message Heading 2", "description": "Message Content 2" }';
+  final List<String> dummyMessages = [
+    '{ "identifier": "Warntag", "description": "oh ... jetzt schon." }',
+    '{ "identifier": "WirVsVirus Finale", "description": "Danke an alle Beteiligten. Spitzen Leistung" }'
+  ];
+
   Future<List<String>> fetchRawFeed() async {
-    // return new List<String>();
-    return [message1, message2];
+    final List<String> rawFeed = [];
+
+    return rawFeed == [] ? rawFeed : dummyMessages;
   }
 }

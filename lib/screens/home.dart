@@ -95,7 +95,7 @@ class HomeScreenState extends State<HomeScreen> {
         'assets/images/dealog_logo.svg',
         key: Key('DEalogLogoKey'),
         semanticsLabel: 'DEalog Logo',
-        width: MediaQuery.of(context).size.width * 0.7,
+        height: MediaQuery.of(context).size.height * 0.08,
       ),
     ];
     homeWidgets.addAll(channelBoxes);
