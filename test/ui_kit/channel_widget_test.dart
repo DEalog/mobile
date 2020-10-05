@@ -24,7 +24,7 @@ void main() {
   });
 
   testWidgets('Shows channel location name', (WidgetTester tester) async {
-    var channel = Channel(Location("Foo", 0.0, 0.0), List.empty());
+    var channel = Channel(Location("Foo", 0.0, 0.0), Set.of([]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();
@@ -40,7 +40,7 @@ void main() {
   });
 
   testWidgets('Shows single category in channel', (WidgetTester tester) async {
-    var channel = Channel(null, List.of([ChannelCategory.FIRE]));
+    var channel = Channel(null, Set.of([ChannelCategory.FIRE]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();
@@ -50,7 +50,7 @@ void main() {
 
   testWidgets('Shows two categories in channel', (WidgetTester tester) async {
     var channel =
-        Channel(null, List.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]));
+        Channel(null, Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();

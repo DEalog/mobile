@@ -27,7 +27,7 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
         : Location.fromJson(json['location'] as Map<String, dynamic>),
     (json['categories'] as List)
         .map((e) => _$enumDecode(_$ChannelCategoryEnumMap, e))
-        .toList(),
+        .toSet(),
   );
 }
 

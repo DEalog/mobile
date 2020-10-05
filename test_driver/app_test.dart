@@ -42,11 +42,9 @@ void main() {
 
       await driver.tap(find.byValueKey("add_channel"));
 
-      await driver.tap(find.byValueKey("state_FIRE"));
+      await scrollAndTap("state_FIRE", driver);
 
-      var submitChannel = find.byValueKey("submit_channel");
-      await driver.scrollIntoView(submitChannel);
-      await driver.tap(submitChannel);
+      await scrollAndTap("submit_channel", driver);
 
       await driver.waitFor(find.text("Fire"));
       await driver.waitForAbsent(find.text("Please subscribe a channel!"));
@@ -65,12 +63,10 @@ void main() {
       await driver.tap(find.byValueKey("location_input"));
       await driver.enterText("my location");
 
-      await driver.tap(find.byValueKey("state_MET"));
-      await driver.tap(find.byValueKey("state_ENV"));
+      await scrollAndTap("state_MET", driver);
+      await scrollAndTap("state_ENV", driver);
 
-      var submitChannel = find.byValueKey("submit_channel");
-      await driver.scrollIntoView(submitChannel);
-      await driver.tap(submitChannel);
+      await scrollAndTap("submit_channel", driver);
 
       await driver.waitFor(find.text("Meteorological"));
       await driver.waitFor(find.text("Environment"));
@@ -83,11 +79,9 @@ void main() {
 
       await driver.tap(find.byValueKey("add_channel"));
 
-      await driver.tap(find.byValueKey("state_HEALTH"));
+      await scrollAndTap("state_HEALTH", driver);
 
-      var submitChannel = find.byValueKey("submit_channel");
-      await driver.scrollIntoView(submitChannel);
-      await driver.tap(submitChannel);
+      await scrollAndTap("submit_channel", driver);
 
       await driver.waitFor(find.text("Health"));
       await driver.waitForAbsent(find.byValueKey("add_channel"));
@@ -108,4 +102,10 @@ void main() {
       await driver.waitFor(find.text("Please subscribe a channel!"));
     });
   });
+}
+
+Future scrollAndTap(String key, FlutterDriver driver) async {
+  var submitChannel = find.byValueKey(key);
+  await driver.scrollIntoView(submitChannel);
+  await driver.tap(submitChannel);
 }

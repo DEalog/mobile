@@ -40,6 +40,8 @@ class Location extends Coordinate {
   Location(this.name, double longitude, double latitude)
       : super(longitude, latitude);
 
+  Location.empty() : this("", 0.0, 0.0);
+
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
 
@@ -54,12 +56,14 @@ Map<String, ChannelCategory> categoryMap = ChannelCategory.values
 class Channel {
   @JsonKey(nullable: true)
   final Location location;
-  final List<ChannelCategory> categories;
+  final Set<ChannelCategory> categories;
 
   Channel(this.location, this.categories);
 
-  Channel.deviceLocation(List<ChannelCategory> categories)
+  Channel.deviceLocation(Set<ChannelCategory> categories)
       : this(null, categories);
+
+  Channel.empty() : this(null, Set.of([]));
 
   factory Channel.fromJson(Map<String, dynamic> json) =>
       _$ChannelFromJson(json);

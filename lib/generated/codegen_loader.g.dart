@@ -21,6 +21,11 @@ class CodegenLoader extends AssetLoader{
     "map": "Karte",
     "settings": "Einstellungen"
   },
+  "actions": {
+    "cancel": "Abbrechen",
+    "add": "Hinzufügen",
+    "update": "Aktualisieren"
+  },
   "model": {
     "category": "Kategorie",
     "categories": {
@@ -53,6 +58,11 @@ static const Map<String,dynamic> en = {
     "messages": "Messages",
     "map": "Map",
     "settings": "Settings"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "add": "Add",
+    "update": "Update"
   },
   "model": {
     "category": "Category",

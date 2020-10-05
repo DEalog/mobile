@@ -58,7 +58,7 @@ void main() {
 
   test('Write channel data without location', () async {
     uut.setValue(prefs, key, [
-      Channel(null, [ChannelCategory.FIRE, ChannelCategory.MET])
+      Channel(null, Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
     verify(prefs.setStringList(
@@ -68,7 +68,7 @@ void main() {
   test('Write all channel data', () async {
     uut.setValue(prefs, key, [
       Channel(Location("Location", 1.0, 2.0),
-          [ChannelCategory.FIRE, ChannelCategory.MET])
+          Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
     verify(prefs.setStringList(key, [

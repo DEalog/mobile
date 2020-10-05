@@ -5,6 +5,11 @@
     "map": "Map",
     "settings": "Settings"
   },
+  "actions": {
+    "cancel": "Cancel",
+    "add": "Add",
+    "update": "Update"
+  },
   "model": {
     "category": "Category",
     "categories": {
