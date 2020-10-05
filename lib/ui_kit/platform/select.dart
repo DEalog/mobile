@@ -9,12 +9,10 @@ import 'package:mobile/ui_kit/icons.dart';
 
 class MultiSelectFormField<T> extends FormField<Set<T>> {
   final Iterable<T> elements;
-  final Iterable<T> selected;
   final String Function(T) elementName;
 
   MultiSelectFormField(
       {this.elements,
-      this.selected,
       this.elementName,
       Key key,
       Set<T> initialValue,
@@ -29,7 +27,7 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
 
               return MultiSelect(
                 elements: elements,
-                selected: selected,
+                selected: initialValue,
                 elementName: elementName,
                 onChanged: onChangedHandler,
               );
@@ -37,7 +35,9 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
             key: key,
             initialValue: initialValue,
             validator: validator,
-            onSaved: onSaved);
+            onSaved: onSaved) {
+    Fimber.i("MultiSelectFormField: initial value=$initialValue");
+  }
 }
 
 class MultiSelect<T> extends StatefulWidget {
@@ -46,7 +46,9 @@ class MultiSelect<T> extends StatefulWidget {
   final String Function(T) elementName;
   final ValueChanged<Set<T>> onChanged;
 
-  MultiSelect({this.elements, this.selected, this.elementName, this.onChanged});
+  MultiSelect({this.elements, this.selected, this.elementName, this.onChanged}) {
+    Fimber.i("MultiSelect elements: $elements, selected: $selected");
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -117,7 +119,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
   @override
   createCupertinoWidget(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 4.0, bottom: 4.0),
+        padding: EdgeInsets.only(top: 3.0, bottom: 3.0),
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           child: Row(

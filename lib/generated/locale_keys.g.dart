@@ -6,6 +6,10 @@ abstract class  LocaleKeys {
   static const navigation_map = 'navigation.map';
   static const navigation_settings = 'navigation.settings';
   static const navigation = 'navigation';
+  static const actions_cancel = 'actions.cancel';
+  static const actions_add = 'actions.add';
+  static const actions_update = 'actions.update';
+  static const actions = 'actions';
   static const model_category = 'model.category';
   static const model_categories_GEO = 'model.categories.GEO';
   static const model_categories_MET = 'model.categories.MET';

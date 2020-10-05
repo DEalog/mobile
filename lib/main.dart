@@ -2,9 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/generated/codegen_loader.g.dart';
+
 import 'home.dart';
 import 'locator.dart';
 import 'themes.dart';
@@ -44,7 +46,7 @@ class App extends StatelessWidget {
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            title: 'Dealog',
+            title: 'DEalog',
             material: (_, __) {
               return new MaterialAppData(
                   theme: AppLightTheme.theme,

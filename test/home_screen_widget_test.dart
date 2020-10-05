@@ -42,12 +42,12 @@ void main() {
 
   final Channel channelWithoutLocationAndCategories = Channel(
     Location(null, 0.0, 0.0),
-    [],
+    Set.of([]),
   );
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
     Location("Berlin", 52.518611, 13.408333),
-    [],
+    Set.of([]),
   );
 
   setUpAll(

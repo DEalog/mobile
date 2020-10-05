@@ -5,6 +5,11 @@
     "map": "Karte",
     "settings": "Einstellungen"
   },
+  "actions": {
+    "cancel": "Abbrechen",
+    "add": "Hinzufügen",
+    "update": "Aktualisieren"
+  },
   "model": {
     "category": "Kategorie",
     "categories": {
