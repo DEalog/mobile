@@ -61,7 +61,7 @@ class ChannelCategoryView extends StatelessWidget {
     return Container(
       child: text,
       decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
+          color: Theme.of(context).buttonColor,
           borderRadius: BorderRadius.all(Radius.circular(5.0))),
       padding: EdgeInsets.all(4.0),
     );
