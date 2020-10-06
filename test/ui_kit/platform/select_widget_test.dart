@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/ui_kit/icons.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
 
 enum Example { FOO, BAR }
@@ -81,9 +80,9 @@ void main() {
     expect(barCheckmark, findsOneWidget);
 
     expect((tester.firstElement(fooCheckmark).widget as Icon).icon,
-        CupertinoIcons.check_mark);
+        CupertinoIcons.check_mark_circled_solid);
     expect((tester.firstElement(barCheckmark).widget as Icon).icon,
-        ExtendedCupertinoIcons.empty);
+        CupertinoIcons.circle);
 
     expect(currentValue, null);
     /* TODO this needs to be fixed, the tap action seems not to work
