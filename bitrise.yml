@@ -148,14 +148,10 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-deliver@2:
+    - deploy-to-itunesconnect-application-loader@0:
         inputs:
-        - bundle_id: de.dealog.mobile.pilot
-        - team_id: $BITRISE_DEVELOPER_TEAM
-        # - password: $APPLE_CONNECT_PASS_FS
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
-    - cache-push@2: {}
 app:
   envs:
   - opts:
