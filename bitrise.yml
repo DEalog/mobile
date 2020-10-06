@@ -152,7 +152,7 @@ workflows:
         inputs:
         - bundle_id: de.dealog.mobile.pilot
         - team_id: $BITRISE_DEVELOPER_TEAM
-        - password: $APPLE_CONNECT_PASS_FS
+        # - password: $APPLE_CONNECT_PASS_FS
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
     - cache-push@2: {}
