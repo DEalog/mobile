@@ -140,7 +140,9 @@ workflows:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
         - platform: both
         - android_output_type: appbundle
-    - ios-auto-provision-appstoreconnect@0: {}
+    - ios-auto-provision-appstoreconnect@0:
+        inputs:
+        - distribution_type: app-store
     - xcode-archive@2:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
