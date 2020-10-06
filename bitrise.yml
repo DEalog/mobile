@@ -147,7 +147,14 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - configuration: Release
     - ios-auto-provision-appstoreconnect@0: {}
-    - deploy-to-itunesconnect-deliver@2: {}
+    - deploy-to-itunesconnect-deliver@2:
+        inputs:
+        - password: $REDNOX_APPLE_CONNECT_PASSWORD
+        - team_name: $APPLE_DEV_TEAM_NAME
+        - bundle_id: de.dealog.mobile.pilot
+        - team_id: $APPLE_DEV_TEAM_ID
+        - app_password: $REDNOX_APPLE_CONNECT_ONETIMEPW
+        - itunescon_user: $APPLE_CONNECT_LOGIN_ID
     - cache-push@2: {}
 app:
   envs:
