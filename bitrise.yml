@@ -150,11 +150,11 @@ workflows:
         - configuration: Release
     - deploy-to-itunesconnect-deliver@2:
         inputs:
-        - password: $REDNOX_APPLE_CONNECT_PASSWORD
         - bundle_id: de.dealog.mobile.pilot
         - team_id: $BITRISE_DEVELOPER_TEAM
         - app_password: $REDNOX_APPLE_CONNECT_ONETIMEPW
-        - itunescon_user: $APPLE_CONNECT_LOGIN_ID
+        - password: $APPLE_CONNECT_APP_PW_FS
+        - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
     - cache-push@2: {}
 app:
   envs:
