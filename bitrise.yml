@@ -167,4 +167,3 @@ app:
     BITRISE_SCHEME: Runner
   - opts:
       is_expand: false
-    BITRISE_EXPORT_METHOD: development
