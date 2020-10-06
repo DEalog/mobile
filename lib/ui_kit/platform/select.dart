@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:mobile/ui_kit/icons.dart';
 
 class MultiSelectFormField<T> extends FormField<Set<T>> {
   final Iterable<T> elements;
@@ -46,7 +45,8 @@ class MultiSelect<T> extends StatefulWidget {
   final String Function(T) elementName;
   final ValueChanged<Set<T>> onChanged;
 
-  MultiSelect({this.elements, this.selected, this.elementName, this.onChanged}) {
+  MultiSelect(
+      {this.elements, this.selected, this.elementName, this.onChanged}) {
     Fimber.i("MultiSelect elements: $elements, selected: $selected");
   }
 
@@ -133,9 +133,9 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
                 padding: EdgeInsets.all(4.0),
                 child: Icon(
                     value
-                        ? CupertinoIcons.check_mark
-                        : ExtendedCupertinoIcons.empty,
-                    color: Colors.blueAccent,
+                        ? CupertinoIcons.check_mark_circled_solid
+                        : CupertinoIcons.circle,
+                    color: Theme.of(context).accentColor,
                     key: getStateKey()),
               )
             ],
