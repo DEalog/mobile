@@ -3,135 +3,163 @@ format_version: '8'
 default_step_lib_source: 'https://github.com/bitrise-io/bitrise-steplib.git'
 project_type: flutter
 trigger_map:
-  - push_branch: '*'
-    workflow: primary
-  - pull_request_source_branch: '*'
-    workflow: integration
-  - tag: '*'
-    workflow: deploy
+- push_branch: '*'
+  workflow: primary
+- pull_request_source_branch: '*'
+  workflow: integration
+- tag: '*'
+  workflow: deploy
 workflows:
   deploy:
     steps:
-      - activate-ssh-key@4:
-          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-      - git-clone@4: {}
-      - get-pubspec-version-and-build-number@1: {}
-      - script@1:
-          inputs:
-            - content: >-
-                #!/usr/bin/env bash
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - get-pubspec-version-and-build-number@1: {}
+    - script@1:
+        inputs:
+        - content: >-
+            #!/usr/bin/env bash
 
-                if [ x$BITRISE_GIT_TAG == "x" ]; then
-                  echo "No tag found. Exiting"
-                  exit 1
-                fi
+            if [ x$BITRISE_GIT_TAG == "x" ]; then
+              echo "No tag found. Exiting"
+              exit 1
+            fi
 
-                if [ $BITRISE_GIT_TAG !=
-                "${PUBSPEC_VERSION_NAME}_${PUBSPEC_BUILD_NUMBER}" ]; then
-                  echo "Project version does not match tag"
-                  exit 1
-                fi
-      - certificate-and-profile-installer@1: {}
-      - flutter-installer@0: {}
-      - cache-pull@2: {}
-      - flutter-analyze@0:
-          inputs:
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - flutter-test@0:
-          inputs:
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - flutter-build@0:
-          inputs:
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-            - platform: both
-            - android_output_type: appbundle
-      - sign-apk@1:
-          inputs:
-            - keystore_url: $BITRISEIO_ANDROID_KEYSTORE_URL
-            - keystore_alias: $BITRISEIO_ANDROID_KEYSTORE_ALIAS
-            - keystore_password: $BITRISEIO_ANDROID_KEYSTORE_PASSWORD
-      - google-play-deploy@3:
-          inputs:
-            - package_name: de.dealog.mobile.pilot
-            - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
-      - xcode-archive@2:
-          inputs:
-            - project_path: $BITRISE_PROJECT_PATH
-            - scheme: $BITRISE_SCHEME
-            - export_method: $BITRISE_EXPORT_METHOD
-            - configuration: Release
-      - ios-auto-provision-appstoreconnect@0: {}
-      - deploy-to-bitrise-io@1: {}
-      - cache-push@2: {}
-      - slack@3:
-          inputs:
-            - webhook_url: $SLACK_WEBHOOK_URL
-            - channel: '#deployment'
-            - message: Successful deployment \U0001F4AA
-            - message_on_error: Failed to deploy \U0001F631
+            if [ $BITRISE_GIT_TAG !=
+            "${PUBSPEC_VERSION_NAME}_${PUBSPEC_BUILD_NUMBER}" ]; then
+              echo "Project version does not match tag"
+              exit 1
+            fi
+    - certificate-and-profile-installer@1: {}
+    - flutter-installer@0: {}
+    - cache-pull@2: {}
+    - flutter-analyze@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-test@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-build@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+        - platform: both
+        - android_output_type: appbundle
+    - sign-apk@1:
+        inputs:
+        - keystore_url: $BITRISEIO_ANDROID_KEYSTORE_URL
+        - keystore_alias: $BITRISEIO_ANDROID_KEYSTORE_ALIAS
+        - keystore_password: $BITRISEIO_ANDROID_KEYSTORE_PASSWORD
+    - google-play-deploy@3:
+        inputs:
+        - package_name: de.dealog.mobile.pilot
+        - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
+    - xcode-archive@2:
+        inputs:
+        - project_path: $BITRISE_PROJECT_PATH
+        - scheme: $BITRISE_SCHEME
+        - export_method: $BITRISE_EXPORT_METHOD
+        - configuration: Release
+    - ios-auto-provision-appstoreconnect@0: {}
+    - deploy-to-bitrise-io@1: {}
+    - cache-push@2: {}
+    - slack@3:
+        inputs:
+        - webhook_url: $SLACK_WEBHOOK_URL
+        - channel: '#deployment'
+        - message: Successful deployment \U0001F4AA
+        - message_on_error: Failed to deploy \U0001F631
   primary:
     steps:
-      - activate-ssh-key@4:
-          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-      - git-clone@4: {}
-      - flutter-installer@0: {}
-      - cache-pull@2: {}
-      - flutter-analyze@0:
-          inputs:
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - flutter-test@0:
-          inputs:
-            - generate_code_coverage_files: 'yes'
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - custom-test-results-export@0:
-          inputs:
-            - test_name: Test
-            - search_pattern: '*'
-            - base_path: $BITRISE_FLUTTER_TESTRESULT_PATH
-      - deploy-to-bitrise-io@1: {}
-      - cache-push@2: {}
-      - slack@3:
-          run_if: .IsBuildFailed
-          inputs:
-            - webhook_url: $SLACK_WEBHOOK_URL
-            - channel: '#mobile'
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - flutter-installer@0: {}
+    - cache-pull@2: {}
+    - flutter-analyze@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-test@0:
+        inputs:
+        - generate_code_coverage_files: 'yes'
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - custom-test-results-export@0:
+        inputs:
+        - test_name: Test
+        - search_pattern: '*'
+        - base_path: $BITRISE_FLUTTER_TESTRESULT_PATH
+    - deploy-to-bitrise-io@1: {}
+    - cache-push@2: {}
+    - slack@3:
+        run_if: .IsBuildFailed
+        inputs:
+        - webhook_url: $SLACK_WEBHOOK_URL
+        - channel: '#mobile'
   integration:
     steps:
-      - avd-manager@1: {}
-      - script@1:
-          inputs:
-            - content: avdmanager list device
-      - activate-ssh-key@4:
-          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-      - git-clone@4: {}
-      - flutter-installer@0: {}
-      - cache-pull@2: {}
-      - flutter-analyze@0:
-          inputs:
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - flutter-test@0:
-          inputs:
-            - generate_code_coverage_files: 'yes'
-            - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-      - wait-for-android-emulator@1: {}
-      - flutter@0:
-          inputs:
-            - version: 1.22.0
-            - commands: drive --target=test_driver/app.dart
-          title: Flutter Drive
-      - deploy-to-bitrise-io@1: {}
-      - cache-push@2: {}
+    - avd-manager@1: {}
+    - script@1:
+        inputs:
+        - content: avdmanager list device
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - flutter-installer@0: {}
+    - cache-pull@2: {}
+    - flutter-analyze@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-test@0:
+        inputs:
+        - generate_code_coverage_files: 'yes'
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - wait-for-android-emulator@1: {}
+    - flutter@0:
+        inputs:
+        - version: 1.22.0
+        - commands: drive --target=test_driver/app.dart
+        title: Flutter Drive
+    - deploy-to-bitrise-io@1: {}
+    - cache-push@2: {}
+  deploy_iOS:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - get-pubspec-version-and-build-number@1: {}
+    - flutter-installer@0: {}
+    - cache-pull@2: {}
+    - flutter-analyze@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-test@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    - flutter-build@0:
+        inputs:
+        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+        - platform: both
+        - android_output_type: appbundle
+    - xcode-archive@2:
+        inputs:
+        - project_path: $BITRISE_PROJECT_PATH
+        - scheme: $BITRISE_SCHEME
+        - export_method: $BITRISE_EXPORT_METHOD
+        - configuration: Release
+    - ios-auto-provision-appstoreconnect@0: {}
+    - deploy-to-itunesconnect-deliver@2: {}
+    - cache-push@2: {}
 app:
   envs:
-    - opts:
-        is_expand: false
-      BITRISE_FLUTTER_PROJECT_LOCATION: .
-    - opts:
-        is_expand: false
-      BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
-    - opts:
-        is_expand: false
-      BITRISE_SCHEME: Runner
-    - opts:
-        is_expand: false
-      BITRISE_EXPORT_METHOD: development
+  - opts:
+      is_expand: false
+    BITRISE_FLUTTER_PROJECT_LOCATION: .
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: Runner
+  - opts:
+      is_expand: false
+    BITRISE_EXPORT_METHOD: development
