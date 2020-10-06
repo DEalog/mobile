@@ -165,5 +165,3 @@ app:
   - opts:
       is_expand: false
     BITRISE_SCHEME: Runner
-  - opts:
-      is_expand: false
