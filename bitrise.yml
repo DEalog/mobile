@@ -140,13 +140,13 @@ workflows:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
         - platform: both
         - android_output_type: appbundle
+    - ios-auto-provision-appstoreconnect@0: {}
     - xcode-archive@2:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - export_method: $BITRISE_EXPORT_METHOD
         - configuration: Release
-    - ios-auto-provision-appstoreconnect@0: {}
     - deploy-to-itunesconnect-deliver@2:
         inputs:
         - password: $REDNOX_APPLE_CONNECT_PASSWORD
