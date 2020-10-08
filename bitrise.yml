@@ -31,7 +31,6 @@ workflows:
               echo "Project version does not match tag"
               exit 1
             fi
-    - certificate-and-profile-installer@1: {}
     - flutter-installer@0: {}
     - cache-pull@2: {}
     - flutter-analyze@0:
@@ -54,20 +53,27 @@ workflows:
         inputs:
         - package_name: de.dealog.mobile.pilot
         - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
+    - ios-auto-provision-appstoreconnect@0:
+        inputs:
+        - distribution_type: app-store
     - xcode-archive@2:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - export_method: $BITRISE_EXPORT_METHOD
+        - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - ios-auto-provision-appstoreconnect@0: {}
+    - deploy-to-itunesconnect-application-loader@0: 
+        inputs:
+        - app_password: $APPLE_CONNECT_APP_PW_FS
+        - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
     - slack@3:
         inputs:
         - webhook_url: $SLACK_WEBHOOK_URL
         - channel: '#deployment'
-        - message: Successful deployment \U0001F4AA
+        - message: Successful deployment to PlayStore and AppleStore \U0001F4AA
         - message_on_error: Failed to deploy \U0001F631
   primary:
     steps:
@@ -129,12 +135,6 @@ workflows:
     - get-pubspec-version-and-build-number@1: {}
     - flutter-installer@0: {}
     - cache-pull@2: {}
-    - flutter-analyze@0:
-        inputs:
-        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-    - flutter-test@0:
-        inputs:
-        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
     - flutter-build@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -150,7 +150,7 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0:
+    - deploy-to-itunesconnect-application-loader@0: 
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
