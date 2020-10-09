@@ -57,6 +57,12 @@ flutter pub run easy_localization:generate -S ./assets/translations -f keys -o l
 
 The application supports dark mode via Flutter's embedded support.
 
+### App Icons
+
+To simplify the generation of app icons for iOS and Android, we use the [Flutter Launcher Icons](https://pub.dev/packages/flutter_launcher_icons) plugin.
+
+If the app icons are changed within the asset directory, you have to run ```flutter pub run flutter_launcher_icons:main``` to update the icons in the iOS and Android project.
+
 ### Platform Abstraction
 
 We use [Platform Widgets](https://pub.dev/packages/flutter_platform_widgets) to simplify the codebase regading the platform specific styles (Material for Android devices and Cupertino for iOS devices).

@@ -33,33 +33,43 @@ Widget localized(Widget widget) {
 }
 
 class App extends StatelessWidget {
-  final Brightness brightness = Brightness.light;
+  Brightness brightness = Brightness.light;
 
   @override
   Widget build(BuildContext context) {
+    final materialLightTheme = AppLightTheme.theme;
+    final materialDarkTheme = AppDarkTheme.theme;
+
+    final settings = PlatformSettingsData(iosUsesMaterialWidgets: false);
+
     return Theme(
-        data: brightness == Brightness.light
-            ? AppLightTheme.theme
-            : AppDarkTheme.theme,
-        child: PlatformProvider(
-          builder: (context) => PlatformApp(
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            title: 'DEalog',
-            material: (_, __) {
-              return new MaterialAppData(
-                  theme: AppLightTheme.theme,
-                  darkTheme: AppDarkTheme.theme,
-                  themeMode: ThemeMode.system);
-            },
-            cupertino: (_, __) => new CupertinoAppData(
-                theme: AppCupertinoTheme.theme,
-                localizationsDelegates: [
-                  DefaultCupertinoLocalizations.delegate
-                ]),
-            home: Home(),
+      data: brightness == Brightness.light
+          ? materialLightTheme
+          : materialDarkTheme,
+      child: PlatformProvider(
+        settings: settings,
+        builder: (context) => PlatformApp(
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          title: 'DEalog Pilot',
+          material: (_, __) {
+            return new MaterialAppData(
+              theme: materialLightTheme,
+              darkTheme: materialDarkTheme,
+              themeMode: ThemeMode.system,
+            );
+          },
+          cupertino: (_, __) => new CupertinoAppData(
+            theme: AppCupertinoTheme.theme,
           ),
-        ));
+          home: Home(),
+        ),
+      ),
+    );
   }
 }

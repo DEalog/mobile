@@ -2,39 +2,44 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AppDarkTheme {
-  static get theme {
-    Fimber.d("Setting theme: dark");
-
-    return ThemeData.dark().copyWith(
-      primaryColor: Colors.grey[900],
-    );
-  }
-}
-
 class AppLightTheme {
   static get theme {
     Fimber.d("Setting theme: light");
 
-    return ThemeData.light().copyWith(
-      primaryColor: Colors.black,
+    return new ThemeData(
+      primarySwatch: Colors.blue,
     );
   }
 }
 
-// TODO Cupertino behaves differently for light and dark mode.
+class AppDarkTheme {
+  static get theme {
+    Fimber.d("Setting theme: dark");
+
+    return new ThemeData(
+      primarySwatch: Colors.grey,
+      brightness: Brightness.dark,
+      accentColor: Colors.blue,
+    );
+  }
+}
+
 class AppCupertinoTheme {
   static get theme {
     Fimber.d("Setting theme: cupertino");
-
-    final original = CupertinoThemeData(
-      brightness: Brightness.light,
+    return new CupertinoThemeData(
       primaryColor: CupertinoDynamicColor.withBrightness(
         color: Colors.black,
-        darkColor: Colors.white,
+        darkColor: Colors.blue,
+      ),
+      scaffoldBackgroundColor: CupertinoDynamicColor.withBrightness(
+        color: Colors.grey[200],
+        darkColor: Colors.grey[900],
+      ),
+      barBackgroundColor: CupertinoDynamicColor.withBrightness(
+        color: Colors.grey[200],
+        darkColor: Colors.grey[900],
       ),
     );
-
-    return original;
   }
 }

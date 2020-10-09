@@ -33,7 +33,7 @@ dependencies:
   provider: ^4.3.2+1
   badges: ^1.1.1
   easy_localization: ^2.3.3
-  flutter_platform_widgets: ^0.60.2
+  flutter_platform_widgets: ^0.70.2
   json_annotation: ^3.1.0
   package_info: '>=0.4.3 <2.0.0'
   optional: ^5.0.0
@@ -50,6 +50,13 @@ dev_dependencies:
   mockito: ^4.1.1
   build_runner: ^1.10.2
   json_serializable: ^3.5.0
+  flutter_launcher_icons: "^0.8.0"
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/images/dealog_iconlogo.png"
+  image_path_android: "assets/images/dealog_iconlogo.png"
 
 flutter:
   uses-material-design: true

@@ -1,4 +1,6 @@
+import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MessageCardUi extends StatelessWidget {
   final String identifier;
@@ -18,12 +20,12 @@ class MessageCardUi extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: Icon(
-                Icons.warning,
+                Icons.warning_amber_rounded,
                 size: MediaQuery.of(context).size.height * 0.06,
                 color: Colors.orangeAccent[200],
               ),
-              title: Text(this.identifier),
-              subtitle: Text(this.description),
+              title: PlatformText(this.identifier),
+              subtitle: PlatformText(this.description),
             ),
           ],
         ),
