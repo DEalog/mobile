@@ -18,7 +18,7 @@ class LocationView extends StatelessWidget {
       var name = location.name;
       locationView = Padding(
           padding: EdgeInsets.all(5.0),
-          child: Text(name != null ? name : "n/a"));
+          child: PlatformText(name != null ? name : "n/a"));
     }
     return Container(
         child: Center(child: locationView), padding: EdgeInsets.all(3.0));
@@ -54,10 +54,9 @@ class ChannelCategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var text = Text(
-      categoryLocalizationKey(category),
-      style: TextStyle(fontSize: 12),
-    ).tr();
+    var text = PlatformText(
+      categoryLocalizationKey(category).tr(),
+    );
     return Container(
       child: text,
       decoration: BoxDecoration(

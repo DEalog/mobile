@@ -3,6 +3,7 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/version.dart';
 
 import 'main.dart';
@@ -25,11 +26,11 @@ class _HomeState extends State<Home> {
 
   final _items = (BuildContext context) => [
         BottomNavigationBarItem(
-          label: Text('navigation.home').tr().data,
+          label: LocaleKeys.navigation_home.tr(),
           icon: Icon(context.platformIcons.home, key: Key("navigate_home")),
         ),
         BottomNavigationBarItem(
-          label: Text('navigation.settings').tr().data,
+          label: LocaleKeys.navigation_settings.tr(),
           icon: Icon(context.platformIcons.settings,
               key: Key("navigate_settings")),
         ),
