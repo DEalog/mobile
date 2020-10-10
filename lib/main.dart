@@ -49,11 +49,7 @@ class App extends StatelessWidget {
       child: PlatformProvider(
         settings: settings,
         builder: (context) => PlatformApp(
-          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
-            DefaultMaterialLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-          ],
+          localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
           title: 'DEalog Pilot',
