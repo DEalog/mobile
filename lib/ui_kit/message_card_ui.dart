@@ -1,10 +1,9 @@
-import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MessageCardUi extends StatelessWidget {
   final String identifier;
   final String description;
+
   const MessageCardUi({Key key, this.identifier, this.description})
       : super(key: key);
 
@@ -24,8 +23,8 @@ class MessageCardUi extends StatelessWidget {
                 size: MediaQuery.of(context).size.height * 0.06,
                 color: Colors.orangeAccent[200],
               ),
-              title: PlatformText(this.identifier),
-              subtitle: PlatformText(this.description),
+              title: Text(this.identifier),
+              subtitle: Text(this.description),
             ),
           ],
         ),

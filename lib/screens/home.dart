@@ -2,11 +2,10 @@ import 'dart:collection';
 
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/settings.dart';
 import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/message_card_ui.dart';
@@ -85,7 +84,7 @@ class HomeScreenState extends State<HomeScreen> {
             );
           } else if (snapshot.hasError) {
             Fimber.d("Home - Snapshot has error");
-            return PlatformText("${snapshot.error}");
+            return Text("${snapshot.error}");
           }
 
           // By default, show a loading spinner.

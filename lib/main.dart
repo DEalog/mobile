@@ -33,7 +33,7 @@ Widget localized(Widget widget) {
 }
 
 class App extends StatelessWidget {
-  Brightness brightness = Brightness.light;
+  final Brightness brightness = Brightness.light;
 
   @override
   Widget build(BuildContext context) {
