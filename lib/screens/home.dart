@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/main.dart';
@@ -84,7 +85,7 @@ class HomeScreenState extends State<HomeScreen> {
             );
           } else if (snapshot.hasError) {
             Fimber.d("Home - Snapshot has error");
-            return Text("${snapshot.error}");
+            return PlatformText("${snapshot.error}");
           }
 
           // By default, show a loading spinner.

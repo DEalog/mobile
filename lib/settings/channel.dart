@@ -70,9 +70,9 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
               padding: EdgeInsets.all(5.0),
               child: Column(children: [
-                Text(LocaleKeys.model_location,
-                        style: Theme.of(context).textTheme.caption)
-                    .tr(),
+                PlatformText(
+                  LocaleKeys.model_location.tr(),
+                ),
                 PlatformSwitchListTile(
                   key: Key("use_location"),
                   label: LocaleKeys.settings_use_location,
@@ -92,9 +92,8 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
             padding: EdgeInsets.all(4.0),
             child: Column(children: [
-              Text(LocaleKeys.model_category,
-                      style: Theme.of(context).textTheme.caption)
-                  .tr(),
+              PlatformText(LocaleKeys.model_category.tr(),
+                  style: Theme.of(context).textTheme.caption),
               MultiSelectFormField<ChannelCategory>(
                 elements: ChannelCategory.values,
                 initialValue: model.get().categories,
@@ -184,7 +183,7 @@ class ChannelDialog extends StatelessWidget {
       actions: [
         PlatformButton(
           key: Key("cancel_channel"),
-          child: Text(LocaleKeys.actions_cancel).tr(),
+          child: PlatformText(LocaleKeys.actions_cancel.tr()),
           onPressed: () {
             Fimber.i("Cancel pressed");
 
@@ -193,7 +192,7 @@ class ChannelDialog extends StatelessWidget {
         ),
         PlatformButton(
             key: Key("submit_channel"),
-            child: Text(submitText),
+            child: PlatformText(submitText),
             onPressed: () {
               Fimber.i("Submit pressed");
               channelForm.submit();
@@ -248,7 +247,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
               builder: (BuildContext context) {
                 return ChannelDialog(
                     onUpdate: addChannel,
-                    submitText: Text(LocaleKeys.actions_add).tr().data);
+                    submitText: LocaleKeys.actions_add.tr());
               });
         },
       ));
@@ -309,7 +308,7 @@ class _ChannelSettingsState extends State<ChannelSettings> {
                 updatedChannels[index] = channel;
                 update(updatedChannels);
               },
-              submitText: Text(LocaleKeys.actions_update).tr().data,
+              submitText: LocaleKeys.actions_update.tr(),
               initialValue: channels[index]);
         });
   }

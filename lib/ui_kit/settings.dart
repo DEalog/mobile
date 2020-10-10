@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HeadingItem {
   final String heading;
@@ -8,10 +9,10 @@ class HeadingItem {
   HeadingItem(this.heading);
 
   Widget build(BuildContext context) {
-    final child = Text(
-      heading,
+    final child = PlatformText(
+      heading.tr(),
       style: Theme.of(context).textTheme.headline5,
-    ).tr();
+    );
     return Container(
         alignment: Alignment.topLeft,
         padding: EdgeInsets.all(8.0),
@@ -26,10 +27,10 @@ class AlertItem {
   AlertItem(this.message);
 
   Widget build(BuildContext context) {
-    final child = Text(
-      message,
+    final child = PlatformText(
+      message.tr(),
       style: Theme.of(context).textTheme.headline6,
-    ).tr();
+    );
     return Container(
         alignment: Alignment.topLeft,
         padding: EdgeInsets.all(8.0),
