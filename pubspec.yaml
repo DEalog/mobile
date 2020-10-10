@@ -55,7 +55,7 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/images/dealog_iconlogo.png"
+  image_path_ios: "assets/images/dealog_iconlogo_iOS.png"
   image_path_android: "assets/images/dealog_iconlogo.png"
 
 flutter:
