@@ -61,7 +61,11 @@ The application supports dark mode via Flutter's embedded support.
 
 To simplify the generation of app icons for iOS and Android, we use the [Flutter Launcher Icons](https://pub.dev/packages/flutter_launcher_icons) plugin.
 
-If the app icons are changed within the asset directory, you have to run ```flutter pub run flutter_launcher_icons:main``` to update the icons in the iOS and Android project.
+If the app icons are changed within the asset directory, you have to run
+```shell script
+flutter pub run flutter_launcher_icons:main
+```
+to update the icons in the iOS and Android project.
 
 ### Platform Abstraction
 
