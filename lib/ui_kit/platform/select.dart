@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -126,8 +125,8 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              PlatformText(
-                this.label.tr(),
+              Text(
+                this.label,
               ),
               Spacer(),
               Container(
@@ -152,7 +151,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        PlatformText(this.label.tr()),
+        Text(this.label),
         Checkbox(
           key: getStateKey(),
           value: value,

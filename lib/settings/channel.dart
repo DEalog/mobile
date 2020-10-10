@@ -70,7 +70,7 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
               padding: EdgeInsets.all(5.0),
               child: Column(children: [
-                PlatformText(
+                Text(
                   LocaleKeys.model_location.tr(),
                 ),
                 PlatformSwitchListTile(
@@ -92,7 +92,7 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
             padding: EdgeInsets.all(4.0),
             child: Column(children: [
-              PlatformText(LocaleKeys.model_category.tr(),
+              Text(LocaleKeys.model_category.tr(),
                   style: Theme.of(context).textTheme.caption),
               MultiSelectFormField<ChannelCategory>(
                 elements: ChannelCategory.values,
@@ -183,7 +183,7 @@ class ChannelDialog extends StatelessWidget {
       actions: [
         PlatformButton(
           key: Key("cancel_channel"),
-          child: PlatformText(LocaleKeys.actions_cancel.tr()),
+          child: Text(LocaleKeys.actions_cancel.tr()),
           onPressed: () {
             Fimber.i("Cancel pressed");
 
@@ -192,7 +192,7 @@ class ChannelDialog extends StatelessWidget {
         ),
         PlatformButton(
             key: Key("submit_channel"),
-            child: PlatformText(submitText),
+            child: Text(submitText),
             onPressed: () {
               Fimber.i("Submit pressed");
               channelForm.submit();

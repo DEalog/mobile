@@ -30,7 +30,7 @@ class PlatformSwitchListTile extends PlatformWidgetBase<Widget, Widget> {
   _wrap(Widget child) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [PlatformText(this.label.tr()), child],
+      children: [Text(this.label.tr()), child],
     );
   }
 
