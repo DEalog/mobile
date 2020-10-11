@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -11,6 +12,9 @@ class LocationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var accentColor = isMaterial(context)
+        ? Theme.of(context).textTheme.bodyText1
+        : CupertinoTheme.of(context).textTheme.textStyle;
     Widget locationView;
     if (location == null) {
       locationView = Icon(PlatformIcons(context).location);
@@ -18,7 +22,7 @@ class LocationView extends StatelessWidget {
       var name = location.name;
       locationView = Padding(
           padding: EdgeInsets.all(5.0),
-          child: Text(name != null ? name : "n/a"));
+          child: Text(name != null ? name : "n/a", style: accentColor));
     }
     return Container(
         child: Center(child: locationView), padding: EdgeInsets.all(3.0));
@@ -54,13 +58,17 @@ class ChannelCategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var text = Text(
-      categoryLocalizationKey(category).tr(),
-    );
+    final buttonColor = Theme.of(context).buttonColor;
+    final textStyle = isMaterial(context)
+        ? Theme.of(context).textTheme.bodyText1
+        : CupertinoTheme.of(context).textTheme.textStyle;
     return Container(
-      child: text,
+      child: Text(
+        categoryLocalizationKey(category).tr(),
+        style: textStyle,
+      ),
       decoration: BoxDecoration(
-          color: Theme.of(context).buttonColor,
+          color: buttonColor,
           borderRadius: BorderRadius.all(Radius.circular(5.0))),
       padding: EdgeInsets.all(4.0),
     );

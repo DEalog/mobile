@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class HeadingItem {
   final String heading;
@@ -8,9 +9,15 @@ class HeadingItem {
   HeadingItem(this.heading);
 
   Widget build(BuildContext context) {
+    var textStyle;
+    if (isMaterial(context)) {
+      textStyle = Theme.of(context).textTheme.headline5;
+    } else {
+      textStyle = CupertinoTheme.of(context).textTheme.actionTextStyle;
+    }
     final child = Text(
       heading.tr(),
-      style: Theme.of(context).textTheme.headline5,
+      style: textStyle,
     );
     return Container(
         alignment: Alignment.topLeft,
@@ -26,9 +33,15 @@ class AlertItem {
   AlertItem(this.message);
 
   Widget build(BuildContext context) {
+    var textStyle;
+    if (isMaterial(context)) {
+      textStyle = Theme.of(context).textTheme.headline6;
+    } else {
+      textStyle = CupertinoTheme.of(context).textTheme.actionTextStyle;
+    }
     final child = Text(
       message.tr(),
-      style: Theme.of(context).textTheme.headline6,
+      style: textStyle,
     );
     return Container(
         alignment: Alignment.topLeft,

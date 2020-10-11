@@ -118,6 +118,9 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   createCupertinoWidget(BuildContext context) {
+    var accentColor = isMaterial(context)
+        ? Theme.of(context).accentColor
+        : CupertinoTheme.of(context).primaryColor;
     return Container(
         padding: EdgeInsets.only(top: 3.0, bottom: 3.0),
         child: GestureDetector(
@@ -135,7 +138,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
                     value
                         ? CupertinoIcons.check_mark_circled_solid
                         : CupertinoIcons.circle,
-                    color: Theme.of(context).accentColor,
+                    color: accentColor,
                     key: getStateKey()),
               )
             ],

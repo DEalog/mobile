@@ -62,6 +62,9 @@ class _ChannelFormState extends State<ChannelForm> {
 
   @override
   Widget build(BuildContext context) {
+    var captionText = isMaterial(context)
+        ? Theme.of(context).textTheme.caption
+        : CupertinoTheme.of(context).textTheme.tabLabelTextStyle;
     return Form(
       key: _formKey,
       child: Column(
@@ -72,6 +75,7 @@ class _ChannelFormState extends State<ChannelForm> {
               child: Column(children: [
                 Text(
                   LocaleKeys.model_location.tr(),
+                  style: captionText,
                 ),
                 PlatformSwitchListTile(
                   key: Key("use_location"),
@@ -92,8 +96,7 @@ class _ChannelFormState extends State<ChannelForm> {
           Padding(
             padding: EdgeInsets.all(4.0),
             child: Column(children: [
-              Text(LocaleKeys.model_category.tr(),
-                  style: Theme.of(context).textTheme.caption),
+              Text(LocaleKeys.model_category.tr(), style: captionText),
               MultiSelectFormField<ChannelCategory>(
                 elements: ChannelCategory.values,
                 initialValue: model.get().categories,
@@ -229,7 +232,10 @@ class _ChannelSettingsState extends State<ChannelSettings> {
           AlertItem(LocaleKeys.settings_channel_none_defined).build(context));
     }
     children.add(HeadingItem(LocaleKeys.settings_channel_title).build(context));
-    children.add(Divider(color: Theme.of(context).focusColor));
+    var focusColor = isMaterial(context)
+        ? Theme.of(context).focusColor
+        : CupertinoTheme.of(context).primaryContrastingColor;
+    children.add(Divider(color: focusColor));
 
     children.add(
       Column(
