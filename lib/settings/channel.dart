@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
+import 'package:mobile/model/ars.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
 import 'package:mobile/ui_kit/platform/switch.dart';
@@ -81,7 +83,9 @@ class _ChannelFormState extends State<ChannelForm> {
                     setState(() {
                       Fimber.i("Update useLocation: $value");
                       model.update((channel) => Channel(
-                          value ? null : Location.empty(), channel.categories));
+                          value ? null : Location.empty(),
+                          channel.levels,
+                          channel.categories));
                     });
                   },
                 ),
@@ -109,8 +113,8 @@ class _ChannelFormState extends State<ChannelForm> {
                   Fimber.i("Categories saved: $value");
                   if (value == null) return;
                   setState(() {
-                    model.update(
-                        (channel) => Channel(channel.location, value.toSet()));
+                    model.update((channel) => Channel(channel.location,
+                        Set.of(ArsLevel.values), value.toSet()));
                   });
                 },
               )
@@ -129,7 +133,7 @@ class _ChannelFormState extends State<ChannelForm> {
       setState(() {
         model.update((channel) {
           var location = channel.location;
-          return Channel(Location(value, location.longitude, location.latitude),
+          return Channel(Location(value, location.coordinate, location.levels), channel.levels,
               channel.categories);
         });
       });
@@ -154,7 +158,8 @@ class _ChannelFormState extends State<ChannelForm> {
 
   mapLocation(String customLocation) {
     Fimber.i("mapLocation: $customLocation");
-    return Location(customLocation, 0.0, 0.0);
+    var arsMap = Map.fromIterable([]);
+    return Location(customLocation, Coordinate(0,0), arsMap);
   }
 }
 

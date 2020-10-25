@@ -26,6 +26,13 @@
       "CBRNE": "Bedrohung",
       "OTHER": "Andere"
     },
+    "levels": {
+      "COUNTRY": "Land",
+      "STATE": "Bundesland",
+      "COUNTY": "Regierungsbezirk",
+      "DISTRICT": "Landkreis",
+      "MUNICIPALITY": "Gemeinde"
+    },
     "location": "Ort"
   },
   "settings": {

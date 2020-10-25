@@ -26,6 +26,13 @@
       "CBRNE": "Threat",
       "OTHER": "Other"
     },
+    "levels": {
+      "COUNTRY": "Country",
+      "STATE": "State",
+      "COUNTY": "County",
+      "DISTRICT": "District",
+      "MUNICIPALITY": "Municipality"
+    },
     "location": "Location"
   },
   "settings": {
