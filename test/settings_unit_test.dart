@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/model/ars.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,34 +47,41 @@ void main() {
 
   test('Read channel with location name only', () async {
     when(prefs.getStringList(key)).thenReturn([
-      "{\"location\":{\"name\":\"Town\",\"longitude\":0.0,\"latitude\":0.0},\"categories\":[]}"
+      "{\"location\":{\"name\":\"Town\",\"levels\":{\"COUNTRY\":\"Germany\"}},\"categories\":[]}"
     ]);
 
     var result = uut.getValue(prefs, key);
 
     Channel channel = result[0];
     expect(channel.location.name, "Town");
-    expect(channel.location.longitude, 0.0);
-    expect(channel.location.latitude, 0.0);
+    expect(channel.location.levels, {ArsLevel.COUNTRY: "Germany"});
   });
 
   test('Write channel data without location', () async {
     uut.setValue(prefs, key, [
-      Channel(null, Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
+      Channel(
+          null, Set.of([]), Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
-    verify(prefs.setStringList(
-        key, ["{\"location\":null,\"categories\":[\"FIRE\",\"MET\"]}"]));
+    verify(prefs.setStringList(key, [
+      "{\"location\":null,\"levels\":[],\"categories\":[\"FIRE\",\"MET\"]}"
+    ]));
   });
 
   test('Write all channel data', () async {
     uut.setValue(prefs, key, [
-      Channel(Location("Location", 1.0, 2.0),
+      Channel(
+          Location("Location", Coordinate(11.5754, 48.1374),
+              Map.fromEntries([MapEntry(ArsLevel.DISTRICT, "Munich")])),
+          Set.of([ArsLevel.DISTRICT]),
           Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
     verify(prefs.setStringList(key, [
-      "{\"location\":{\"longitude\":1.0,\"latitude\":2.0,\"name\":\"Location\"},\"categories\":[\"FIRE\",\"MET\"]}"
+      "{\"location\":{\"name\":\"Location\","
+          "\"coordinate\":{\"longitude\":11.5754,\"latitude\":48.1374},"
+          "\"levels\":{\"DISTRICT\":\"Munich\"}},"
+          "\"levels\":[\"DISTRICT\"],\"categories\":[\"FIRE\",\"MET\"]}"
     ]));
   });
 }

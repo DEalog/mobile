@@ -7,6 +7,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +17,13 @@ import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/screens/home.dart';
 import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
-import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+
 import 'test_utils.dart';
 
 // Mock class
@@ -41,12 +44,15 @@ void main() {
   final messageKey = Key('Message');
 
   final Channel channelWithoutLocationAndCategories = Channel(
-    Location(null, 0.0, 0.0),
+    null,
+    Set.of([]),
     Set.of([]),
   );
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
-    Location("Berlin", 52.518611, 13.408333),
+    Location(
+        "Berlin", Coordinate(13.4105300, 52.5243700), Map.fromIterable([])),
+    Set.of([]),
     Set.of([]),
   );
 

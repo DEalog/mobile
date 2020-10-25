@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobile/model/ars.dart';
+
+import 'gis.dart';
 
 part 'channel.g.dart';
 
@@ -25,21 +28,17 @@ String categoryLocalizationKey(ChannelCategory category) =>
 String categoryName(ChannelCategory category) =>
     categoryLocalizationKey(category).tr();
 
-class Coordinate {
-  final double longitude;
-  final double latitude;
-
-  Coordinate(this.longitude, this.latitude);
-}
-
 @JsonSerializable(nullable: false)
-class Location extends Coordinate {
+class Location {
   final String name;
+  @JsonKey(nullable: true)
+  final Coordinate coordinate;
+  @JsonKey(nullable: true)
+  final Map<ArsLevel, String> levels;
 
-  Location(this.name, double longitude, double latitude)
-      : super(longitude, latitude);
+  Location(this.name, this.coordinate, this.levels);
 
-  Location.empty() : this("", 0.0, 0.0);
+  Location.empty() : this("", null, Map.fromIterable([]));
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
@@ -55,14 +54,16 @@ Map<String, ChannelCategory> categoryMap = ChannelCategory.values
 class Channel {
   @JsonKey(nullable: true)
   final Location location;
+  @JsonKey(nullable: true)
+  final Set<ArsLevel> levels;
   final Set<ChannelCategory> categories;
 
-  Channel(this.location, this.categories);
+  Channel(this.location, this.levels, this.categories);
 
-  Channel.deviceLocation(Set<ChannelCategory> categories)
-      : this(null, categories);
+  Channel.deviceLocation(Set<ArsLevel> levels, Set<ChannelCategory> categories)
+      : this(null, levels, categories);
 
-  Channel.empty() : this(null, Set.of([]));
+  Channel.empty() : this(null, Set.of([]), Set.of([]));
 
   factory Channel.fromJson(Map<String, dynamic> json) =>
       _$ChannelFromJson(json);

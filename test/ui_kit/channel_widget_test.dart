@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/ui_kit/channel.dart';
 
 import '../support.dart';
@@ -17,14 +18,18 @@ void main() {
   });
 
   testWidgets('Shows location name', (WidgetTester tester) async {
-    await createWidget(tester, LocationView(Location("Foo", 0.0, 0.0)));
+    await createWidget(tester,
+        LocationView(Location("Foo", Coordinate(0, 0), Map.fromIterable([]))));
     await tester.pumpAndSettle();
 
     expect(find.text("Foo"), findsOneWidget);
   });
 
   testWidgets('Shows channel location name', (WidgetTester tester) async {
-    var channel = Channel(Location("Foo", 0.0, 0.0), Set.of([]));
+    var channel = Channel(
+        Location("Foo", Coordinate(0, 0), Map.fromIterable([])),
+        Set.of([]),
+        Set.of([]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();
@@ -40,7 +45,7 @@ void main() {
   });
 
   testWidgets('Shows single category in channel', (WidgetTester tester) async {
-    var channel = Channel(null, Set.of([ChannelCategory.FIRE]));
+    var channel = Channel(null, Set.of([]), Set.of([ChannelCategory.FIRE]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();
@@ -49,8 +54,8 @@ void main() {
   });
 
   testWidgets('Shows two categories in channel', (WidgetTester tester) async {
-    var channel =
-        Channel(null, Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]));
+    var channel = Channel(null, Set.of([]),
+        Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]));
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();

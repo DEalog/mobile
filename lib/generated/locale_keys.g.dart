@@ -24,6 +24,12 @@ abstract class  LocaleKeys {
   static const model_categories_CBRNE = 'model.categories.CBRNE';
   static const model_categories_OTHER = 'model.categories.OTHER';
   static const model_categories = 'model.categories';
+  static const model_levels_COUNTRY = 'model.levels.COUNTRY';
+  static const model_levels_STATE = 'model.levels.STATE';
+  static const model_levels_COUNTY = 'model.levels.COUNTY';
+  static const model_levels_DISTRICT = 'model.levels.DISTRICT';
+  static const model_levels_MUNICIPALITY = 'model.levels.MUNICIPALITY';
+  static const model_levels = 'model.levels';
   static const model_location = 'model.location';
   static const model = 'model';
   static const settings_channel_title = 'settings.channel.title';

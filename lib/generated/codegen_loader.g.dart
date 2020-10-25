@@ -42,6 +42,13 @@ class CodegenLoader extends AssetLoader{
       "CBRNE": "Bedrohung",
       "OTHER": "Andere"
     },
+    "levels": {
+      "COUNTRY": "Land",
+      "STATE": "Bundesland",
+      "COUNTY": "Regierungsbezirk",
+      "DISTRICT": "Landkreis",
+      "MUNICIPALITY": "Gemeinde"
+    },
     "location": "Ort"
   },
   "settings": {
@@ -79,6 +86,13 @@ static const Map<String,dynamic> en = {
       "INFRA": "Infrastructure",
       "CBRNE": "Threat",
       "OTHER": "Other"
+    },
+    "levels": {
+      "COUNTRY": "Country",
+      "STATE": "State",
+      "COUNTY": "County",
+      "DISTRICT": "District",
+      "MUNICIPALITY": "Municipality"
     },
     "location": "Location"
   },
