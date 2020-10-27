@@ -12,7 +12,7 @@ import 'package:mobile/themes.dart';
 Future<void> createWidget(WidgetTester tester, Widget widget) async {
   final Brightness brightness = Brightness.light;
   await tester.pumpWidget(EasyLocalization(
-    path: 'unused',
+    path: 'assets/translations',
     useOnlyLangCode: true,
     assetLoader: CodegenLoader(),
     fallbackLocale: const Locale('en_US'),

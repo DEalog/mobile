@@ -5,7 +5,6 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -18,7 +17,7 @@ import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
-import 'package:mobile/screens/home.dart';
+import 'package:mobile/screens/messages.dart';
 import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,33 +73,6 @@ void main() {
     },
   );
 
-  group('Bottom button bar', () {
-    setUp(() {
-      streamingSharedPreferences.setStringList(
-        AppSettings.LOCATIONS_KEY,
-        [jsonEncode(channelWithoutLocationAndCategories.toJson())],
-      );
-    });
-
-    testWidgets('Home screen show Home text', (WidgetTester tester) async {
-      // Set test messages to feed service
-      // mock raw feed
-      when(restClient.fetchRawFeed()).thenAnswer(
-        (_) => Future.value([]),
-      );
-
-      await createWidget(tester, HomeScreen());
-
-      // Verify home screen
-      expect(find.text('Home'), findsNothing);
-      expect(find.text('Settings'), findsNothing);
-    });
-
-    tearDown(() async {
-      expect(await streamingSharedPreferences.clear(), isTrue);
-    });
-  });
-
   group('Message List for one channel', () {
     setUp(() {
       streamingSharedPreferences.setStringList(
@@ -121,11 +93,11 @@ void main() {
         (_) async => [],
       );
 
-      await createWidget(tester, HomeScreen());
+      await createWidget(tester, MessagesScreen());
       await tester.pump();
 
       await tester.runAsync(() async {
-        tester.ensureVisible(progressIndicatorFinder);
+        // tester.ensureVisible(progressIndicatorFinder);
         expect(progressIndicatorFinder, findsOneWidget);
         expect(find.text('Message Heading 1'), findsNothing);
         expect(find.text('Message Content 1'), findsNothing);
@@ -142,7 +114,7 @@ void main() {
         (_) async => [message1],
       );
 
-      await createWidget(tester, HomeScreen());
+      await createWidget(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 
@@ -168,7 +140,7 @@ void main() {
         (_) async => [message1, message2],
       );
 
-      await createWidget(tester, HomeScreen());
+      await createWidget(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 
@@ -209,7 +181,7 @@ void main() {
         (_) async => [message1, message2],
       );
 
-      await createWidget(tester, HomeScreen());
+      await createWidget(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 
