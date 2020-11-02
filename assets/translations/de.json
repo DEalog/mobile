@@ -8,7 +8,10 @@
   "actions": {
     "cancel": "Abbrechen",
     "add": "Hinzufügen",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "save": "Speichern",
+    "continue": "Weiter",
+    "back": "Zurück"
   },
   "model": {
     "category": "Kategorie",

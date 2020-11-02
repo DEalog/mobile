@@ -9,6 +9,9 @@ abstract class  LocaleKeys {
   static const actions_cancel = 'actions.cancel';
   static const actions_add = 'actions.add';
   static const actions_update = 'actions.update';
+  static const actions_save = 'actions.save';
+  static const actions_continue = 'actions.continue';
+  static const actions_back = 'actions.back';
   static const actions = 'actions';
   static const model_category = 'model.category';
   static const model_categories_GEO = 'model.categories.GEO';

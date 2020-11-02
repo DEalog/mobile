@@ -8,6 +8,7 @@ import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/settings.dart';
+import 'package:mobile/settings/wizard.dart';
 import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/message_card_ui.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
@@ -34,13 +35,13 @@ class MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
     channelsPref.listen(
-      (newChannels) {
+          (newChannels) {
         if (mounted) {
           setState(
-            () {
+                () {
               channels = newChannels;
               channels.forEach(
-                (channel) {
+                    (channel) {
                   futureFeedMessages[channel] = feedService.getFeed();
                 },
               );
@@ -63,9 +64,13 @@ class MessagesScreenState extends State<MessagesScreen> {
               children: [
                 ChannelView(channel),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.2,
                   child: ListView.separated(
-                      separatorBuilder: (context, index) => Divider(
+                      separatorBuilder: (context, index) =>
+                          Divider(
                             thickness: 0,
                           ),
                       scrollDirection: Axis.horizontal,
@@ -97,6 +102,12 @@ class MessagesScreenState extends State<MessagesScreen> {
     }).toList();
     List<Widget> homeWidgets = [];
     homeWidgets.addAll(channelBoxes);
+
+    homeWidgets.add(PlatformButton(child: Icon(Icons.add),
+        onPressed: () =>
+            showPlatformDialog(
+                context: context,
+                builder: (BuildContext context) => FormWidget())));
 
     return Container(
       key: Key("HomeScreen"),
