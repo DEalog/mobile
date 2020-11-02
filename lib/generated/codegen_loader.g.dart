@@ -24,7 +24,10 @@ class CodegenLoader extends AssetLoader{
   "actions": {
     "cancel": "Abbrechen",
     "add": "Hinzufügen",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "save": "Speichern",
+    "continue": "Weiter",
+    "back": "Zurück"
   },
   "model": {
     "category": "Kategorie",
@@ -69,7 +72,10 @@ static const Map<String,dynamic> en = {
   "actions": {
     "cancel": "Cancel",
     "add": "Add",
-    "update": "Update"
+    "update": "Update",
+    "save": "Save",
+    "continue": "Continue",
+    "back": "Back"
   },
   "model": {
     "category": "Category",
