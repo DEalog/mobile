@@ -26,13 +26,13 @@ void main() {
     group('Home Screen', () {
       test('Homescreen setup', () async {
         await driver.waitFor(find.byValueKey("DEalogLogoKey"));
-        await driver.waitFor(find.byValueKey("AppBarButtonDehaze"));
+        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
       });
     });
 
     group('Onboarding Tests', () {
       test('Should start with settings at first run', () async {
-        await driver.tap(find.byValueKey("AppBarButtonDehaze"));
+        await driver.tap(find.byValueKey("AppBarButtonSettings"));
         await driver.waitFor(find.byValueKey("DEalogLogoKey"));
         await driver.waitFor(find.text("Please subscribe a channel!"));
         await driver.waitFor(find.text("Subscribed Channels"));

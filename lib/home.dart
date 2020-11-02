@@ -34,20 +34,22 @@ class Home extends StatelessWidget {
                       fit: BoxFit.cover,
                       height: MediaQuery.of(context).size.height * 0.07,
                     ),
-                    leading: PlatformIconButton(
-                      key: Key('AppBarButtonDehaze'),
-                      icon: Icon(PlatformIcons(context).dehaze),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          platformPageRoute(
+                    actions: [
+                      PlatformIconButton(
+                        key: Key('AppBarButtonSettings'),
+                        icon: Icon(PlatformIcons(context).settings),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            platformPageRoute(
                               builder: (BuildContext context) {
                                 return SettingsScreen();
                               },
-                              context: context),
-                        );
-                      },
-                    ),
+                              context: context,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                     elevation: 0.0,
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                   ),

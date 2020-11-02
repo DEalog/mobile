@@ -90,7 +90,7 @@ void main() {
       expect(find.text('Home'), findsNothing);
       expect(find.text('Settings'), findsNothing);
       expect(find.byKey(Key('DEalogLogoKey')), findsOneWidget);
-      expect(find.byKey(Key('AppBarButtonDehaze')), findsOneWidget);
+      expect(find.byKey(Key('AppBarButtonSettings')), findsOneWidget);
       expect(find.byKey(Key('AppBarButtonBack')), findsNothing);
     });
 

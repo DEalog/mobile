@@ -78,7 +78,7 @@ void main() {
 
         // Verify settings screen
         expect(find.byKey(Key('DEalogLogoKey')), findsOneWidget);
-        expect(find.byKey(Key('AppBarButtonDehaze')), findsNothing);
+        expect(find.byKey(Key('AppBarButtonSettings')), findsNothing);
         expect(find.byKey(Key('AppBarButtonBack')), findsOneWidget);
       },
     );
