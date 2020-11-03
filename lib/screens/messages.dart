@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
@@ -11,20 +12,20 @@ import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/message_card_ui.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+class MessagesScreen extends StatefulWidget {
+  MessagesScreen({Key key}) : super(key: key);
 
   @override
-  HomeScreenState createState() => HomeScreenState();
+  MessagesScreenState createState() => MessagesScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class MessagesScreenState extends State<MessagesScreen> {
   HashMap<Channel, Future<List<FeedMessage>>> futureFeedMessages = HashMap();
   FeedService feedService;
   Preference<List<Channel>> channelsPref;
   List<Channel> channels = List();
 
-  HomeScreenState() {
+  MessagesScreenState() {
     feedService = getIt<FeedService>();
     channelsPref = getIt<AppSettings>().channels;
   }
@@ -88,23 +89,13 @@ class HomeScreenState extends State<HomeScreen> {
           }
 
           // By default, show a loading spinner.
-          return CircularProgressIndicator(
+          return PlatformCircularProgressIndicator(
             key: Key("CircularProgressIndicator"),
           );
         },
       );
     }).toList();
-    List<Widget> homeWidgets = [
-      Padding(
-        padding: EdgeInsets.fromLTRB(0, 5, 0, 20),
-        child: Image.asset(
-          'assets/images/dealog_logo.png',
-          key: Key('DEalogLogoKey'),
-          semanticLabel: 'DEalog Logo',
-          height: MediaQuery.of(context).size.height * 0.08,
-        ),
-      ),
-    ];
+    List<Widget> homeWidgets = [];
     homeWidgets.addAll(channelBoxes);
 
     return Container(

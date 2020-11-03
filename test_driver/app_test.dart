@@ -23,83 +23,80 @@ void main() {
         driver.close();
       }
     });
-
-    test('Should start with settings at first run', () async {
-      await driver.waitFor(find.text("Please subscribe a channel!"));
-      await driver.waitFor(find.text("Subscribed Channels"));
-      await driver.waitFor(find.byValueKey("add_channel"));
+    group('Home Screen', () {
+      test('Homescreen setup', () async {
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
+      });
     });
 
-    test('Should show navigation', () async {
-      await driver.waitFor(find.byValueKey("navigate_home"));
-      await driver.waitFor(find.byValueKey("navigate_settings"));
-    });
+    group('Onboarding Tests', () {
+      test('Should start with settings at first run', () async {
+        await driver.tap(find.byValueKey("AppBarButtonSettings"));
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.text("Please subscribe a channel!"));
+        await driver.waitFor(find.text("Subscribed Channels"));
+        await driver.waitFor(find.byValueKey("add_channel"));
+      });
 
-    test('Add device location fire channel', () async {
-      await driver.tap(find.byValueKey("navigate_settings"));
+      test('Add device location fire channel', () async {
+        await driver.waitForAbsent(find.text("Fire"));
 
-      await driver.waitForAbsent(find.text("Fire"));
+        await driver.tap(find.byValueKey("add_channel"));
 
-      await driver.tap(find.byValueKey("add_channel"));
+        await scrollAndTap("state_FIRE", driver);
 
-      await scrollAndTap("state_FIRE", driver);
+        await scrollAndTap("submit_channel", driver);
 
-      await scrollAndTap("submit_channel", driver);
+        await driver.waitFor(find.text("Fire"));
+        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+      });
 
-      await driver.waitFor(find.text("Fire"));
-      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-    });
+      test('Add custom location weather and env channel', () async {
+        await driver.waitForAbsent(find.text("Meteorological"));
+        await driver.waitForAbsent(find.text("Environment"));
 
-    test('Add custom location weather and env channel', () async {
-      await driver.tap(find.byValueKey("navigate_settings"));
+        await driver.tap(find.byValueKey("add_channel"));
 
-      await driver.waitForAbsent(find.text("Meteorological"));
-      await driver.waitForAbsent(find.text("Environment"));
+        await driver.tap(find.byValueKey("use_location_toggle"));
 
-      await driver.tap(find.byValueKey("add_channel"));
+        await driver.tap(find.byValueKey("location_input"));
+        await driver.enterText("my location");
 
-      await driver.tap(find.byValueKey("use_location_toggle"));
+        await scrollAndTap("state_MET", driver);
+        await scrollAndTap("state_ENV", driver);
 
-      await driver.tap(find.byValueKey("location_input"));
-      await driver.enterText("my location");
+        await scrollAndTap("submit_channel", driver);
 
-      await scrollAndTap("state_MET", driver);
-      await scrollAndTap("state_ENV", driver);
+        await driver.waitFor(find.text("Meteorological"));
+        await driver.waitFor(find.text("Environment"));
+      });
 
-      await scrollAndTap("submit_channel", driver);
+      test('Add another channel removes add channel button', () async {
+        await driver.waitForAbsent(find.text("Health"));
 
-      await driver.waitFor(find.text("Meteorological"));
-      await driver.waitFor(find.text("Environment"));
-    });
+        await driver.tap(find.byValueKey("add_channel"));
 
-    test('Add another channel removes add channel button', () async {
-      await driver.tap(find.byValueKey("navigate_settings"));
+        await scrollAndTap("state_HEALTH", driver);
 
-      await driver.waitForAbsent(find.text("Health"));
+        await scrollAndTap("submit_channel", driver);
 
-      await driver.tap(find.byValueKey("add_channel"));
+        await driver.waitFor(find.text("Health"));
+        await driver.waitForAbsent(find.byValueKey("add_channel"));
+      });
 
-      await scrollAndTap("state_HEALTH", driver);
+      test('Deleting all channels should show message', () async {
+        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+        await driver.tap(find.byValueKey("delete_channel_0"));
 
-      await scrollAndTap("submit_channel", driver);
+        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+        await driver.tap(find.byValueKey("delete_channel_0"));
 
-      await driver.waitFor(find.text("Health"));
-      await driver.waitForAbsent(find.byValueKey("add_channel"));
-    });
+        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+        await driver.tap(find.byValueKey("delete_channel_0"));
 
-    test('Deleting all channels should show message', () async {
-      await driver.tap(find.byValueKey("navigate_settings"));
-
-      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-      await driver.tap(find.byValueKey("delete_channel_0"));
-
-      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-      await driver.tap(find.byValueKey("delete_channel_0"));
-
-      await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-      await driver.tap(find.byValueKey("delete_channel_0"));
-
-      await driver.waitFor(find.text("Please subscribe a channel!"));
+        await driver.waitFor(find.text("Please subscribe a channel!"));
+      });
     });
   });
 }

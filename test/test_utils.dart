@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/themes.dart';
 
+// TODO get rid of this file and use support.dart or merge both files
 Future<void> createWidget(WidgetTester tester, Widget widget) async {
   final Brightness brightness = Brightness.light;
   await tester.pumpWidget(
@@ -32,7 +34,9 @@ Future<void> createWidget(WidgetTester tester, Widget widget) async {
           cupertino: (_, __) => new CupertinoAppData(
             theme: AppCupertinoTheme.theme,
           ),
-          home: widget,
+          home: PlatformScaffold(
+            body: widget,
+          ),
         ),
       ),
     ),

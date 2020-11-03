@@ -7,8 +7,21 @@ class AppLightTheme {
     Fimber.d("Setting theme: light");
 
     return new ThemeData(
-      primarySwatch: Colors.blue,
-    );
+        primaryColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            headline6: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 28.0,
+            ),
+          ),
+          color: Colors.white,
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white);
   }
 }
 
