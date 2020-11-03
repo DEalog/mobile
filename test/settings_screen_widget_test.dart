@@ -30,7 +30,8 @@ void main() {
   StreamingSharedPreferences streamingSharedPreferences;
 
   final Channel channelWithoutLocationAndCategories = Channel(
-    Location(null, 0.0, 0.0),
+    null,
+    Set.of([]),
     Set.of([]),
   );
 
