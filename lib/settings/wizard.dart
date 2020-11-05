@@ -131,7 +131,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
       content: Container(
           child: Stack(
         overflow: Overflow.visible,
-        children: [buildForm(context)],
+        children: [form],
       ),
         width: mediaQuery.size.width,
         height: mediaQuery.size.height,
