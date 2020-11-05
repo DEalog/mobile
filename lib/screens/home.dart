@@ -113,7 +113,7 @@ class HomeScreenState extends State<HomeScreen> {
         child: Icon(context.platformIcons.add),
         onPressed: () => showPlatformDialog(
             context: context,
-            builder: (BuildContext context) => FormWidget())));
+            builder: (BuildContext context) => ChannelWizard())));
 
     return Container(
       key: Key("HomeScreen"),
