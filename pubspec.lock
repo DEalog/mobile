@@ -520,7 +520,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.0-nullsafety.1"
+    version: "1.10.0-nullsafety.3"
   petitparser:
     dependency: transitive
     description:
@@ -548,7 +548,7 @@ packages:
       name: pool
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.0-nullsafety.1"
+    version: "1.5.0-nullsafety.3"
   process:
     dependency: transitive
     description:
@@ -672,14 +672,14 @@ packages:
       name: source_map_stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.2"
+    version: "2.1.0-nullsafety.4"
   source_maps:
     dependency: transitive
     description:
       name: source_maps
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.10-nullsafety.1"
+    version: "0.10.10-nullsafety.3"
   source_span:
     dependency: transitive
     description:
@@ -842,5 +842,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.11.0-0.0 <=2.11.0-260.0.dev"
+  dart: ">=2.12.0-0 <=2.12.0-15.0.dev"
   flutter: ">=1.20.4 <2.0.0"

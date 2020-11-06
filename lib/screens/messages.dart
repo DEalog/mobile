@@ -35,13 +35,13 @@ class MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
     channelsPref.listen(
-          (newChannels) {
+      (newChannels) {
         if (mounted) {
           setState(
-                () {
+            () {
               channels = newChannels;
               channels.forEach(
-                    (channel) {
+                (channel) {
                   futureFeedMessages[channel] = feedService.getFeed();
                 },
               );
@@ -64,13 +64,9 @@ class MessagesScreenState extends State<MessagesScreen> {
               children: [
                 ChannelView(channel),
                 Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   child: ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          Divider(
+                      separatorBuilder: (context, index) => Divider(
                             thickness: 0,
                           ),
                       scrollDirection: Axis.horizontal,
@@ -103,11 +99,16 @@ class MessagesScreenState extends State<MessagesScreen> {
     List<Widget> homeWidgets = [];
     homeWidgets.addAll(channelBoxes);
 
-    homeWidgets.add(PlatformButton(child: Icon(Icons.add),
-        onPressed: () =>
-            showPlatformDialog(
+    homeWidgets.add(PlatformButton(
+        child: Icon(context.platformIcons.add),
+        onPressed: () => Navigator.of(context).push(
+              platformPageRoute(
                 context: context,
-                builder: (BuildContext context) => FormWidget())));
+                builder: (BuildContext context) {
+                  return ChannelWizard();
+                },
+              ),
+            )));
 
     return Container(
       key: Key("HomeScreen"),

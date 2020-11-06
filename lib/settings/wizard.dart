@@ -15,9 +15,9 @@ final _formKey = GlobalKey<FormState>();
 
 const _totalSteps = 3;
 
-class FormWidget extends StatefulWidget {
+class ChannelWizard extends StatefulWidget {
   @override
-  _FormWidgetState createState() => _FormWidgetState();
+  _ChannelWizardState createState() => _ChannelWizardState();
 }
 
 class ArsEntry {
@@ -39,22 +39,14 @@ class DataProvider {
   }
 }
 
-class _FormWidgetState extends State<FormWidget> {
+class _ChannelWizardState extends State<ChannelWizard> {
   int _stepNumber = 1;
   DataProvider _dataProvider = DataProvider();
 
-  final ctl_name = TextEditingController();
-  final ctl_age = TextEditingController();
-  final ctl_address = TextEditingController();
-  final ctl_city = TextEditingController();
+  final editingLocation = TextEditingController();
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
-
-    print(ctl_name.text);
-    print(ctl_age.text);
-    print(ctl_address.text);
-    print(ctl_city.text);
   }
 
   void nextPage(BuildContext context) {
@@ -72,12 +64,10 @@ class _FormWidgetState extends State<FormWidget> {
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
               width: double.infinity,
-              child: Text("STEP 1")),
+              child: Text("Select Location")),
         ),
-        TextFormField(
-          controller: ctl_age,
-          decoration: const InputDecoration(labelText: 'Step 2 Age'),
-        ),
+        PlatformText('Location'),
+        PlatformTextField(controller: editingLocation),
       ],
     );
   }
@@ -96,7 +86,7 @@ class _FormWidgetState extends State<FormWidget> {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(border: Border.all(color: Colors.red)),
             width: double.infinity,
-            child: Text("STEP 2"),
+            child: Text("Select Layer"),
           ),
         ),
         MultiSelectFormField(
@@ -118,7 +108,7 @@ class _FormWidgetState extends State<FormWidget> {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(border: Border.all(color: Colors.red)),
             width: double.infinity,
-            child: Text("STEP 3"),
+            child: Text("Select Category"),
           ),
         ),
         MultiSelectFormField(
@@ -132,14 +122,37 @@ class _FormWidgetState extends State<FormWidget> {
   @override
   Widget build(BuildContext context) {
     final form = buildForm(context);
+    final mediaQuery = MediaQuery.of(context);
 
-    return PlatformAlertDialog(
-      material: (_, __) => MaterialAlertDialogData(scrollable: true),
-      content: Stack(
-        overflow: Overflow.visible,
-        children: [buildForm(context)],
+    return PlatformScaffold(
+      iosContentPadding: true,
+      body: SafeArea(
+        child: Column(
+          children: [
+            AppBar(
+              centerTitle: true,
+              title: Image.asset(
+                'assets/images/dealog_logo.png',
+                key: Key('DEalogLogoKey'),
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height * 0.07,
+              ),
+              elevation: 0.0,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            ),
+            Container(
+              child: form,
+              height: mediaQuery.size.height * 0.75,
+            ),
+            Row(
+              children: [
+                leftButton(),
+                rightButton(),
+              ],
+            ),
+          ],
+        ),
       ),
-      actions: [leftButton(), rightButton()],
     );
   }
 
@@ -246,10 +259,7 @@ class _FormWidgetState extends State<FormWidget> {
   }
 
   void dispose() {
-    ctl_address.dispose();
-    ctl_age.dispose();
-    ctl_city.dispose();
-    ctl_name.dispose();
+    editingLocation.dispose();
 
     super.dispose();
   }
