@@ -43,7 +43,11 @@
       "title": "Abonnierte Kanäle",
       "none_defined": "Bitte abonnieren Sie einen Kanal!"
     },
-    "use_location": "Gerätestandort nutzen"
+    "use_location": "Gerätestandort nutzen",
+    "select_location": "Für welchen Ort möchtest du informiert werden?",
+    "select_layer": "Aus welchen föderalen Ebenen möchtest du informiert werden?",
+    "select_category": "Für welche Bereiche möchtest du informiert werden?",
+    "enter_location": "Ort eingeben"
   }
 }
 

@@ -62,7 +62,10 @@ class MessagesScreenState extends State<MessagesScreen> {
             Fimber.d("Snapshot has Data");
             return Column(
               children: [
-                ChannelView(channel),
+                LocationView(
+                  channel.location,
+                  alignment: Alignment.centerLeft,
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   child: ListView.separated(
@@ -99,20 +102,10 @@ class MessagesScreenState extends State<MessagesScreen> {
     List<Widget> homeWidgets = [];
     homeWidgets.addAll(channelBoxes);
 
-    homeWidgets.add(PlatformButton(
-        child: Icon(context.platformIcons.add),
-        onPressed: () => Navigator.of(context).push(
-              platformPageRoute(
-                context: context,
-                builder: (BuildContext context) {
-                  return ChannelWizard();
-                },
-              ),
-            )));
-
-    return Container(
+    return Expanded(
       key: Key("HomeScreen"),
-      child: Column(
+      // height: MediaQuery.of(context).size.height * 0.867,
+      child: ListView(
         children: homeWidgets,
       ),
     );

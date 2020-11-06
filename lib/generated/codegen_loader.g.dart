@@ -59,7 +59,11 @@ class CodegenLoader extends AssetLoader{
       "title": "Abonnierte Kanäle",
       "none_defined": "Bitte abonnieren Sie einen Kanal!"
     },
-    "use_location": "Gerätestandort nutzen"
+    "use_location": "Gerätestandort nutzen",
+    "select_location": "Für welchen Ort möchtest du informiert werden?",
+    "select_layer": "Aus welchen föderalen Ebenen möchtest du informiert werden?",
+    "select_category": "Für welche Bereiche möchtest du informiert werden?",
+    "enter_location": "Ort eingeben"
   }
 };
 static const Map<String,dynamic> en = {
@@ -107,7 +111,11 @@ static const Map<String,dynamic> en = {
       "title": "Subscribed Channels",
       "none_defined": "Please subscribe a channel!"
     },
-    "use_location": "Use device location"
+    "use_location": "Use device location",
+    "select_location": "For which location do you want to be informed?",
+    "select_layer": "From which federal layers would you like to be informed?",
+    "select_category": "For which areas would you like to be informed?",
+    "enter_location": "Enter location"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"de": de, "en": en};

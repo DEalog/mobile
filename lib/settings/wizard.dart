@@ -2,7 +2,9 @@ import 'dart:collection';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
@@ -10,14 +12,19 @@ import 'package:mobile/model/ars.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 final _formKey = GlobalKey<FormState>();
-
 const _totalSteps = 3;
 
 class ChannelWizard extends StatefulWidget {
+  final Preference<List<Channel>> channelSettings;
+
+  ChannelWizard({this.channelSettings});
+
   @override
-  _ChannelWizardState createState() => _ChannelWizardState();
+  _ChannelWizardState createState() =>
+      _ChannelWizardState(channelSettings: this.channelSettings);
 }
 
 class ArsEntry {
@@ -40,10 +47,32 @@ class DataProvider {
 }
 
 class _ChannelWizardState extends State<ChannelWizard> {
+  final Preference<List<Channel>> channelSettings;
+  List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
+  Location location;
+  Set<ArsLevel> levels;
+  Set<ChannelCategory> categories;
+  final _scrollController = ScrollController();
+
   DataProvider _dataProvider = DataProvider();
 
+  _ChannelWizardState({this.channelSettings}) {
+    this.channels.addAll(channelSettings.getValue());
+    this.location = Location.empty();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+  }
+
   final editingLocation = TextEditingController();
+
+  bool useLocation() => this.location == null;
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
@@ -56,18 +85,93 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Column formOneBuilder(BuildContext context) {
+    var mediaQuerySize = MediaQuery.of(context).size;
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(
+            top: mediaQuerySize.width * 0.1,
+            bottom: mediaQuerySize.width * 0.2,
+          ),
           child: Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-              width: double.infinity,
-              child: Text("Select Location")),
+            alignment: Alignment.center,
+            child: Text(
+              LocaleKeys.settings_select_location.tr(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            ),
+          ),
         ),
-        PlatformText('Location'),
-        PlatformTextField(controller: editingLocation),
+        Container(
+          width: mediaQuerySize.width * 0.7,
+          child: Column(
+            children: [
+              PlatformTextField(
+                controller: editingLocation,
+                enabled: !useLocation(),
+                onChanged: (value) {
+                  setState(() {
+                    this.location = Location(value, null, null);
+                  });
+                },
+                material: (context, platform) => MaterialTextFieldData(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: LocaleKeys.settings_enter_location.tr(),
+                  ),
+                ),
+                cupertino: (context, platform) => CupertinoTextFieldData(
+                  placeholder: LocaleKeys.settings_enter_location.tr(),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: mediaQuerySize.height * 0.03),
+                child: PlatformButton(
+                  cupertino: (context, platform) => CupertinoButtonData(
+                    padding: EdgeInsets.zero,
+                    color: useLocation() ? Colors.blue : Colors.white,
+                  ),
+                  material: (context, platform) => MaterialRaisedButtonData(
+                    padding: EdgeInsets.zero,
+                    color: useLocation() ? Colors.blue : Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      useLocation()
+                          ? Icon(
+                              PlatformIcons(context).locationSolid,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              PlatformIcons(context).location,
+                              color: Colors.black,
+                            ),
+                      Text(
+                        LocaleKeys.settings_use_location.tr(),
+                        style: TextStyle(
+                            color: useLocation() ? Colors.white : Colors.black),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Fimber.i("Update useLocation: $useLocation()");
+                      if (useLocation()) {
+                        this.location = Location.empty();
+                      } else {
+                        this.editingLocation.clear();
+                        this.location = null;
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -77,54 +181,115 @@ class _ChannelWizardState extends State<ChannelWizard> {
     final arsLevels = arsEntries.map((e) => e.arsLevel).toList();
     final arsMap =
         HashMap.fromEntries(arsEntries.map((e) => MapEntry(e.arsLevel, e)));
+    final mediaQuerySize = MediaQuery.of(context).size;
 
     return Column(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(
+            top: mediaQuerySize.width * 0.1,
+            bottom: mediaQuerySize.width * 0.1,
+          ),
           child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-            width: double.infinity,
-            child: Text("Select Layer"),
+            alignment: Alignment.center,
+            child: Text(
+              LocaleKeys.settings_select_layer.tr(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            ),
           ),
         ),
-        MultiSelectFormField(
+        MultiSelectFormField<ArsLevel>(
           elements: arsLevels,
           elementName: (arsLevel) =>
               "${arsMap[arsLevel].name} (${arsLevelName(arsLevel)})",
           initialValue: arsLevels.toSet(),
+          onSaved: (arsLevels) {
+            Fimber.i("ArsLevels selected: $arsLevels");
+            if (arsLevels != null && arsLevels.isNotEmpty) {
+              setState(() {
+                levels = arsLevels;
+              });
+            }
+          },
         ),
       ],
     );
   }
 
-  Column formThreeBuilder(BuildContext context) {
-    return Column(
+  Widget formThreeBuilder(BuildContext context) {
+    var mediaQuerySize = MediaQuery.of(context).size;
+    var column = Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(
+            top: mediaQuerySize.width * 0.1,
+            bottom: mediaQuerySize.width * 0.1,
+          ),
           child: Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-            width: double.infinity,
-            child: Text("Select Category"),
+            alignment: Alignment.center,
+            child: Text(
+              LocaleKeys.settings_select_category.tr(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            ),
           ),
         ),
-        MultiSelectFormField(
-          elements: ChannelCategory.values,
-          elementName: (arsLevel) => categoryName(arsLevel),
+        Container(
+          height: mediaQuerySize.width * 0.8,
+          child: Scrollbar(
+            isAlwaysShown: true,
+            controller: _scrollController,
+            thickness: mediaQuerySize.width * 0.01,
+            child: Padding(
+              padding: EdgeInsets.all(mediaQuerySize.width * 0.015),
+              child: ListView(
+                children: [
+                  MultiSelectFormField<ChannelCategory>(
+                    elements: ChannelCategory.values,
+                    elementName: (arsLevel) => categoryName(arsLevel),
+                    onSaved: (channelCategories) {
+                      Fimber.i(
+                          "Channel categories selected: $channelCategories");
+                      if (channelCategories != null &&
+                          channelCategories.isNotEmpty) {
+                        setState(() {
+                          this.categories = channelCategories;
+                          Fimber.i(
+                              "Channel categories selected: $channelCategories");
+                        });
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
         ),
       ],
     );
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+    return column;
   }
 
   @override
   Widget build(BuildContext context) {
     final form = buildForm(context);
-    final mediaQuery = MediaQuery.of(context);
+    final mediaQuerySize = MediaQuery.of(context).size;
 
     return PlatformScaffold(
+      material: (context, platform) =>
+          MaterialScaffoldData(resizeToAvoidBottomInset: false),
+      cupertino: (context, platform) => CupertinoPageScaffoldData(
+        resizeToAvoidBottomInset: false,
+      ),
       iosContentPadding: true,
       body: SafeArea(
         child: Column(
@@ -137,18 +302,21 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height * 0.07,
               ),
+              automaticallyImplyLeading: false,
               elevation: 0.0,
               toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             ),
-            Container(
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: mediaQuerySize.width * 0.1),
               child: form,
-              height: mediaQuery.size.height * 0.75,
             ),
-            Row(
-              children: [
-                leftButton(),
-                rightButton(),
-              ],
+            Spacer(),
+            bottomTopButton(),
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: mediaQuerySize.height * 0.02),
+              child: bottomButton(),
             ),
           ],
         ),
@@ -180,7 +348,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
     }
   }
 
-  leftButton() {
+  bottomButton() {
     if (_stepNumber == 1) {
       return cancelButton();
     } else {
@@ -188,7 +356,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
     }
   }
 
-  rightButton() {
+  bottomTopButton() {
     if (_stepNumber == _totalSteps) {
       return saveButton();
     } else {
@@ -199,6 +367,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
   Widget cancelButton() {
     return PlatformButton(
       key: Key("cancel"),
+      materialFlat: (context, platform) => MaterialFlatButtonData(),
       child: Text(LocaleKeys.actions_cancel.tr()),
       onPressed: () {
         Fimber.i("Cancel pressed");
@@ -211,10 +380,23 @@ class _ChannelWizardState extends State<ChannelWizard> {
   Widget saveButton() {
     return PlatformButton(
         key: Key("save"),
+        materialFlat: (context, platform) => MaterialFlatButtonData(
+              color: Colors.black,
+              textColor: Colors.white,
+            ),
         child: Text(LocaleKeys.actions_save.tr()),
+        cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
         onPressed: () {
           Fimber.i("Save pressed");
           if (submit()) {
+            this.channels.add(Channel(
+                  this.location,
+                  this.levels,
+                  this.categories,
+                ));
+            this.channelSettings.setValue(
+                  this.channels,
+                );
             Navigator.pop(context);
           }
         });
@@ -223,6 +405,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
   Widget backButton() {
     return PlatformButton(
         key: Key("back"),
+        materialFlat: (context, platform) => MaterialFlatButtonData(),
         child: Text(LocaleKeys.actions_back.tr()),
         onPressed: () {
           Fimber.i("Back pressed");
@@ -235,7 +418,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
   Widget continueButton() {
     return PlatformButton(
         key: Key("continue"),
+        material: (context, platform) => MaterialRaisedButtonData(
+              color: Colors.black,
+              textColor: Colors.white,
+            ),
         child: Text(LocaleKeys.actions_continue.tr()),
+        cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
         onPressed: () {
           Fimber.i("Continue pressed");
           if (submit()) {
@@ -260,7 +448,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   void dispose() {
     editingLocation.dispose();
-
+    _scrollController.dispose();
     super.dispose();
   }
 }

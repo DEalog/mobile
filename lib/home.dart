@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'screens/messages.dart';
 import 'screens/settings.dart';
+import 'settings.dart';
+import 'settings/wizard.dart';
 import 'version.dart';
 import 'main.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appSettings = getIt<AppSettings>();
     return FutureBuilder(
       future: getIt.allReady(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -22,6 +25,11 @@ class Home extends StatelessWidget {
 
           Fimber.d("Building app");
           return PlatformScaffold(
+            material: (context, platform) =>
+                MaterialScaffoldData(resizeToAvoidBottomInset: false),
+            cupertino: (context, platform) => CupertinoPageScaffoldData(
+              resizeToAvoidBottomInset: false,
+            ),
             iosContentPadding: true,
             body: SafeArea(
               child: Column(
@@ -50,6 +58,21 @@ class Home extends StatelessWidget {
                         },
                       ),
                     ],
+                    leading: PlatformButton(
+                      materialFlat: (context, platform) =>
+                          MaterialFlatButtonData(),
+                      child: Icon(context.platformIcons.add),
+                      onPressed: () => Navigator.of(context).push(
+                        platformPageRoute(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ChannelWizard(
+                              channelSettings: appSettings.channels,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                     elevation: 0.0,
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                   ),

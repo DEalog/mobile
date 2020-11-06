@@ -39,6 +39,10 @@ abstract class  LocaleKeys {
   static const settings_channel_none_defined = 'settings.channel.none_defined';
   static const settings_channel = 'settings.channel';
   static const settings_use_location = 'settings.use_location';
+  static const settings_select_location = 'settings.select_location';
+  static const settings_select_layer = 'settings.select_layer';
+  static const settings_select_category = 'settings.select_category';
+  static const settings_enter_location = 'settings.enter_location';
   static const settings = 'settings';
 
 }

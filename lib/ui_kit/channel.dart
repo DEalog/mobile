@@ -6,8 +6,9 @@ import 'package:mobile/model/channel.dart';
 
 class LocationView extends StatelessWidget {
   final Location location;
+  final Alignment alignment;
 
-  LocationView(this.location);
+  LocationView(this.location, {this.alignment = Alignment.center});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,10 @@ class LocationView extends StatelessWidget {
           child: Text(name != null ? name : "n/a"));
     }
     return Container(
-        child: Center(child: locationView), padding: EdgeInsets.all(3.0));
+      alignment: this.alignment,
+      child: Container(child: locationView),
+      padding: EdgeInsets.all(3.0),
+    );
   }
 }
 

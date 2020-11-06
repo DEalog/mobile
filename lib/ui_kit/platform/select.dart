@@ -149,9 +149,10 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
   @override
   createMaterialWidget(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(this.label),
+        Spacer(),
         Checkbox(
           key: getStateKey(),
           value: value,
