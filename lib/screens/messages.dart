@@ -8,7 +8,6 @@ import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/settings.dart';
-import 'package:mobile/settings/wizard.dart';
 import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/message_card_ui.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
@@ -24,11 +23,12 @@ class MessagesScreenState extends State<MessagesScreen> {
   HashMap<Channel, Future<List<FeedMessage>>> futureFeedMessages = HashMap();
   FeedService feedService;
   Preference<List<Channel>> channelsPref;
-  List<Channel> channels = List();
+  List<Channel> channels;
 
   MessagesScreenState() {
     feedService = getIt<FeedService>();
     channelsPref = getIt<AppSettings>().channels;
+    channels = channelsPref.getValue();
   }
 
   @override
