@@ -43,9 +43,24 @@ Future<void> createWidget(WidgetTester tester, Widget widget) async {
           cupertino: (_, __) => new CupertinoAppData(
             theme: AppCupertinoTheme.theme,
           ),
-          home: PlatformScaffold(body: widget),
+          home: PlatformScaffold(
+            body: widget,
+          ),
         ),
       ),
     ),
   ));
+}
+
+Future<void> createWidgetWrappedInColumn(
+  WidgetTester tester,
+  Widget widget,
+) async {
+  var widgetWrappedInColumn = Container(
+    height: 500,
+    child: Column(
+      children: [widget],
+    ),
+  );
+  await createWidget(tester, widgetWrappedInColumn);
 }

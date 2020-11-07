@@ -23,11 +23,12 @@ class MessagesScreenState extends State<MessagesScreen> {
   HashMap<Channel, Future<List<FeedMessage>>> futureFeedMessages = HashMap();
   FeedService feedService;
   Preference<List<Channel>> channelsPref;
-  List<Channel> channels = List();
+  List<Channel> channels;
 
   MessagesScreenState() {
     feedService = getIt<FeedService>();
     channelsPref = getIt<AppSettings>().channels;
+    channels = channelsPref.getValue();
   }
 
   @override
@@ -61,7 +62,10 @@ class MessagesScreenState extends State<MessagesScreen> {
             Fimber.d("Snapshot has Data");
             return Column(
               children: [
-                ChannelView(channel),
+                LocationView(
+                  channel.location,
+                  alignment: Alignment.centerLeft,
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   child: ListView.separated(
@@ -98,9 +102,10 @@ class MessagesScreenState extends State<MessagesScreen> {
     List<Widget> homeWidgets = [];
     homeWidgets.addAll(channelBoxes);
 
-    return Container(
+    return Expanded(
       key: Key("HomeScreen"),
-      child: Column(
+      // height: MediaQuery.of(context).size.height * 0.867,
+      child: ListView(
         children: homeWidgets,
       ),
     );

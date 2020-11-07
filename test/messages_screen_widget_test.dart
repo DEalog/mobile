@@ -22,8 +22,7 @@ import 'package:mobile/settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-
-import 'test_utils.dart';
+import 'support.dart';
 
 // Mock class
 class MockRestClient extends Mock implements RestClient {}
@@ -42,11 +41,7 @@ void main() {
       '{ "identifier": "Message Heading 2", "description": "Message Content 2" }';
   final messageKey = Key('Message');
 
-  final Channel channelWithoutLocationAndCategories = Channel(
-    null,
-    Set.of([]),
-    Set.of([]),
-  );
+  final Channel channelWithoutLocationAndCategories = Channel.empty();
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
     Location(
@@ -74,7 +69,7 @@ void main() {
   );
 
   group('Message List for one channel', () {
-    setUp(() {
+    setUp(() async {
       streamingSharedPreferences.setStringList(
         AppSettings.LOCATIONS_KEY,
         [jsonEncode(channelWithoutLocationAndCategories.toJson())],
@@ -93,17 +88,15 @@ void main() {
         (_) async => [],
       );
 
-      await createWidget(tester, MessagesScreen());
+      await createWidgetWrappedInColumn(tester, MessagesScreen());
       await tester.pump();
+      await untilCalled(restClient.fetchRawFeed());
 
-      await tester.runAsync(() async {
-        // tester.ensureVisible(progressIndicatorFinder);
-        expect(progressIndicatorFinder, findsOneWidget);
-        expect(find.text('Message Heading 1'), findsNothing);
-        expect(find.text('Message Content 1'), findsNothing);
-        expect(find.text('Message Heading 2'), findsNothing);
-        expect(find.text('Message Content 2'), findsNothing);
-      });
+      expect(progressIndicatorFinder, findsOneWidget);
+      expect(find.text('Message Heading 1'), findsNothing);
+      expect(find.text('Message Content 1'), findsNothing);
+      expect(find.text('Message Heading 2'), findsNothing);
+      expect(find.text('Message Content 2'), findsNothing);
     });
 
     testWidgets('Message List shows test message 1',
@@ -114,7 +107,7 @@ void main() {
         (_) async => [message1],
       );
 
-      await createWidget(tester, MessagesScreen());
+      await createWidgetWrappedInColumn(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 
@@ -140,7 +133,7 @@ void main() {
         (_) async => [message1, message2],
       );
 
-      await createWidget(tester, MessagesScreen());
+      await createWidgetWrappedInColumn(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 
@@ -181,7 +174,7 @@ void main() {
         (_) async => [message1, message2],
       );
 
-      await createWidget(tester, MessagesScreen());
+      await createWidgetWrappedInColumn(tester, MessagesScreen());
       await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
 

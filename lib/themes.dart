@@ -7,21 +7,23 @@ class AppLightTheme {
     Fimber.d("Setting theme: light");
 
     return new ThemeData(
-        primaryColor: Colors.black,
-        appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-            headline6: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 28.0,
-            ),
-          ),
-          color: Colors.white,
-          iconTheme: IconThemeData(
+      primarySwatch: Colors.blue,
+      primaryColor: Colors.white,
+      appBarTheme: AppBarTheme(
+        textTheme: TextTheme(
+          headline6: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 28.0,
           ),
         ),
-        backgroundColor: Colors.white);
+        color: Colors.white,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: Colors.white,
+    );
   }
 }
 
@@ -46,12 +48,16 @@ class AppCupertinoTheme {
         darkColor: Colors.blue,
       ),
       scaffoldBackgroundColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.grey[200],
+        color: Colors.white,
         darkColor: Colors.grey[900],
       ),
       barBackgroundColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.grey[200],
+        color: Colors.white,
         darkColor: Colors.grey[900],
+      ),
+      primaryContrastingColor: CupertinoDynamicColor.withBrightness(
+        color: Colors.white,
+        darkColor: Colors.red,
       ),
     );
   }
