@@ -1,5 +1,5 @@
 import 'package:fimber/fimber.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:package_info/package_info.dart';
 
 class Version {
@@ -7,26 +7,19 @@ class Version {
   final PackageInfo info;
   String _version;
   int _versionCode;
-  int _lastKnownVersionCode;
   VersionState _state = VersionState.UNCHANGED;
 
   String get version => _version;
 
   int get versionCode => _versionCode;
 
-  int get lastKnownVersionCode => _lastKnownVersionCode;
+  int get lastKnownVersionCode => settings.lastKnownVersionCode;
+
+  bool get isInitialVersion => state == VersionState.INITIAL;
 
   VersionState get state => _state;
 
-  Version(AppSettings settings, PackageInfo info)
-      : settings = settings,
-        info = info {
-    _version = info.version;
-    _versionCode = int.parse(info.buildNumber);
-    _lastKnownVersionCode = settings.lastKnownVersionCode;
-
-    settings.lastKnownVersionCode = versionCode;
-
+  void updateVersionState() {
     if (lastKnownVersionCode == 0) {
       _state = VersionState.INITIAL;
     } else if (lastKnownVersionCode != versionCode) {
@@ -34,6 +27,17 @@ class Version {
     } else {
       _state = VersionState.UNCHANGED;
     }
+  }
+
+  Version(AppSettings settings, PackageInfo info)
+      : settings = settings,
+        info = info {
+    _version = info.version;
+    _versionCode = int.parse(info.buildNumber);
+
+    updateVersionState();
+    settings.lastKnownVersionCode = versionCode;
+
     Fimber.i(
         "Version '$version' ($lastKnownVersionCode) -> ($versionCode) = ${state.toString()}");
   }

@@ -4,6 +4,7 @@ import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MultiSelectFormField<T> extends FormField<Set<T>> {
@@ -65,12 +66,23 @@ class _MultiSelectState<E> extends State {
   final ValueChanged<Set<E>> onChanged;
   final String Function(E) elementName;
   final bool required = false;
+  final _scrollController = ScrollController();
 
   _MultiSelectState(
       this.elements, this.selected, this.elementName, this.onChanged);
 
   @override
+  void initState() {
+    super.initState();
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(0);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var mediaQuerySize = MediaQuery.of(context).size;
+
     List<Widget> entries = elements.map((e) {
       final isSelected = selected.contains(e);
       return PlatformSelectListTile(
@@ -97,8 +109,26 @@ class _MultiSelectState<E> extends State {
           .toList();
     }
 
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start, children: entries);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+    });
+
+    return Scrollbar(
+      isAlwaysShown: true,
+      controller: _scrollController,
+      thickness: mediaQuerySize.width * 0.01,
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: entries.length,
+        itemBuilder: (context, index) => entries[index],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
 

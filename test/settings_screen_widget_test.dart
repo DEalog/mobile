@@ -9,7 +9,7 @@ import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/screens/settings.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mobile/version.dart';
 import 'package:mockito/mockito.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
@@ -41,6 +41,7 @@ void main() {
       streamingSharedPreferences = await StreamingSharedPreferences.instance;
       appSettings = AppSettings(streamingSharedPreferences);
       getIt.registerSingleton(appSettings);
+      getIt.registerSingleton(version);
       getIt.registerSingleton(Serializer());
       getIt.registerSingleton(restClient);
       getIt.registerSingleton(FeedService());
@@ -72,6 +73,12 @@ void main() {
 
         when(version.state).thenReturn(
           VersionState.UNCHANGED,
+        );
+        when(version.versionCode).thenReturn(
+          0,
+        );
+        when(version.version).thenReturn(
+          '1.0.0',
         );
 
         await createWidget(tester, SettingsScreen());

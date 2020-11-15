@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mobile/settings/channel.dart';
-
 import '../main.dart';
+import '../version.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appSettings = getIt<AppSettings>();
+    final version = getIt<Version>();
+    final buildNumber = version.versionCode;
     return PlatformScaffold(
       iosContentPadding: true,
       body: SafeArea(
@@ -33,14 +35,14 @@ class SettingsScreen extends StatelessWidget {
               elevation: 0.0,
               toolbarHeight: MediaQuery.of(context).size.height * 0.1,
             ),
-            Container(
-              height: 200,
+            Expanded(
               child: ListView(
                 children: [
                   ChannelSettings(appSettings.channels),
                 ],
               ),
             ),
+            Text('App Version: ' + version.version + " Build: $buildNumber")
           ],
         ),
       ),

@@ -43,22 +43,10 @@ class AppCupertinoTheme {
   static get theme {
     Fimber.d("Setting theme: cupertino");
     return new CupertinoThemeData(
-      primaryColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.black,
-        darkColor: Colors.blue,
-      ),
-      scaffoldBackgroundColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.white,
-        darkColor: Colors.grey[900],
-      ),
-      barBackgroundColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.white,
-        darkColor: Colors.grey[900],
-      ),
-      primaryContrastingColor: CupertinoDynamicColor.withBrightness(
-        color: Colors.white,
-        darkColor: Colors.red,
-      ),
+      primaryColor: Colors.black,
+      scaffoldBackgroundColor: Colors.white,
+      barBackgroundColor: Colors.white,
+      primaryContrastingColor: Colors.white,
     );
   }
 }

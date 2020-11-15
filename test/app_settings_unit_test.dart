@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/model/ars.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

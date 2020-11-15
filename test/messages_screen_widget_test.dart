@@ -18,7 +18,7 @@ import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/screens/messages.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';

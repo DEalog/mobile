@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mobile/version.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
