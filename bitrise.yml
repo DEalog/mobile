@@ -63,7 +63,7 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0: 
+    - deploy-to-itunesconnect-application-loader@0:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
@@ -103,7 +103,10 @@ workflows:
         - channel: '#mobile'
   integration:
     steps:
-    - avd-manager@1: {}
+    - avd-manager@1:
+        inputs:
+        - profile: pixel_3a
+        - api_level: '30'
     - script@1:
         inputs:
         - content: avdmanager list device
@@ -122,7 +125,7 @@ workflows:
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
-        - version: 1.22.0
+        - version: stable
         - commands: drive --target=test_driver/app.dart
         title: Flutter Drive
     - deploy-to-bitrise-io@1: {}
@@ -150,7 +153,7 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0: 
+    - deploy-to-itunesconnect-application-loader@0:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
