@@ -23,86 +23,62 @@ void main() {
         driver.close();
       }
     });
-    group('Home Screen', () {
-      test('Homescreen setup', () async {
-        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
-        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
-      });
-    });
 
-    group('Onboarding Tests', () {
+    group('Onboarding Tests Form', () {
       test('Should start with settings at first run', () async {
-        await driver.tap(find.byValueKey("AppBarButtonSettings"));
         await driver.waitFor(find.byValueKey("DEalogLogoKey"));
-        await driver.waitFor(find.text("Please subscribe a channel!"));
-        await driver.waitFor(find.text("Subscribed Channels"));
-        await driver.waitFor(find.byValueKey("add_channel"));
+        await driver.waitForAbsent(find.byValueKey("wizardCancel"));
+        await driver.waitFor(find.byValueKey("wizardContinue"));
+        await driver.waitFor(find.byValueKey("wizardFormOneText"));
       });
 
-      test('Add device location fire channel', () async {
-        await driver.waitForAbsent(find.text("Fire"));
-
-        await driver.tap(find.byValueKey("add_channel"));
-
+      test('Add device location all channels but fire channel', () async {
+        await driver.tap(find.byValueKey("wizardUseLocationButton"));
+        await driver.tap(find.byValueKey("wizardContinue"));
+        await driver.tap(find.byValueKey("wizardContinue"));
         await scrollAndTap("state_FIRE", driver);
-
-        await scrollAndTap("submit_channel", driver);
-
-        await driver.waitFor(find.text("Fire"));
-        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
+        await driver.tap(find.byValueKey("wizardSave"));
+        await driver.waitFor(find.byValueKey('locationView'));
+        await driver.waitFor(find.byValueKey('locationViewCurrentLocation'));
       });
 
-      test('Add custom location weather and env channel', () async {
-        await driver.waitForAbsent(find.text("Meteorological"));
-        await driver.waitForAbsent(find.text("Environment"));
+      test('Add custom location without weather and env channel', () async {
+        await driver.tap(find.byValueKey("AppBarWizardButton"));
 
-        await driver.tap(find.byValueKey("add_channel"));
-
-        await driver.tap(find.byValueKey("use_location_toggle"));
-
-        await driver.tap(find.byValueKey("location_input"));
-        await driver.enterText("my location");
+        await driver.tap(find.byValueKey('wizardLocationTextField'));
+        await driver.enterText('Arnsberg');
+        await driver.tap(find.byValueKey("wizardContinue"));
+        await driver.tap(find.byValueKey("wizardContinue"));
 
         await scrollAndTap("state_MET", driver);
         await scrollAndTap("state_ENV", driver);
 
-        await scrollAndTap("submit_channel", driver);
+        await driver.tap(find.byValueKey("wizardSave"));
+        await driver.waitFor(find.byValueKey('locationView'));
+        await driver.waitFor(find.text("Arnsberg"));
+      });
+    });
 
-        await driver.waitFor(find.text("Meteorological"));
-        await driver.waitFor(find.text("Environment"));
+    group('Home Screen', () {
+      test('Homescreen setup', () async {
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
+        await driver.waitFor(find.byValueKey("AppBarWizardButton"));
       });
 
-      test('Add another channel removes add channel button', () async {
-        await driver.waitForAbsent(find.text("Health"));
-
-        await driver.tap(find.byValueKey("add_channel"));
-
-        await scrollAndTap("state_HEALTH", driver);
-
-        await scrollAndTap("submit_channel", driver);
-
-        await driver.waitFor(find.text("Health"));
-        await driver.waitForAbsent(find.byValueKey("add_channel"));
-      });
-
-      test('Deleting all channels should show message', () async {
-        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-        await driver.tap(find.byValueKey("delete_channel_0"));
-
-        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-        await driver.tap(find.byValueKey("delete_channel_0"));
-
-        await driver.waitForAbsent(find.text("Please subscribe a channel!"));
-        await driver.tap(find.byValueKey("delete_channel_0"));
-
-        await driver.waitFor(find.text("Please subscribe a channel!"));
+      test('Open Wizard for new channel', () async {
+        await driver.tap(find.byValueKey("AppBarWizardButton"));
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.byValueKey("wizardCancel"));
+        await driver.waitFor(find.byValueKey("wizardContinue"));
+        await driver.waitFor(find.byValueKey("wizardFormOneText"));
       });
     });
   });
 }
 
 Future scrollAndTap(String key, FlutterDriver driver) async {
-  var submitChannel = find.byValueKey(key);
-  await driver.scrollIntoView(submitChannel);
-  await driver.tap(submitChannel);
+  var finder = find.byValueKey(key);
+  await driver.scrollIntoView(finder);
+  await driver.tap(finder);
 }

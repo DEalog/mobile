@@ -15,6 +15,7 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
+    - cache-pull@2: {}
     - get-pubspec-version-and-build-number@1: {}
     - script@1:
         inputs:
@@ -31,8 +32,9 @@ workflows:
               echo "Project version does not match tag"
               exit 1
             fi
-    - flutter-installer@0: {}
-    - cache-pull@2: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-analyze@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -63,7 +65,7 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0: 
+    - deploy-to-itunesconnect-application-loader@0:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
@@ -80,8 +82,10 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
-    - flutter-installer@0: {}
     - cache-pull@2: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-analyze@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -103,26 +107,32 @@ workflows:
         - channel: '#mobile'
   integration:
     steps:
-    - avd-manager@1: {}
     - script@1:
         inputs:
         - content: avdmanager list device
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
-    - flutter-installer@0: {}
     - cache-pull@2: {}
-    - flutter-analyze@0:
+    - avd-manager@1:
         inputs:
-        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-    - flutter-test@0:
+        - api_level: '26'
+        - profile: '18' # pixel
+        # - profile: '21' # pixel 3
+    - flutter-installer@0:
         inputs:
-        - generate_code_coverage_files: 'yes'
-        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+        - version: $BITRISE_FLUTTER_VERSION
+    # - flutter-analyze@0:
+    #     inputs:
+    #     - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
+    # - flutter-test@0:
+    #     inputs:
+    #     - generate_code_coverage_files: 'yes'
+    #     - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
-        - version: 1.22.0
+        - version: $BITRISE_FLUTTER_VERSION
         - commands: drive --target=test_driver/app.dart
         title: Flutter Drive
     - deploy-to-bitrise-io@1: {}
@@ -132,9 +142,11 @@ workflows:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
-    - get-pubspec-version-and-build-number@1: {}
-    - flutter-installer@0: {}
     - cache-pull@2: {}
+    - get-pubspec-version-and-build-number@1: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-build@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -150,12 +162,36 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0: 
+    - deploy-to-itunesconnect-application-loader@0:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
+  integration_iOS:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - cache-pull@2: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
+    - flutter-build@0:
+        inputs:
+        - platform: ios
+    - xcode-build-for-simulator@0:
+        inputs:
+        - configuration: Release
+        - simulator_device: iPhone 8
+    - flutter@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
+        - commands: drive --target=test_driver/app.dart
+        title: Flutter Drive
+    - deploy-to-bitrise-io@1: {}
+    - cache-push@2: {}
 app:
   envs:
+  - BITRISE_FLUTTER_VERSION: 1.22.4
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .

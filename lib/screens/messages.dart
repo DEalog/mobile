@@ -7,7 +7,7 @@ import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mobile/ui_kit/channel.dart';
 import 'package:mobile/ui_kit/message_card_ui.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';

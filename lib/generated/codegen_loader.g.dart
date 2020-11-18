@@ -60,6 +60,7 @@ class CodegenLoader extends AssetLoader{
       "none_defined": "Bitte abonnieren Sie einen Kanal!"
     },
     "use_location": "Gerätestandort nutzen",
+    "current_location": "Aktueller Standort",
     "select_location": "Für welchen Ort möchtest du informiert werden?",
     "select_layer": "Aus welchen föderalen Ebenen möchtest du informiert werden?",
     "select_category": "Für welche Bereiche möchtest du informiert werden?",
@@ -112,6 +113,7 @@ static const Map<String,dynamic> en = {
       "none_defined": "Please subscribe a channel!"
     },
     "use_location": "Use device location",
+    "current_location": "Current location",
     "select_location": "For which location do you want to be informed?",
     "select_layer": "From which federal layers would you like to be informed?",
     "select_category": "For which areas would you like to be informed?",

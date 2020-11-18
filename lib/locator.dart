@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobile/api/feed_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/api/serializer.dart';
-import 'package:mobile/settings.dart';
+import 'package:mobile/app_settings.dart';
 import 'package:mobile/version.dart';
 import 'package:package_info/package_info.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';

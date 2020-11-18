@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/model/channel.dart';
 
 class LocationView extends StatelessWidget {
@@ -14,16 +15,28 @@ class LocationView extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget locationView;
     if (location == null) {
-      locationView = Icon(PlatformIcons(context).location);
+      locationView = Row(
+        key: Key('locationViewCurrentLocation'),
+        children: [
+          Icon(
+            PlatformIcons(context).location,
+          ),
+          Text(
+            LocaleKeys.settings_current_location.tr(),
+          ),
+        ],
+      );
     } else {
       var name = location.name;
       locationView = Padding(
+          key: Key('locationViewStaticLocation'),
           padding: EdgeInsets.all(5.0),
           child: Text(name != null ? name : "n/a"));
     }
     return Container(
+      key: Key('locationView'),
       alignment: this.alignment,
-      child: Container(child: locationView),
+      child: locationView,
       padding: EdgeInsets.all(3.0),
     );
   }
@@ -46,7 +59,10 @@ class ChannelView extends StatelessWidget {
     );
 
     return Row(
-      children: <Widget>[LocationView(channel.location), categories],
+      children: <Widget>[
+        LocationView(channel.location),
+        Expanded(child: categories),
+      ],
     );
   }
 }
