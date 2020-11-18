@@ -106,7 +106,7 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - profile: pixel_3a
+        - profile: pixel
         - api_level: '30'
     - script@1:
         inputs:
