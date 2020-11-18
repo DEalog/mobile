@@ -112,8 +112,8 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - profile: Pixel 3
-        - api_level: '26'
+        - api_level: '30'
+        - profile: '21' # pixel 3
     # - flutter-installer@0: {}
     # - flutter-analyze@0:
     #     inputs:
