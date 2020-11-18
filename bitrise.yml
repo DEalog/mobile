@@ -32,7 +32,9 @@ workflows:
               echo "Project version does not match tag"
               exit 1
             fi
-    - flutter-installer@0: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-analyze@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -81,7 +83,9 @@ workflows:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
-    - flutter-installer@0: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-analyze@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -112,9 +116,12 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - api_level: '30'
-        - profile: '21' # pixel 3
-    # - flutter-installer@0: {}
+        - api_level: '26'
+        - profile: '18' # pixel
+        # - profile: '21' # pixel 3
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     # - flutter-analyze@0:
     #     inputs:
     #     - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -125,7 +132,7 @@ workflows:
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
-        - version: stable
+        - version: $BITRISE_FLUTTER_VERSION
         - commands: drive --target=test_driver/app.dart
         title: Flutter Drive
     - deploy-to-bitrise-io@1: {}
@@ -137,7 +144,9 @@ workflows:
     - git-clone@4: {}
     - cache-pull@2: {}
     - get-pubspec-version-and-build-number@1: {}
-    - flutter-installer@0: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
     - flutter-build@0:
         inputs:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
@@ -159,6 +168,7 @@ workflows:
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
 app:
   envs:
+  - BITRISE_FLUTTER_VERSION: 1.22.4
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
