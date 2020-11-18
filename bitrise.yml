@@ -166,6 +166,29 @@ workflows:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
+  integration_iOS:
+    steps:
+    - activate-ssh-key@4:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4: {}
+    - cache-pull@2: {}
+    - flutter-installer@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
+    - flutter-build@0:
+        inputs:
+        - platform: ios
+    - xcode-build-for-simulator@0:
+        inputs:
+        - configuration: Release
+        - simulator_device: iPhone 8
+    - flutter@0:
+        inputs:
+        - version: $BITRISE_FLUTTER_VERSION
+        - commands: drive --target=test_driver/app.dart
+        title: Flutter Drive
+    - deploy-to-bitrise-io@1: {}
+    - cache-push@2: {}
 app:
   envs:
   - BITRISE_FLUTTER_VERSION: 1.22.4
