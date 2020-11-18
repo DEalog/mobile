@@ -12,10 +12,10 @@ trigger_map:
 workflows:
   deploy:
     steps:
-    - cache-pull@2: {}
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
+    - cache-pull@2: {}
     - get-pubspec-version-and-build-number@1: {}
     - script@1:
         inputs:
@@ -77,10 +77,10 @@ workflows:
         - message_on_error: Failed to deploy \U0001F631
   primary:
     steps:
-    - cache-pull@2: {}
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
+    - cache-pull@2: {}
     - flutter-installer@0: {}
     - flutter-analyze@0:
         inputs:
@@ -103,17 +103,17 @@ workflows:
         - channel: '#mobile'
   integration:
     steps:
-    - cache-pull@2: {}
-    - avd-manager@1:
-        inputs:
-        - profile: pixel
-        - api_level: '30'
     - script@1:
         inputs:
         - content: avdmanager list device
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
+    - cache-pull@2: {}
+    - avd-manager@1:
+        inputs:
+        - profile: Pixel 3a
+        - api_level: '26'
     # - flutter-installer@0: {}
     # - flutter-analyze@0:
     #     inputs:
@@ -132,10 +132,10 @@ workflows:
     - cache-push@2: {}
   deploy_iOS:
     steps:
-    - cache-pull@2: {}
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
+    - cache-pull@2: {}
     - get-pubspec-version-and-build-number@1: {}
     - flutter-installer@0: {}
     - flutter-build@0:
