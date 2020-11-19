@@ -172,6 +172,11 @@ workflows:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
+    - git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master:
+        title: Start Simulator
+        inputs:
+        - simctl_command: boot
+        - simctl_device: iphone 8
     # - flutter-installer@0:
     #     inputs:
     #     - version: $BITRISE_FLUTTER_VERSION
@@ -183,6 +188,11 @@ workflows:
         - version: $BITRISE_FLUTTER_VERSION
         - commands: drive --target=test_driver/app.dart
         title: Flutter Drive
+    - git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master:
+        title: Stop Simulator
+        inputs:
+        - simctl_command: shutdown
+        - simctl_device: iphone 8
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
 app:
