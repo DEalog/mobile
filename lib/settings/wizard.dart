@@ -202,8 +202,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
             ),
           ),
         ),
-        Container(
-          height: mediaQuerySize.width * 0.8,
+        Expanded(
           child: MultiSelectFormField<ArsLevel>(
             elements: arsLevels,
             elementName: (arsLevel) =>
