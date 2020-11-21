@@ -77,6 +77,8 @@ workflows:
         - channel: '#deployment'
         - message: Successful deployment to PlayStore and AppleStore \U0001F4AA
         - message_on_error: Failed to deploy \U0001F631
+    before_run:
+    - integration
   primary:
     steps:
     - activate-ssh-key@4:
@@ -122,13 +124,6 @@ workflows:
     - flutter-installer@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-    # - flutter-analyze@0:
-    #     inputs:
-    #     - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-    # - flutter-test@0:
-    #     inputs:
-    #     - generate_code_coverage_files: 'yes'
-    #     - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
@@ -136,36 +131,9 @@ workflows:
         - commands: drive --target=test_driver/app.dart
         title: Flutter Drive
     - deploy-to-bitrise-io@1: {}
-    - cache-push@2: {}
-  deploy_iOS:
-    steps:
-    - activate-ssh-key@4:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone@4: {}
-    - cache-pull@2: {}
-    - get-pubspec-version-and-build-number@1: {}
-    - flutter-installer@0:
-        inputs:
-        - version: $BITRISE_FLUTTER_VERSION
-    - flutter-build@0:
-        inputs:
-        - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
-        - platform: both
-        - android_output_type: appbundle
-    - ios-auto-provision-appstoreconnect@0:
-        inputs:
-        - distribution_type: app-store
-    - xcode-archive@2:
-        inputs:
-        - project_path: $BITRISE_PROJECT_PATH
-        - scheme: $BITRISE_SCHEME
-        - export_method: $BITRISE_EXPORT_METHOD
-        - team_id: $BITRISE_DEVELOPER_TEAM
-        - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0:
-        inputs:
-        - app_password: $APPLE_CONNECT_APP_PW_FS
-        - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
+    - cache-push@2: {}    
+    after_run:
+    - integration_iOS
   integration_iOS:
     steps:
     - activate-ssh-key@4:
@@ -177,12 +145,6 @@ workflows:
         inputs:
         - simctl_command: boot
         - simctl_device: iphone 8
-    # - flutter-installer@0:
-    #     inputs:
-    #     - version: $BITRISE_FLUTTER_VERSION
-    # - flutter-build@0:
-    #     inputs:
-    #     - platform: ios
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
