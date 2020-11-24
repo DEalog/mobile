@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
+import 'package:mobile/model/region.dart';
 import 'package:mobile/ui_kit/channel.dart';
 
 import '../support.dart';
@@ -18,8 +19,16 @@ void main() {
   });
 
   testWidgets('Shows location name', (WidgetTester tester) async {
-    await createWidget(tester,
-        LocationView(Location("Foo", Coordinate(0, 0), Map.fromIterable([]))));
+    await createWidget(
+      tester,
+      LocationView(
+        Location(
+          "Foo",
+          Coordinate(0, 0),
+          Region.empty(),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text("Foo"), findsOneWidget);
@@ -27,7 +36,11 @@ void main() {
 
   testWidgets('Shows channel location name', (WidgetTester tester) async {
     var channel = Channel(
-        Location("Foo", Coordinate(0, 0), Map.fromIterable([])),
+        Location(
+          "Foo",
+          Coordinate(0, 0),
+          Region.empty(),
+        ),
         Set.of([]),
         Set.of([]));
 

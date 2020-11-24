@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:mobile/api/feed_service.dart';
+import 'package:mobile/api/data_service.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
@@ -21,12 +21,12 @@ class MessagesScreen extends StatefulWidget {
 
 class MessagesScreenState extends State<MessagesScreen> {
   HashMap<Channel, Future<List<FeedMessage>>> futureFeedMessages = HashMap();
-  FeedService feedService;
+  DataService dataService;
   Preference<List<Channel>> channelsPref;
   List<Channel> channels;
 
   MessagesScreenState() {
-    feedService = getIt<FeedService>();
+    dataService = getIt<DataService>();
     channelsPref = getIt<AppSettings>().channels;
     channels = channelsPref.getValue();
   }
@@ -42,7 +42,7 @@ class MessagesScreenState extends State<MessagesScreen> {
               channels = newChannels;
               channels.forEach(
                 (channel) {
-                  futureFeedMessages[channel] = feedService.getFeed();
+                  futureFeedMessages[channel] = dataService.getFeed();
                 },
               );
             },
