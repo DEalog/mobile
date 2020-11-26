@@ -4,9 +4,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobile/api/feed_service.dart';
+import 'package:mobile/api/data_service.dart';
 import 'package:mobile/api/rest_client.dart';
-import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/screens/settings.dart';
 import 'package:mobile/app_settings.dart';
@@ -42,9 +41,8 @@ void main() {
       appSettings = AppSettings(streamingSharedPreferences);
       getIt.registerSingleton(appSettings);
       getIt.registerSingleton(version);
-      getIt.registerSingleton(Serializer());
       getIt.registerSingleton(restClient);
-      getIt.registerSingleton(FeedService());
+      getIt.registerSingleton(DataService());
     },
   );
 

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
-import 'package:mobile/model/ars.dart';
+import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/ui_kit/channel.dart';
@@ -114,7 +114,7 @@ class _ChannelFormState extends State<ChannelForm> {
                   if (value == null) return;
                   setState(() {
                     model.update((channel) => Channel(channel.location,
-                        Set.of(ArsLevel.values), value.toSet()));
+                        Set.of(RegionLevel.values), value.toSet()));
                   });
                 },
               )
@@ -133,7 +133,7 @@ class _ChannelFormState extends State<ChannelForm> {
       setState(() {
         model.update((channel) {
           var location = channel.location;
-          return Channel(Location(value, location.coordinate, location.levels),
+          return Channel(Location(value, location.coordinate, location.region),
               channel.levels, channel.categories);
         });
       });
@@ -158,8 +158,7 @@ class _ChannelFormState extends State<ChannelForm> {
 
   mapLocation(String customLocation) {
     Fimber.i("mapLocation: $customLocation");
-    var arsMap = Map.fromIterable([]);
-    return Location(customLocation, Coordinate(0, 0), arsMap);
+    return Location(customLocation, Coordinate(0, 0), Region.empty());
   }
 }
 

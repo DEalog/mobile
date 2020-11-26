@@ -118,6 +118,7 @@ class _MultiSelectState<E> extends State {
       controller: _scrollController,
       thickness: mediaQuerySize.width * 0.01,
       child: ListView.builder(
+        key: Key('listview_multiselect'),
         controller: _scrollController,
         itemCount: entries.length,
         itemBuilder: (context, index) => entries[index],

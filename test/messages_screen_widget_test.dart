@@ -12,11 +12,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobile/api/feed_service.dart';
+import 'package:mobile/api/data_service.dart';
 import 'package:mobile/api/rest_client.dart';
-import 'package:mobile/api/serializer.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
+import 'package:mobile/model/region.dart';
 import 'package:mobile/screens/messages.dart';
 import 'package:mobile/app_settings.dart';
 import 'package:mockito/mockito.dart';
@@ -44,8 +44,7 @@ void main() {
   final Channel channelWithoutLocationAndCategories = Channel.empty();
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
-    Location(
-        "Berlin", Coordinate(13.4105300, 52.5243700), Map.fromIterable([])),
+    Location("Berlin", Coordinate(13.4105300, 52.5243700), Region.empty()),
     Set.of([]),
     Set.of([]),
   );
@@ -56,9 +55,8 @@ void main() {
       streamingSharedPreferences = await StreamingSharedPreferences.instance;
       appSettings = AppSettings(streamingSharedPreferences);
       getIt.registerSingleton(appSettings);
-      getIt.registerSingleton(Serializer());
       getIt.registerSingleton(restClient);
-      getIt.registerSingleton(FeedService());
+      getIt.registerSingleton(DataService());
     },
   );
 

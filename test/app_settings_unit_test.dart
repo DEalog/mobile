@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile/model/ars.dart';
+import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/app_settings.dart';
@@ -47,14 +49,28 @@ void main() {
 
   test('Read channel with location name only', () async {
     when(prefs.getStringList(key)).thenReturn([
-      "{\"location\":{\"name\":\"Town\",\"levels\":{\"COUNTRY\":\"Germany\"}},\"categories\":[]}"
+      jsonEncode(
+        {
+          "location": {
+            "name": "Town",
+            "region": {
+              "ars": "123",
+              "type": "COUNTRY",
+              "name": "Germany",
+            },
+          },
+          "levels": [],
+          "categories": [],
+        },
+      )
     ]);
 
     var result = uut.getValue(prefs, key);
 
     Channel channel = result[0];
     expect(channel.location.name, "Town");
-    expect(channel.location.levels, {ArsLevel.COUNTRY: "Germany"});
+    expect(channel.location.region.name, "Germany");
+    expect(channel.location.region.type, RegionLevel.COUNTRY);
   });
 
   test('Write channel data without location', () async {
@@ -64,24 +80,50 @@ void main() {
     ]);
 
     verify(prefs.setStringList(key, [
-      "{\"location\":null,\"levels\":[],\"categories\":[\"FIRE\",\"MET\"]}"
+      jsonEncode({
+        "location": null,
+        "levels": [],
+        "categories": ["FIRE", "MET"]
+      })
     ]));
   });
 
   test('Write all channel data', () async {
     uut.setValue(prefs, key, [
       Channel(
-          Location("Location", Coordinate(11.5754, 48.1374),
-              Map.fromEntries([MapEntry(ArsLevel.DISTRICT, "Munich")])),
-          Set.of([ArsLevel.DISTRICT]),
+          Location(
+            "Location",
+            Coordinate(11.5754, 48.1374),
+            Region("123", "Munich", RegionLevel.DISTRICT),
+          ),
+          Set.of([RegionLevel.DISTRICT]),
           Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
     verify(prefs.setStringList(key, [
-      "{\"location\":{\"name\":\"Location\","
-          "\"coordinate\":{\"longitude\":11.5754,\"latitude\":48.1374},"
-          "\"levels\":{\"DISTRICT\":\"Munich\"}},"
-          "\"levels\":[\"DISTRICT\"],\"categories\":[\"FIRE\",\"MET\"]}"
+      jsonEncode(
+        {
+          "location": {
+            "name": "Location",
+            "coordinate": {
+              "longitude": 11.5754,
+              "latitude": 48.1374,
+            },
+            "region": {
+              "ars": "123",
+              "name": "Munich",
+              "type": "DISTRICT",
+            },
+          },
+          "levels": [
+            "DISTRICT",
+          ],
+          "categories": [
+            "FIRE",
+            "MET",
+          ],
+        },
+      )
     ]));
   });
 }

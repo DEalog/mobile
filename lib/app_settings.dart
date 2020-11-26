@@ -26,8 +26,11 @@ class AppSettings {
   AppSettings(this.preferences)
       : lastKnownVersionCodePrefs =
             preferences.getInt(LAST_KNOWN_VERSION_CODE_KEY, defaultValue: 0),
-        channels = preferences.getCustomValue(LOCATIONS_KEY,
-            defaultValue: List.empty(), adapter: ChannelAdapter());
+        channels = preferences.getCustomValue(
+          LOCATIONS_KEY,
+          defaultValue: List.empty(),
+          adapter: ChannelAdapter(),
+        );
 }
 
 class ChannelAdapter extends PreferenceAdapter<List<Channel>> {
@@ -53,8 +56,8 @@ class ChannelAdapter extends PreferenceAdapter<List<Channel>> {
   @override
   Future<bool> setValue(
       SharedPreferences preferences, String key, List<Channel> channels) {
-    return preferences.setStringList(
-        key, channels.map((channel) => _toJson(channel)).toList());
+    var channelsJson = channels.map((channel) => _toJson(channel)).toList();
+    return preferences.setStringList(key, channelsJson);
   }
 
   String _toJson(Channel channel) {

@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mobile/model/ars.dart';
+import 'package:mobile/model/region.dart';
 
 import 'gis.dart';
 
@@ -34,11 +34,11 @@ class Location {
   @JsonKey(nullable: true)
   final Coordinate coordinate;
   @JsonKey(nullable: true)
-  final Map<ArsLevel, String> levels;
+  final Region region;
 
-  Location(this.name, this.coordinate, this.levels);
+  Location(this.name, this.coordinate, this.region);
 
-  Location.empty() : this("", null, Map.fromIterable([]));
+  Location.empty() : this("", null, Region.empty());
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
@@ -55,12 +55,13 @@ class Channel {
   @JsonKey(nullable: true)
   final Location location;
   @JsonKey(nullable: true)
-  final Set<ArsLevel> levels;
+  final Set<RegionLevel> levels;
   final Set<ChannelCategory> categories;
 
   Channel(this.location, this.levels, this.categories);
 
-  Channel.deviceLocation(Set<ArsLevel> levels, Set<ChannelCategory> categories)
+  Channel.deviceLocation(
+      Set<RegionLevel> levels, Set<ChannelCategory> categories)
       : this(null, levels, categories);
 
   Channel.empty() : this(null, Set.of([]), Set.of([]));

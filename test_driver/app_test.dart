@@ -36,7 +36,7 @@ void main() {
         await driver.tap(find.byValueKey("wizardUseLocationButton"));
         await driver.tap(find.byValueKey("wizardContinue"));
         await driver.tap(find.byValueKey("wizardContinue"));
-        await scrollAndTap("state_FIRE", driver);
+        await scrollAndTap("state_FIRE", 'listview_multiselect', driver);
         await driver.tap(find.byValueKey("wizardSave"));
         await driver.waitFor(find.byValueKey('locationView'));
         await driver.waitFor(find.byValueKey('locationViewCurrentLocation'));
@@ -50,8 +50,8 @@ void main() {
         await driver.tap(find.byValueKey("wizardContinue"));
         await driver.tap(find.byValueKey("wizardContinue"));
 
-        await scrollAndTap("state_MET", driver);
-        await scrollAndTap("state_ENV", driver);
+        await scrollAndTap("state_MET", 'listview_multiselect', driver);
+        await scrollAndTap("state_ENV", 'listview_multiselect', driver);
 
         await driver.tap(find.byValueKey("wizardSave"));
         await driver.waitFor(find.byValueKey('locationView'));
@@ -77,8 +77,17 @@ void main() {
   });
 }
 
-Future scrollAndTap(String key, FlutterDriver driver) async {
-  var finder = find.byValueKey(key);
-  await driver.scrollIntoView(finder);
-  await driver.tap(finder);
+Future scrollAndTap(
+    String itemKey, String scrollWidgetKey, FlutterDriver driver) async {
+  var itemFinder = find.byValueKey(itemKey);
+  var scrollable = find.byValueKey(scrollWidgetKey);
+  await driver.scrollUntilVisible(
+    scrollable,
+    itemFinder,
+    dyScroll: -150.0,
+  );
+  await driver.tap(
+    itemFinder,
+  );
+  await Future.delayed(Duration(milliseconds: 200));
 }

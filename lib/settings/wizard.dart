@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
-import 'package:mobile/model/ars.dart';
+import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
@@ -30,19 +30,19 @@ class ChannelWizard extends StatefulWidget {
 
 class ArsEntry {
   final String name;
-  final ArsLevel arsLevel;
+  final RegionLevel regionLevel;
 
-  ArsEntry(this.name, this.arsLevel);
+  ArsEntry(this.name, this.regionLevel);
 }
 
 class DataProvider {
   List<ArsEntry> fetchArsEntries(Coordinate coordinate) {
     return [
-      ArsEntry("Deutschland", ArsLevel.COUNTRY),
-      ArsEntry("Bayern", ArsLevel.STATE),
-      ArsEntry("Oberbayern", ArsLevel.DISTRICT),
-      ArsEntry("Weilheim", ArsLevel.COUNTY),
-      ArsEntry("Peißenberg", ArsLevel.MUNICIPALITY)
+      ArsEntry("Deutschland", RegionLevel.COUNTRY),
+      ArsEntry("Bayern", RegionLevel.STATE),
+      ArsEntry("Oberbayern", RegionLevel.DISTRICT),
+      ArsEntry("Weilheim", RegionLevel.COUNTY),
+      ArsEntry("Peißenberg", RegionLevel.MUNICIPALITY)
     ];
   }
 }
@@ -52,7 +52,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
   List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
   Location location;
-  Set<ArsLevel> levels;
+  Set<RegionLevel> levels;
   Set<ChannelCategory> categories;
 
   DataProvider _dataProvider = DataProvider();
@@ -178,9 +178,9 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   Column formTwoBuilder(BuildContext context) {
     final arsEntries = _dataProvider.fetchArsEntries(null);
-    final arsLevels = arsEntries.map((e) => e.arsLevel).toList();
+    final regionLevels = arsEntries.map((e) => e.regionLevel).toList();
     final arsMap =
-        HashMap.fromEntries(arsEntries.map((e) => MapEntry(e.arsLevel, e)));
+        HashMap.fromEntries(arsEntries.map((e) => MapEntry(e.regionLevel, e)));
     final mediaQuerySize = MediaQuery.of(context).size;
 
     return Column(
@@ -202,18 +202,17 @@ class _ChannelWizardState extends State<ChannelWizard> {
             ),
           ),
         ),
-        Container(
-          height: mediaQuerySize.width * 0.8,
-          child: MultiSelectFormField<ArsLevel>(
-            elements: arsLevels,
-            elementName: (arsLevel) =>
-                "${arsMap[arsLevel].name} (${arsLevelName(arsLevel)})",
-            initialValue: arsLevels.toSet(),
-            onSaved: (arsLevels) {
-              Fimber.i("ArsLevels selected: $arsLevels");
-              if (arsLevels != null && arsLevels.isNotEmpty) {
+        Expanded(
+          child: MultiSelectFormField<RegionLevel>(
+            elements: regionLevels,
+            elementName: (regionLevel) =>
+                "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
+            initialValue: regionLevels.toSet(),
+            onSaved: (regionLevels) {
+              Fimber.i("RegionLevels selected: $regionLevels");
+              if (regionLevels != null && regionLevels.isNotEmpty) {
                 setState(() {
-                  levels = arsLevels;
+                  levels = regionLevels;
                 });
               }
             },
@@ -248,7 +247,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
           child: MultiSelectFormField<ChannelCategory>(
             initialValue: ChannelCategory.values.toSet(),
             elements: ChannelCategory.values,
-            elementName: (arsLevel) => categoryName(arsLevel),
+            elementName: (regionLevel) => categoryName(regionLevel),
             onSaved: (channelCategories) {
               Fimber.i("Channel categories selected: $channelCategories");
               if (channelCategories != null && channelCategories.isNotEmpty) {
