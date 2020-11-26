@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class RestClient {
@@ -21,6 +19,42 @@ class RestClient {
       "name": regionName,
     };
     var uri = Uri.https(authority, "/api/regions/", queryParameters);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      return response.body;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<String> getRegionHierarchyById(String id) async {
+    var queryParameters = {
+      "ars": id,
+    };
+    var uri = Uri.https(authority, "/api/regions/hierarchy", queryParameters);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      return response.body;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<String> getRegionHierarchyByCoordinates(
+      double lat, double long) async {
+    var queryParameters = {
+      "long": long.toString(),
+      "lat": lat.toString(),
+    };
+    var uri = Uri.https(authority, "/api/regions/hierarchy", queryParameters);
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
