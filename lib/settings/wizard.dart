@@ -3,12 +3,14 @@ import 'dart:collection';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_typeahead/cupertino_flutter_typeahead.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mobile/api/data_service.dart';
+import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/region.dart';
@@ -63,12 +65,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
   Set<ChannelCategory> categories;
   DataService dataService = getIt<DataService>();
   DataProvider _dataProvider = DataProvider();
-  Region _selectedRegion;
 
   _ChannelWizardState({this.channelSettings}) {
     this.channels.addAll(channelSettings.getValue());
     this.channelLocation = ChannelLocation.empty();
-    this._selectedRegion = Region.empty();
     this.location = new Location();
   }
 
@@ -79,7 +79,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() => this.channelLocation == null;
+  bool useLocation() => this.channelLocation.coordinate != null;
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
@@ -140,22 +140,23 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     title: PlatformText(region.name),
                   );
                 },
+                validator: (value) {
+                  if (!useLocation() && value.length < 3) {
+                    return 'a minimum of 3 characters is required';
+                  }
+                  return null;
+                },
+                autovalidateMode: AutovalidateMode.always,
+                hideOnEmpty: true,
                 onSuggestionSelected: (suggestion) {
                   Region suggestedRegion = suggestion;
                   setState(() {
                     this.editingLocation.text = suggestedRegion.name;
-                    this._selectedRegion = suggestedRegion;
-                  });
-                },
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return LocaleKeys.settings_enter_location.tr();
-                  }
-                  return '';
-                },
-                onSaved: (value) {
-                  setState(() {
-                    this.channelLocation = ChannelLocation(value, null, null);
+                    this.channelLocation = ChannelLocation(
+                      suggestedRegion.name,
+                      null,
+                      suggestedRegion,
+                    );
                   });
                 },
               ),
@@ -195,7 +196,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     bool _serviceEnabled;
                     PermissionStatus _permissionGranted;
                     LocationData _locationData;
-                    if (useLocation()) {
+                    if (!useLocation()) {
                       _serviceEnabled = await location.serviceEnabled();
                       if (!_serviceEnabled) {
                         _serviceEnabled = await location.requestService();
@@ -211,10 +212,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
                           return;
                         }
                       }
-
                       _locationData = await location.getLocation();
 
                       setState(() {
+                        this.editingLocation.clear();
                         this.channelLocation = ChannelLocation(
                           null,
                           Coordinate(
@@ -226,8 +227,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       });
                     } else {
                       setState(() {
-                        this.editingLocation.clear();
-                        this.channelLocation = null;
+                        this.channelLocation = ChannelLocation.empty();
                       });
                     }
                   },
@@ -241,10 +241,6 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Column formTwoBuilder(BuildContext context) {
-    final arsEntries = _dataProvider.fetchArsEntries(null);
-    final regionLevels = arsEntries.map((e) => e.regionLevel).toList();
-    final arsMap =
-        HashMap.fromEntries(arsEntries.map((e) => MapEntry(e.regionLevel, e)));
     final mediaQuerySize = MediaQuery.of(context).size;
 
     return Column(
@@ -267,20 +263,32 @@ class _ChannelWizardState extends State<ChannelWizard> {
           ),
         ),
         Expanded(
-          child: MultiSelectFormField<RegionLevel>(
-            elements: regionLevels,
-            elementName: (regionLevel) =>
-                "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
-            initialValue: regionLevels.toSet(),
-            onSaved: (regionLevels) {
-              Fimber.i("RegionLevels selected: $regionLevels");
-              if (regionLevels != null && regionLevels.isNotEmpty) {
-                setState(() {
-                  levels = regionLevels;
-                });
-              }
-            },
-          ),
+          child: FutureBuilder<RegionHierarchy>(
+              future: dataService.getRegionHierarchy(channelLocation),
+              builder: (BuildContext context,
+                  AsyncSnapshot<RegionHierarchy> snapshot) {
+                if (snapshot.hasData) {
+                  final arsEntries = snapshot.data.regionHierarchy;
+                  final regionLevels = arsEntries.map((e) => e.type).toList();
+                  final arsMap = HashMap.fromEntries(
+                      arsEntries.map((e) => MapEntry(e.type, e)));
+                  return MultiSelectFormField<RegionLevel>(
+                    elements: regionLevels,
+                    elementName: (regionLevel) =>
+                        "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
+                    initialValue: regionLevels.toSet(),
+                    onSaved: (regionLevels) {
+                      Fimber.i("RegionLevels selected: $regionLevels");
+                      if (regionLevels != null && regionLevels.isNotEmpty) {
+                        setState(() {
+                          levels = regionLevels;
+                        });
+                      }
+                    },
+                  );
+                }
+                return Container();
+              }),
         ),
       ],
     );

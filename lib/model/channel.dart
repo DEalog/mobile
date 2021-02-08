@@ -44,6 +44,13 @@ class ChannelLocation {
       _$LocationFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
+
+  @override
+  bool operator ==(o) =>
+      o is ChannelLocation &&
+      o.name == name &&
+      o.coordinate == coordinate &&
+      o.region == region;
 }
 
 Map<String, ChannelCategory> categoryMap = ChannelCategory.values

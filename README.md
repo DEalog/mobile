@@ -128,3 +128,9 @@ envs:
 - BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL: file://<path to google play service account 
 - SLACK_WEBHOOK_URL: <stlack webhook url>
 ```
+
+### Release for pipeline
+
+1. Increase the project version within the pubspec.yaml
+1. Commit and push the repo with the updated project version
+1. Create a new tag for the new project version

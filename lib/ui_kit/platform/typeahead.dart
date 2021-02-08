@@ -61,7 +61,7 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
     this.errorBuilder,
     this.getImmediateSuggestions,
     this.hideKeyboard,
-    this.hideOnEmpty,
+    this.hideOnEmpty = false,
     this.hideOnError,
     this.hideOnLoading,
     this.hideSuggestionsOnKeyboardHide,
@@ -91,7 +91,8 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
       onSuggestionSelected: this.onSuggestionSelected,
       suggestionsCallback: this.suggestionsCallback,
       validator: this.validator,
-      hideOnEmpty: true,
+      hideOnEmpty: this.hideOnEmpty,
+      autovalidateMode: this.autovalidateMode,
       onSaved: this.onSaved,
     );
   }
@@ -106,7 +107,8 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
       onSuggestionSelected: this.onSuggestionSelected,
       suggestionsCallback: this.suggestionsCallback,
       validator: this.validator,
-      hideOnEmpty: true,
+      autovalidateMode: this.autovalidateMode,
+      hideOnEmpty: this.hideKeyboard,
       onSaved: this.onSaved,
     );
   }
