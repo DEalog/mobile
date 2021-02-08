@@ -6,14 +6,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_typeahead/cupertino_flutter_typeahead.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:mobile/api/data_service.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
+import 'package:mobile/ui_kit/platform/listtile.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
+import 'package:mobile/ui_kit/platform/typeahead.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import '../version.dart';
+import 'package:location/location.dart';
 
 final _formKey = GlobalKey<FormState>();
 const _totalSteps = 3;
@@ -51,15 +57,19 @@ class _ChannelWizardState extends State<ChannelWizard> {
   final Preference<List<Channel>> channelSettings;
   List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
+  ChannelLocation channelLocation;
   Location location;
   Set<RegionLevel> levels;
   Set<ChannelCategory> categories;
-
+  DataService dataService = getIt<DataService>();
   DataProvider _dataProvider = DataProvider();
+  Region _selectedRegion;
 
   _ChannelWizardState({this.channelSettings}) {
     this.channels.addAll(channelSettings.getValue());
-    this.location = Location.empty();
+    this.channelLocation = ChannelLocation.empty();
+    this._selectedRegion = Region.empty();
+    this.location = new Location();
   }
 
   @override
@@ -69,7 +79,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() => this.location == null;
+  bool useLocation() => this.channelLocation == null;
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
@@ -106,24 +116,48 @@ class _ChannelWizardState extends State<ChannelWizard> {
           width: mediaQuerySize.width * 0.7,
           child: Column(
             children: [
-              PlatformTextField(
+              PlatformTypeAhead(
                 key: Key('wizardLocationTextField'),
-                controller: editingLocation,
-                enabled: !useLocation(),
-                onChanged: (value) {
-                  setState(() {
-                    this.location = Location(value, null, null);
-                  });
-                },
-                material: (context, platform) => MaterialTextFieldData(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: editingLocation,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: LocaleKeys.settings_enter_location.tr(),
                   ),
+                  enabled: !useLocation(),
                 ),
-                cupertino: (context, platform) => CupertinoTextFieldData(
+                cupertinoTextFieldConfiguration:
+                    CupertinoTextFieldConfiguration(
+                  controller: editingLocation,
                   placeholder: LocaleKeys.settings_enter_location.tr(),
+                  enabled: !useLocation(),
                 ),
+                suggestionsCallback: (pattern) {
+                  return dataService.getMunicipalRegions(pattern);
+                },
+                itemBuilder: (context, region) {
+                  return PlatformListTile(
+                    title: PlatformText(region.name),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  Region suggestedRegion = suggestion;
+                  setState(() {
+                    this.editingLocation.text = suggestedRegion.name;
+                    this._selectedRegion = suggestedRegion;
+                  });
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return LocaleKeys.settings_enter_location.tr();
+                  }
+                  return '';
+                },
+                onSaved: (value) {
+                  setState(() {
+                    this.channelLocation = ChannelLocation(value, null, null);
+                  });
+                },
               ),
               Padding(
                 padding: EdgeInsets.only(top: mediaQuerySize.height * 0.03),
@@ -156,16 +190,46 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    setState(() {
-                      Fimber.i("Update useLocation: $useLocation()");
-                      if (useLocation()) {
-                        this.location = Location.empty();
-                      } else {
-                        this.editingLocation.clear();
-                        this.location = null;
+                  onPressed: () async {
+                    Fimber.i("Update useLocation: $useLocation()");
+                    bool _serviceEnabled;
+                    PermissionStatus _permissionGranted;
+                    LocationData _locationData;
+                    if (useLocation()) {
+                      _serviceEnabled = await location.serviceEnabled();
+                      if (!_serviceEnabled) {
+                        _serviceEnabled = await location.requestService();
+                        if (!_serviceEnabled) {
+                          return;
+                        }
                       }
-                    });
+
+                      _permissionGranted = await location.hasPermission();
+                      if (_permissionGranted == PermissionStatus.denied) {
+                        _permissionGranted = await location.requestPermission();
+                        if (_permissionGranted != PermissionStatus.granted) {
+                          return;
+                        }
+                      }
+
+                      _locationData = await location.getLocation();
+
+                      setState(() {
+                        this.channelLocation = ChannelLocation(
+                          null,
+                          Coordinate(
+                            _locationData.longitude,
+                            _locationData.latitude,
+                          ),
+                          null,
+                        );
+                      });
+                    } else {
+                      setState(() {
+                        this.editingLocation.clear();
+                        this.channelLocation = null;
+                      });
+                    }
                   },
                 ),
               ),
@@ -392,7 +456,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
           Fimber.i("Save pressed");
           if (submit()) {
             this.channels.add(Channel(
-                  this.location,
+                  this.channelLocation,
                   this.levels,
                   this.categories,
                 ));

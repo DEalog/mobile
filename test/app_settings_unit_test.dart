@@ -91,7 +91,7 @@ void main() {
   test('Write all channel data', () async {
     uut.setValue(prefs, key, [
       Channel(
-          Location(
+          ChannelLocation(
             "Location",
             Coordinate(11.5754, 48.1374),
             Region("123", "Munich", RegionLevel.DISTRICT),

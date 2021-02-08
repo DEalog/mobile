@@ -31,6 +31,32 @@ class RestClient {
     }
   }
 
+  Future<String> getRegionsByType(
+      String regionName, List<String> regionLevels) async {
+    var queryParameters = {
+      "name": regionName,
+    };
+    queryParameters.addEntries(
+      regionLevels.map(
+        (regionLevel) => MapEntry(
+          "type",
+          regionLevel,
+        ),
+      ),
+    );
+    var uri = Uri.https(authority, "/api/regions/", queryParameters);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      return response.body;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<String> getRegionHierarchyById(String id) async {
     var queryParameters = {
       "ars": id,

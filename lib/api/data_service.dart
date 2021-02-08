@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:fimber/fimber_base.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/model/regions.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/main.dart';
+import 'package:mobile/model/region.dart';
 
 class DataService {
   final RestClient _restClient = getIt<RestClient>();
@@ -23,14 +26,31 @@ class DataService {
     return serializedMessagesFromFeed;
   }
 
+  /// Region name must be at least 3 characters long
   Future<Regions> getRegions(String name) async {
     String rawRegionsJson = await _restClient.getRegions(name);
     var regions = Regions.fromJson(jsonDecode(rawRegionsJson));
     return regions;
   }
 
-  Future<RegionHierarchy> getRegionHierarchy(Location location) async {
-    var regionHierarchyJson = (Location location) {
+  /// Municipal region name must be at least 3 characters long
+  FutureOr<Iterable<dynamic>> getMunicipalRegions(String name) async {
+    if (name.length < 3) {
+      return List.empty();
+    }
+
+    String rawRegionsJson = await _restClient.getRegionsByType(
+      name,
+      [
+        describeEnum(RegionLevel.MUNICIPALITY),
+      ],
+    );
+    var regions = Regions.fromJson(jsonDecode(rawRegionsJson)).regions;
+    return regions;
+  }
+
+  Future<RegionHierarchy> getRegionHierarchy(ChannelLocation location) async {
+    var regionHierarchyJson = (ChannelLocation location) {
       if (location.region != null && location.region.ars.isNotEmpty) {
         return _restClient.getRegionHierarchyById(
           location.region.ars,

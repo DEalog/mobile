@@ -22,7 +22,7 @@ void main() {
     await createWidget(
       tester,
       LocationView(
-        Location(
+        ChannelLocation(
           "Foo",
           Coordinate(0, 0),
           Region.empty(),
@@ -36,7 +36,7 @@ void main() {
 
   testWidgets('Shows channel location name', (WidgetTester tester) async {
     var channel = Channel(
-        Location(
+        ChannelLocation(
           "Foo",
           Coordinate(0, 0),
           Region.empty(),

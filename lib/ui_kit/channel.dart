@@ -6,7 +6,7 @@ import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/model/channel.dart';
 
 class LocationView extends StatelessWidget {
-  final Location location;
+  final ChannelLocation location;
   final Alignment alignment;
 
   LocationView(this.location, {this.alignment = Alignment.center});

@@ -83,7 +83,7 @@ class _ChannelFormState extends State<ChannelForm> {
                     setState(() {
                       Fimber.i("Update useLocation: $value");
                       model.update((channel) => Channel(
-                          value ? null : Location.empty(),
+                          value ? null : ChannelLocation.empty(),
                           channel.levels,
                           channel.categories));
                     });
@@ -133,8 +133,10 @@ class _ChannelFormState extends State<ChannelForm> {
       setState(() {
         model.update((channel) {
           var location = channel.location;
-          return Channel(Location(value, location.coordinate, location.region),
-              channel.levels, channel.categories);
+          return Channel(
+              ChannelLocation(value, location.coordinate, location.region),
+              channel.levels,
+              channel.categories);
         });
       });
     };
@@ -158,7 +160,7 @@ class _ChannelFormState extends State<ChannelForm> {
 
   mapLocation(String customLocation) {
     Fimber.i("mapLocation: $customLocation");
-    return Location(customLocation, Coordinate(0, 0), Region.empty());
+    return ChannelLocation(customLocation, Coordinate(0, 0), Region.empty());
   }
 }
 

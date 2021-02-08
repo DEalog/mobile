@@ -44,7 +44,8 @@ void main() {
   final Channel channelWithoutLocationAndCategories = Channel.empty();
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
-    Location("Berlin", Coordinate(13.4105300, 52.5243700), Region.empty()),
+    ChannelLocation(
+        "Berlin", Coordinate(13.4105300, 52.5243700), Region.empty()),
     Set.of([]),
     Set.of([]),
   );

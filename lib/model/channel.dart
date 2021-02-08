@@ -29,18 +29,18 @@ String categoryName(ChannelCategory category) =>
     categoryLocalizationKey(category).tr();
 
 @JsonSerializable(nullable: false)
-class Location {
+class ChannelLocation {
   final String name;
   @JsonKey(nullable: true)
   final Coordinate coordinate;
   @JsonKey(nullable: true)
   final Region region;
 
-  Location(this.name, this.coordinate, this.region);
+  ChannelLocation(this.name, this.coordinate, this.region);
 
-  Location.empty() : this("", null, Region.empty());
+  ChannelLocation.empty() : this("", null, Region.empty());
 
-  factory Location.fromJson(Map<String, dynamic> json) =>
+  factory ChannelLocation.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
@@ -53,7 +53,7 @@ Map<String, ChannelCategory> categoryMap = ChannelCategory.values
 @JsonSerializable(nullable: false)
 class Channel {
   @JsonKey(nullable: true)
-  final Location location;
+  final ChannelLocation location;
   @JsonKey(nullable: true)
   final Set<RegionLevel> levels;
   final Set<ChannelCategory> categories;
