@@ -85,7 +85,7 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
   Widget createCupertinoWidget(BuildContext context) {
     // TODO: implement createCupertinoWidget
     return CupertinoTypeAheadFormField(
-      key: key,
+      key: _toggleKey(),
       textFieldConfiguration: this.cupertinoTextFieldConfiguration,
       itemBuilder: this.itemBuilder,
       onSuggestionSelected: this.onSuggestionSelected,
@@ -101,7 +101,7 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
   Widget createMaterialWidget(BuildContext context) {
     // TODO: implement createMaterialWidget
     return TypeAheadFormField(
-      key: key,
+      key: _toggleKey(),
       textFieldConfiguration: this.textFieldConfiguration,
       itemBuilder: this.itemBuilder,
       onSuggestionSelected: this.onSuggestionSelected,
@@ -111,5 +111,10 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
       hideOnEmpty: this.hideKeyboard,
       onSaved: this.onSaved,
     );
+  }
+
+  Key _toggleKey() {
+    final keyBase = (key as ValueKey).value;
+    return key != null ? Key("${keyBase}_toggle") : null;
   }
 }

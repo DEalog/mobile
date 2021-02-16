@@ -14,7 +14,7 @@ class LocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget locationView;
-    if (location == null) {
+    if (location.coordinate != null) {
       locationView = Row(
         key: Key('locationViewCurrentLocation'),
         children: [

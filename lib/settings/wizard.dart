@@ -148,6 +148,25 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 },
                 autovalidateMode: AutovalidateMode.always,
                 hideOnEmpty: true,
+                onSaved: (suggestion) async {
+                  if (channelLocation.name != suggestion) {
+                    Region suggestedRegion =
+                        await dataService.getMunicipalRegion(suggestion);
+
+                    if (!suggestedRegion.isEmpty()) {
+                      setState(
+                        () {
+                          this.editingLocation.text = suggestedRegion.name;
+                          this.channelLocation = ChannelLocation(
+                            suggestedRegion.name,
+                            null,
+                            suggestedRegion,
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
                 onSuggestionSelected: (suggestion) {
                   Region suggestedRegion = suggestion;
                   setState(() {
