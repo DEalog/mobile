@@ -149,7 +149,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 autovalidateMode: AutovalidateMode.always,
                 hideOnEmpty: true,
                 onSaved: (suggestion) async {
-                  if (channelLocation.name != suggestion) {
+                  if (!useLocation() && channelLocation.name != suggestion) {
                     Region suggestedRegion =
                         await dataService.getMunicipalRegion(suggestion);
 
@@ -197,10 +197,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       useLocation()
                           ? Icon(
                               PlatformIcons(context).locationSolid,
+                              key: Key('wizardUseLocationIconSolid'),
                               color: Colors.white,
                             )
                           : Icon(
                               PlatformIcons(context).location,
+                              key: Key('wizardUseLocationIcon'),
                               color: Colors.black,
                             ),
                       Text(

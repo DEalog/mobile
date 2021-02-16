@@ -33,6 +33,13 @@ void main() {
         'de.dealog.mobile.pilot',
         'android.permission.ACCESS_FINE_LOCATION'
       ]);
+      await Process.run(adbPath, [
+        'emu',
+        'geo',
+        'fix',
+        '11.725356',
+        '52.002247',
+      ]);
       driver = await FlutterDriver.connect();
     });
 
@@ -53,6 +60,7 @@ void main() {
 
       test('Add device location all channels but fire channel', () async {
         await driver.tap(find.byValueKey("wizardUseLocationButton"));
+        await driver.waitFor(find.byValueKey("wizardUseLocationIconSolid"));
         await driver.tap(find.byValueKey("wizardContinue"));
         await driver.tap(find.byValueKey("wizardContinue"));
         await scrollAndTap("state_FIRE", 'listview_multiselect', driver);

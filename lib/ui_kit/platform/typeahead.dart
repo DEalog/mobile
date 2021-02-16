@@ -108,7 +108,7 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
       suggestionsCallback: this.suggestionsCallback,
       validator: this.validator,
       autovalidateMode: this.autovalidateMode,
-      hideOnEmpty: this.hideKeyboard,
+      hideOnEmpty: this.hideOnEmpty,
       onSaved: this.onSaved,
     );
   }
