@@ -123,8 +123,7 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - api_level: '30'        
-        - abi: x86_64
+        - api_level: '29'
         - profile: '18'
     - wait-for-android-emulator@1: {}
     - script@1:
