@@ -125,7 +125,6 @@ workflows:
         inputs:
         - api_level: '26'
         - profile: '18'
-        - tag: default
     - wait-for-android-emulator@1: {}
     - script@1:
         inputs:
@@ -171,7 +170,7 @@ workflows:
     - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: "1.22.6"
+  - BITRISE_FLUTTER_VERSION: "1.22.4"
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
