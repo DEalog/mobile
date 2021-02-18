@@ -5,7 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
@@ -16,30 +16,30 @@ void main() {
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
-      final Map<String, String> envVars = Platform.environment;
-      final String adbPath =
-          envVars['ANDROID_SDK_ROOT'] + '/platform-tools/adb';
-      await Process.run(adbPath, [
-        'shell',
-        'pm',
-        'grant',
-        'de.dealog.mobile.pilot',
-        'android.permission.ACCESS_COARSE_LOCATION'
-      ]);
-      await Process.run(adbPath, [
-        'shell',
-        'pm',
-        'grant',
-        'de.dealog.mobile.pilot',
-        'android.permission.ACCESS_FINE_LOCATION'
-      ]);
-      await Process.run(adbPath, [
-        'emu',
-        'geo',
-        'fix',
-        '11.725356',
-        '52.002247',
-      ]);
+      // final Map<String, String> envVars = Platform.environment;
+      // final String adbPath =
+      //     envVars['ANDROID_SDK_ROOT'] + '/platform-tools/adb';
+      // await Process.run(adbPath, [
+      //   'shell',
+      //   'pm',
+      //   'grant',
+      //   'de.dealog.mobile.pilot',
+      //   'android.permission.ACCESS_COARSE_LOCATION'
+      // ]);
+      // await Process.run(adbPath, [
+      //   'shell',
+      //   'pm',
+      //   'grant',
+      //   'de.dealog.mobile.pilot',
+      //   'android.permission.ACCESS_FINE_LOCATION'
+      // ]);
+      // await Process.run(adbPath, [
+      //   'emu',
+      //   'geo',
+      //   'fix',
+      //   '11.725356',
+      //   '52.002247',
+      // ]);
       driver = await FlutterDriver.connect();
     });
 

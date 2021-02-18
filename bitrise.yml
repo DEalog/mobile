@@ -127,6 +127,25 @@ workflows:
         - abi: x86_64
         - profile: '18'
     - wait-for-android-emulator@1: {}
+    - script@1:
+        inputs:
+        - content: >-
+            adb shell pm grant de.dealog.mobile.pilot
+            android.permission.ACCESS_COARSE_LOCATION
+
+            adb shell pm grant de.dealog.mobile.pilot
+            android.permission.ACCESS_FINE_LOCATION
+
+            adb emu geo fix 11.1 52.1
+
+
+            $ANDROID_SDK_ROOT/platform-tools/adb shell pm grant
+            de.dealog.mobile.pilot android.permission.ACCESS_COARSE_LOCATION
+
+            $ANDROID_SDK_ROOT/platform-tools/adb shell pm grant
+            de.dealog.mobile.pilot android.permission.ACCESS_FINE_LOCATION
+
+            $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
