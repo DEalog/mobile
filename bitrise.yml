@@ -123,27 +123,13 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - api_level: '29'
+        - api_level: '26'
         - profile: '18'
+        - tag: default
     - wait-for-android-emulator@1: {}
     - script@1:
         inputs:
         - content: >-
-            adb shell pm grant de.dealog.mobile.pilot
-            android.permission.ACCESS_COARSE_LOCATION
-
-            adb shell pm grant de.dealog.mobile.pilot
-            android.permission.ACCESS_FINE_LOCATION
-
-            adb emu geo fix 11.1 52.1
-
-
-            $ANDROID_SDK_ROOT/platform-tools/adb shell pm grant
-            de.dealog.mobile.pilot android.permission.ACCESS_COARSE_LOCATION
-
-            $ANDROID_SDK_ROOT/platform-tools/adb shell pm grant
-            de.dealog.mobile.pilot android.permission.ACCESS_FINE_LOCATION
-
             $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
     - flutter@0:
         inputs:
