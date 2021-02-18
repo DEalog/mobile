@@ -60,8 +60,13 @@ void main() {
 
       test('Add device location all channels but fire channel', () async {
         await driver.tap(find.byValueKey("wizardUseLocationButton"));
-        await driver.waitFor(find.byValueKey("wizardUseLocationIconSolid"));
+        await driver.waitFor(
+          find.byValueKey("wizardUseLocationIconSolid"),
+        );
         await driver.tap(find.byValueKey("wizardContinue"));
+        await driver.waitForAbsent(
+          find.byValueKey("wizardUseLocationIconSolid"),
+        );
         await driver.tap(find.byValueKey("wizardContinue"));
         await scrollAndTap("state_FIRE", 'listview_multiselect', driver);
         await driver.tap(find.byValueKey("wizardSave"));
