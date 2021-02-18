@@ -109,16 +109,18 @@ workflows:
         - channel: '#mobile'
   integration:
     steps:
-    - script@1:
-        inputs:
-        - content: avdmanager list device
-    - script@1:
-        inputs:
-        - content: android list --all -e 
     - android-sdk-update@1:
         inputs:
         - system_images: sys-img-arm64-v8a-android-30
         - sdk_version: '30'
+    - script@1:
+        inputs:
+        - content: avdmanager list device
+        is_always_run: true
+    - script@1:
+        inputs:
+        - content: android list --all -e 
+        is_always_run: true
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
