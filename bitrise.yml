@@ -118,11 +118,9 @@ workflows:
     - cache-pull@2: {}
     - avd-manager@1:
         inputs:
-        - api_level: '30'
+        - api_level: '30'        
+        - abi: arm64-v8a
         - profile: '18'
-    - flutter-installer@0:
-        inputs:
-        - version: $BITRISE_FLUTTER_VERSION
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
@@ -164,7 +162,7 @@ workflows:
     - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: 1.22.6
+  - BITRISE_FLUTTER_VERSION: "1.22.6"
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
