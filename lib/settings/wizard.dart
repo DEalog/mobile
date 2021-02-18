@@ -79,7 +79,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() => this.channelLocation.coordinate != null;
+  bool useLocation() =>
+      this.channelLocation != null && this.channelLocation.coordinate != null;
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();

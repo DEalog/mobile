@@ -71,7 +71,12 @@ class Channel {
       Set<RegionLevel> levels, Set<ChannelCategory> categories)
       : this(null, levels, categories);
 
-  Channel.empty() : this(null, Set.of([]), Set.of([]));
+  Channel.empty()
+      : this(
+          ChannelLocation.empty(),
+          Set.of([]),
+          Set.of([]),
+        );
 
   factory Channel.fromJson(Map<String, dynamic> json) =>
       _$ChannelFromJson(json);
