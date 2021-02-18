@@ -109,17 +109,9 @@ workflows:
         - channel: '#mobile'
   integration:
     steps:
-    - android-sdk-update@1:
-        inputs:
-        - system_images: sys-img-arm64-v8a-android-30
-        - sdk_version: '30'
     - script@1:
         inputs:
         - content: avdmanager list device
-        is_always_run: true
-    - script@1:
-        inputs:
-        - content: android list --all -e 
         is_always_run: true
     - script@1:
         inputs:
@@ -132,7 +124,7 @@ workflows:
     - avd-manager@1:
         inputs:
         - api_level: '30'        
-        - abi: arm64-v8a
+        - abi: x86_64
         - profile: '18'
     - wait-for-android-emulator@1: {}
     - flutter@0:
