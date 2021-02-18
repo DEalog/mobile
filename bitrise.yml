@@ -170,7 +170,7 @@ workflows:
     - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: "1.22.4"
+  - BITRISE_FLUTTER_VERSION: "1.22.6"
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
