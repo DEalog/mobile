@@ -55,6 +55,7 @@ void main() {
         await driver.tap(find.byValueKey("wizardUseLocationButton"));
         await driver.waitFor(
           find.byValueKey("wizardUseLocationIconSolid"),
+          timeout: Duration(seconds: 5),
         );
         await driver.tap(find.byValueKey("wizardContinue"));
         await driver.waitForAbsent(

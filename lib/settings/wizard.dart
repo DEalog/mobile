@@ -80,7 +80,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
   final editingLocation = TextEditingController();
 
   bool useLocation() =>
-      this.channelLocation != null && this.channelLocation.coordinate != null;
+      (this.channelLocation != null && this.channelLocation.coordinate != null);
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
@@ -217,7 +217,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     Fimber.i("Update useLocation: $useLocation()");
                     bool _serviceEnabled;
                     PermissionStatus _permissionGranted;
-                    LocationData _locationData;
+
                     if (!useLocation()) {
                       _serviceEnabled = await location.serviceEnabled();
                       if (!_serviceEnabled) {
@@ -234,19 +234,21 @@ class _ChannelWizardState extends State<ChannelWizard> {
                           return;
                         }
                       }
-                      _locationData = await location.getLocation();
-
-                      setState(() {
-                        this.editingLocation.clear();
-                        this.channelLocation = ChannelLocation(
-                          null,
-                          Coordinate(
-                            _locationData.longitude,
-                            _locationData.latitude,
-                          ),
-                          null,
-                        );
-                      });
+                      location.getLocation().then(
+                        (locationData) {
+                          setState(() {
+                            this.editingLocation.clear();
+                            this.channelLocation = ChannelLocation(
+                              null,
+                              Coordinate(
+                                locationData.longitude,
+                                locationData.latitude,
+                              ),
+                              null,
+                            );
+                          });
+                        },
+                      );
                     } else {
                       setState(() {
                         this.channelLocation = ChannelLocation.empty();
