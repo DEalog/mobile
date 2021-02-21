@@ -145,7 +145,7 @@ workflows:
             "system-images;android-30;google_apis;x86"
 
             echo "no" | $ANDROID_HOME/tools/bin/avdmanager --verbose create avd
-            --force --name "pixel3a" --device "Pixel 3a" --package
+            --force --name "pixel3a" --device "23" --package
             "system-images;android-30;google_apis;x86" --tag "google_apis" --abi
             "x86"
 
