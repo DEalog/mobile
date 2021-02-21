@@ -124,6 +124,7 @@ workflows:
     - avd-manager@1:
         inputs:
         - api_level: '30'
+        - start_command_flags: '-camera-back none -camera-front none -no-boot-anim -debug-all'
         - profile: '18'
     - wait-for-android-emulator@1: {}
     - script@1:
