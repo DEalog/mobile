@@ -124,7 +124,7 @@ workflows:
     - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
         title: AVD manager
         inputs:
-        - api_level: '30'
+        - api_level: '26'
         - start_command_flags: '-camera-back none -camera-front none'
         - profile: '18'
     - wait-for-android-emulator@1: {}
