@@ -121,54 +121,58 @@ workflows:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
-    - script@1:
-        inputs:
-        - content: >-
-            #!/usr/bin/env bash
+    # - script@1:
+    #     inputs:
+    #     - content: >-
+    #         #!/usr/bin/env bash
 
-            # fail if any commands fails
+    #         # fail if any commands fails
 
-            set -e
+    #         set -e
 
-            # debug log
+    #         # debug log
 
-            set -x
+    #         set -x
 
 
-            # write your script here
+    #         # write your script here
 
-            sudo $ANDROID_HOME/tools/bin/sdkmanager --update
+    #         sudo $ANDROID_HOME/tools/bin/sdkmanager --update
 
-            $ANDROID_HOME/tools/bin/sdkmanager --install "emulator"
+    #         $ANDROID_HOME/tools/bin/sdkmanager --install "emulator"
 
-            $ANDROID_HOME/tools/bin/sdkmanager --install
-            "system-images;android-30;google_apis;x86"
+    #         $ANDROID_HOME/tools/bin/sdkmanager --install
+    #         "system-images;android-30;google_apis;x86"
 
-            echo "no" | $ANDROID_HOME/tools/bin/avdmanager --verbose create avd
-            --force --name "pixel3a" --device "23" --package
-            "system-images;android-30;google_apis;x86" --tag "google_apis" --abi
-            "x86"
+    #         echo "no" | $ANDROID_HOME/tools/bin/avdmanager --verbose create avd
+    #         --force --name "pixel3a" --device "23" --package
+    #         "system-images;android-30;google_apis;x86" --tag "google_apis" --abi
+    #         "x86"
 
-            $ANDROID_HOME/emulator/emulator-headless @pixel3a -no-boot-anim
-            -netdelay none -no-snapshot -wipe-data -verbose -show-kernel
-            -no-audio -gpu swiftshader_indirect -no-snapshot &> /tmp/log.txt &
+    #         $ANDROID_HOME/emulator/emulator-headless @pixel3a -no-boot-anim
+    #         -netdelay none -no-snapshot -wipe-data -verbose -show-kernel
+    #         -no-audio -gpu swiftshader_indirect -no-snapshot &> /tmp/log.txt &
 
-            sleep 160
+    #         sleep 250
     # - avd-manager@1:
     #     inputs:
     #     - api_level: '26'
     #     - profile: '18'
+    - avd-manager@1:
+        inputs:
+        - api_level: '26'
+        - profile: 'Nexus 5'
     # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
     #     title: AVD manager
     #     inputs:
     #     - api_level: '30'
     #     - start_command_flags: '-camera-back none -camera-front none'
     #     - profile: '23'
-    # - wait-for-android-emulator@1: {}
-    # - script@1:
-    #     inputs:
-    #     - content: >-
-    #         $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
+    - wait-for-android-emulator@1: {}
+    - script@1:
+        inputs:
+        - content: >-
+            $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
