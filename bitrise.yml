@@ -165,10 +165,10 @@ workflows:
     #     - start_command_flags: '-camera-back none -camera-front none'
     #     - profile: '23'
     # - wait-for-android-emulator@1: {}
-    - script@1:
-        inputs:
-        - content: >-
-            $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
+    # - script@1:
+    #     inputs:
+    #     - content: >-
+    #         $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
