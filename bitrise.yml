@@ -182,6 +182,9 @@ workflows:
     - cache-push@2: {}
     after_run:
     - integration_iOS
+    meta:
+      bitrise.io:
+        stack: linux-docker-android
   integration_iOS:
     steps:
     - activate-ssh-key@4:
