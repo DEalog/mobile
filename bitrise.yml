@@ -160,7 +160,7 @@ workflows:
     #     - profile: '18'
     - avd-manager@1:
         inputs:
-        - api_level: '26'
+        - api_level: '30'
         - profile: 'Nexus 5'
     # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
     #     title: AVD manager
