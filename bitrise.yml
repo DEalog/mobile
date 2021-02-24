@@ -130,9 +130,7 @@ workflows:
     - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
         title: AVD manager
         inputs:
-        - api_level: '26'
-        - tag: default
-        - abi: x86_64
+        - api_level: '27'
         - start_command_flags: '-camera-back none -camera-front none'
         - profile: 'Nexus 5'
     - activate-ssh-key@4:
