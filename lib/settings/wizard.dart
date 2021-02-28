@@ -10,6 +10,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_typeahead/cupertino_flutter_typeahead.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:mobile/api/data_service.dart';
+import 'package:mobile/api/location_service.dart';
 import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
@@ -21,7 +22,6 @@ import 'package:mobile/ui_kit/platform/select.dart';
 import 'package:mobile/ui_kit/platform/typeahead.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import '../version.dart';
-import 'package:location/location.dart';
 
 final _formKey = GlobalKey<FormState>();
 const _totalSteps = 3;
@@ -60,16 +60,14 @@ class _ChannelWizardState extends State<ChannelWizard> {
   List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
   ChannelLocation channelLocation;
-  Location location;
   Set<RegionLevel> levels;
   Set<ChannelCategory> categories;
   DataService dataService = getIt<DataService>();
-  DataProvider _dataProvider = DataProvider();
+  LocationService _locationService = getIt<LocationService>();
 
   _ChannelWizardState({this.channelSettings}) {
     this.channels.addAll(channelSettings.getValue());
     this.channelLocation = ChannelLocation.empty();
-    this.location = new Location();
   }
 
   @override
@@ -215,26 +213,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   ),
                   onPressed: () async {
                     Fimber.i("Update useLocation: $useLocation()");
-                    bool _serviceEnabled;
-                    PermissionStatus _permissionGranted;
-
                     if (!useLocation()) {
-                      _serviceEnabled = await location.serviceEnabled();
-                      if (!_serviceEnabled) {
-                        _serviceEnabled = await location.requestService();
-                        if (!_serviceEnabled) {
-                          return;
-                        }
-                      }
-
-                      _permissionGranted = await location.hasPermission();
-                      if (_permissionGranted == PermissionStatus.denied) {
-                        _permissionGranted = await location.requestPermission();
-                        if (_permissionGranted != PermissionStatus.granted) {
-                          return;
-                        }
-                      }
-                      location.getLocation().then(
+                      _locationService.getLocationFromDevice().then(
                         (locationData) {
                           setState(() {
                             this.editingLocation.clear();

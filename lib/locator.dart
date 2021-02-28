@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobile/api/data_service.dart';
+import 'package:mobile/api/location_service.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/app_settings.dart';
 import 'package:mobile/version.dart';
@@ -12,6 +13,8 @@ void register(GetIt getIt) {
   getIt.registerSingletonAsync(() => PackageInfo.fromPlatform());
 
   getIt.registerSingletonAsync<RestClient>(() async => RestClient());
+
+  getIt.registerSingletonAsync<LocationService>(() async => LocationService());
 
   getIt.registerSingletonWithDependencies(
     () => DataService(),

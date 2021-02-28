@@ -34,23 +34,23 @@ void main() {
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
-      final Map<String, String> envVars = Platform.environment;
-      final String adbPath =
-          envVars['ANDROID_SDK_ROOT'] + '/platform-tools/adb';
-      await Process.run(adbPath, [
-        'shell',
-        'pm',
-        'grant',
-        'de.dealog.mobile.pilot',
-        'android.permission.ACCESS_COARSE_LOCATION'
-      ]);
-      await Process.run(adbPath, [
-        'shell',
-        'pm',
-        'grant',
-        'de.dealog.mobile.pilot',
-        'android.permission.ACCESS_FINE_LOCATION'
-      ]);
+      // final Map<String, String> envVars = Platform.environment;
+      // final String adbPath =
+      //     envVars['ANDROID_SDK_ROOT'] + '/platform-tools/adb';
+      // await Process.run(adbPath, [
+      //   'shell',
+      //   'pm',
+      //   'grant',
+      //   'de.dealog.mobile.pilot',
+      //   'android.permission.ACCESS_COARSE_LOCATION'
+      // ]);
+      // await Process.run(adbPath, [
+      //   'shell',
+      //   'pm',
+      //   'grant',
+      //   'de.dealog.mobile.pilot',
+      //   'android.permission.ACCESS_FINE_LOCATION'
+      // ]);
 
       /// Github workaround
       /// https://github.com/flutter/flutter/issues/42433

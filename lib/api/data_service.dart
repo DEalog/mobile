@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:fimber/fimber_base.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/model/regions.dart';

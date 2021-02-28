@@ -121,31 +121,31 @@ workflows:
     #     inputs:
     #     - api_level: '26'
     #     - profile: '18'
-    # - avd-manager@1:
-    #     inputs:
-    #     - api_level: '30'
-    #     - tag: default
-    #     - abi: x86_64
-    #     - profile: 'Nexus 5'
-    - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
-        title: AVD manager
+    - avd-manager@1:
         inputs:
-        - api_level: '27'
-        - start_command_flags: '-camera-back none -camera-front none'
+        - api_level: '29'
+        - tag: default
+        - abi: x86_64
         - profile: 'Nexus 5'
+    # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
+    #     title: AVD manager
+    #     inputs:
+    #     - api_level: '27'
+    #     - start_command_flags: '-camera-back none -camera-front none'
+    #     - profile: 'Nexus 5'
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
     - wait-for-android-emulator@1: {}
-    - script@1:
-        inputs:
-        - content: >-
-            $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
+    # - script@1:
+    #     inputs:
+    #     - content: >-
+    #         $ANDROID_SDK_ROOT/platform-tools/adb emu geo fix 11.1 52.1
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --target=test_driver/app.dart
+        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
         title: Flutter Drive
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
