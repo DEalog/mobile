@@ -216,7 +216,7 @@ void main() {
     });
 
     test('Request hierarchy by ARS for starnberg', () async {
-      var location = Location(
+      var location = ChannelLocation(
         "Starnberg",
         null,
         starnbergRegion,
@@ -264,7 +264,7 @@ void main() {
     });
 
     test('Request hierarchy by ARS for starnberg', () async {
-      var location = Location(
+      var location = ChannelLocation(
         "Starnberg",
         null,
         starnbergRegion,

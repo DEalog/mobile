@@ -3,15 +3,23 @@ import 'dart:collection';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_typeahead/cupertino_flutter_typeahead.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:mobile/api/data_service.dart';
+import 'package:mobile/api/location_service.dart';
+import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
+import 'package:mobile/ui_kit/platform/listtile.dart';
 import 'package:mobile/ui_kit/platform/select.dart';
+import 'package:mobile/ui_kit/platform/typeahead.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import '../version.dart';
 
@@ -51,15 +59,15 @@ class _ChannelWizardState extends State<ChannelWizard> {
   final Preference<List<Channel>> channelSettings;
   List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
-  Location location;
+  ChannelLocation channelLocation;
   Set<RegionLevel> levels;
   Set<ChannelCategory> categories;
-
-  DataProvider _dataProvider = DataProvider();
+  DataService dataService = getIt<DataService>();
+  LocationService _locationService = getIt<LocationService>();
 
   _ChannelWizardState({this.channelSettings}) {
     this.channels.addAll(channelSettings.getValue());
-    this.location = Location.empty();
+    this.channelLocation = ChannelLocation.empty();
   }
 
   @override
@@ -69,7 +77,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() => this.location == null;
+  bool useLocation() =>
+      (this.channelLocation != null && this.channelLocation.coordinate != null);
 
   void saveData(BuildContext context) {
     _formKey.currentState.save();
@@ -106,24 +115,68 @@ class _ChannelWizardState extends State<ChannelWizard> {
           width: mediaQuerySize.width * 0.7,
           child: Column(
             children: [
-              PlatformTextField(
+              PlatformTypeAhead(
                 key: Key('wizardLocationTextField'),
-                controller: editingLocation,
-                enabled: !useLocation(),
-                onChanged: (value) {
-                  setState(() {
-                    this.location = Location(value, null, null);
-                  });
-                },
-                material: (context, platform) => MaterialTextFieldData(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: editingLocation,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: LocaleKeys.settings_enter_location.tr(),
                   ),
+                  enabled: !useLocation(),
                 ),
-                cupertino: (context, platform) => CupertinoTextFieldData(
+                cupertinoTextFieldConfiguration:
+                    CupertinoTextFieldConfiguration(
+                  controller: editingLocation,
                   placeholder: LocaleKeys.settings_enter_location.tr(),
+                  enabled: !useLocation(),
                 ),
+                suggestionsCallback: (pattern) {
+                  return dataService.getMunicipalRegions(pattern);
+                },
+                itemBuilder: (context, region) {
+                  return PlatformListTile(
+                    title: PlatformText(region.name),
+                  );
+                },
+                validator: (value) {
+                  if (!useLocation() && value.length < 3) {
+                    return 'a minimum of 3 characters is required';
+                  }
+                  return null;
+                },
+                autovalidateMode: AutovalidateMode.always,
+                hideOnEmpty: true,
+                onSaved: (suggestion) async {
+                  if (!useLocation() && channelLocation.name != suggestion) {
+                    Region suggestedRegion =
+                        await dataService.getMunicipalRegion(suggestion);
+
+                    if (!suggestedRegion.isEmpty()) {
+                      setState(
+                        () {
+                          this.editingLocation.text = suggestedRegion.name;
+                          this.channelLocation = ChannelLocation(
+                            suggestedRegion.name,
+                            null,
+                            suggestedRegion,
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
+                onSuggestionSelected: (suggestion) {
+                  Region suggestedRegion = suggestion;
+                  setState(() {
+                    this.editingLocation.text = suggestedRegion.name;
+                    this.channelLocation = ChannelLocation(
+                      suggestedRegion.name,
+                      null,
+                      suggestedRegion,
+                    );
+                  });
+                },
               ),
               Padding(
                 padding: EdgeInsets.only(top: mediaQuerySize.height * 0.03),
@@ -143,10 +196,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       useLocation()
                           ? Icon(
                               PlatformIcons(context).locationSolid,
+                              key: Key('wizardUseLocationIconSolid'),
                               color: Colors.white,
                             )
                           : Icon(
                               PlatformIcons(context).location,
+                              key: Key('wizardUseLocationIcon'),
                               color: Colors.black,
                             ),
                       Text(
@@ -156,16 +211,29 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    setState(() {
-                      Fimber.i("Update useLocation: $useLocation()");
-                      if (useLocation()) {
-                        this.location = Location.empty();
-                      } else {
-                        this.editingLocation.clear();
-                        this.location = null;
-                      }
-                    });
+                  onPressed: () async {
+                    Fimber.i("Update useLocation: $useLocation()");
+                    if (!useLocation()) {
+                      _locationService.getLocationFromDevice().then(
+                        (locationData) {
+                          setState(() {
+                            this.editingLocation.clear();
+                            this.channelLocation = ChannelLocation(
+                              null,
+                              Coordinate(
+                                locationData.longitude,
+                                locationData.latitude,
+                              ),
+                              null,
+                            );
+                          });
+                        },
+                      );
+                    } else {
+                      setState(() {
+                        this.channelLocation = ChannelLocation.empty();
+                      });
+                    }
                   },
                 ),
               ),
@@ -177,10 +245,6 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Column formTwoBuilder(BuildContext context) {
-    final arsEntries = _dataProvider.fetchArsEntries(null);
-    final regionLevels = arsEntries.map((e) => e.regionLevel).toList();
-    final arsMap =
-        HashMap.fromEntries(arsEntries.map((e) => MapEntry(e.regionLevel, e)));
     final mediaQuerySize = MediaQuery.of(context).size;
 
     return Column(
@@ -203,20 +267,32 @@ class _ChannelWizardState extends State<ChannelWizard> {
           ),
         ),
         Expanded(
-          child: MultiSelectFormField<RegionLevel>(
-            elements: regionLevels,
-            elementName: (regionLevel) =>
-                "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
-            initialValue: regionLevels.toSet(),
-            onSaved: (regionLevels) {
-              Fimber.i("RegionLevels selected: $regionLevels");
-              if (regionLevels != null && regionLevels.isNotEmpty) {
-                setState(() {
-                  levels = regionLevels;
-                });
-              }
-            },
-          ),
+          child: FutureBuilder<RegionHierarchy>(
+              future: dataService.getRegionHierarchy(channelLocation),
+              builder: (BuildContext context,
+                  AsyncSnapshot<RegionHierarchy> snapshot) {
+                if (snapshot.hasData) {
+                  final arsEntries = snapshot.data.regionHierarchy;
+                  final regionLevels = arsEntries.map((e) => e.type).toList();
+                  final arsMap = HashMap.fromEntries(
+                      arsEntries.map((e) => MapEntry(e.type, e)));
+                  return MultiSelectFormField<RegionLevel>(
+                    elements: regionLevels,
+                    elementName: (regionLevel) =>
+                        "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
+                    initialValue: regionLevels.toSet(),
+                    onSaved: (regionLevels) {
+                      Fimber.i("RegionLevels selected: $regionLevels");
+                      if (regionLevels != null && regionLevels.isNotEmpty) {
+                        setState(() {
+                          levels = regionLevels;
+                        });
+                      }
+                    },
+                  );
+                }
+                return Container();
+              }),
         ),
       ],
     );
@@ -392,7 +468,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
           Fimber.i("Save pressed");
           if (submit()) {
             this.channels.add(Channel(
-                  this.location,
+                  this.channelLocation,
                   this.levels,
                   this.categories,
                 ));

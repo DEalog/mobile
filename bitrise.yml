@@ -53,19 +53,19 @@ workflows:
         - keystore_password: $BITRISEIO_ANDROID_KEYSTORE_PASSWORD
     - google-play-deploy@3:
         inputs:
-        - package_name: de.dealog.mobile.pilot
+        - package_name: $BITRISE_APP_BUNDLE_IDENTIFIER
         - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
-    - ios-auto-provision-appstoreconnect@0:
+    - ios-auto-provision-appstoreconnect@1:
         inputs:
         - distribution_type: app-store
-    - xcode-archive@2:
+    - xcode-archive@3:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - configuration: Release
-    - deploy-to-itunesconnect-application-loader@0:
+    - deploy-to-itunesconnect-application-loader@1:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
@@ -112,54 +112,80 @@ workflows:
     - script@1:
         inputs:
         - content: avdmanager list device
+        is_always_run: true
+    - script@1:
+        inputs:
+        - content: sdkmanager --list
+        is_always_run: true
+    - avd-manager@1:
+        inputs:
+        - api_level: '26'
+        - profile: 'pixel'
+    # - avd-manager@1:
+    #     inputs:
+    #     - api_level: '29'
+    #     - tag: default
+    #     - abi: x86_64
+    #     - profile: 'Nexus 5'
+    # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
+    #     title: AVD manager
+    #     inputs:
+    #     - api_level: '26'
+    #     - start_command_flags: '-camera-back none -camera-front none'
+    #     - profile: 'pixel'
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
-    - avd-manager@1:
-        inputs:
-        - api_level: '26'
-        - profile: '18' # pixel
-        # - profile: '21' # pixel 3
-    - flutter-installer@0:
-        inputs:
-        - version: $BITRISE_FLUTTER_VERSION
     - wait-for-android-emulator@1: {}
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --target=test_driver/app.dart
+        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
         title: Flutter Drive
+    - script@1:
+        inputs:
+        - content: >-
+            $ANDROID_SDK_ROOT/platform-tools/adb emu kill
     - deploy-to-bitrise-io@1: {}
-    - cache-push@2: {}    
+    - cache-push@2: {}
     after_run:
     - integration_iOS
+    # meta:
+    #   bitrise.io:
+    #     stack: linux-docker-android
   integration_iOS:
     steps:
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
     - cache-pull@2: {}
-    - git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master:
+    - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
         title: Start Simulator
         inputs:
         - simctl_command: boot
         - simctl_device: iphone 8
+    - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
+        title: Set GeoLocation Permission
+        inputs:
+        - simctl_command: privacy
+        - BITRISE_SIMCTL_SERVICE: location-always
+        - BITRISE_SIMCTL_ACTION: grant
+        - BITRISE_IOS_BUNDLE_ID: $BITRISE_APP_BUNDLE_IDENTIFIER
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --target=test_driver/app.dart
+        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
         title: Flutter Drive
-    - git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master:
+    - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
         title: Stop Simulator
         inputs:
         - simctl_command: shutdown
-        - simctl_device: iphone 8
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: 1.22.4
+  - BITRISE_FLUTTER_VERSION: "1.22.6"
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
@@ -169,3 +195,6 @@ app:
   - opts:
       is_expand: false
     BITRISE_SCHEME: Runner
+  - opts:
+      is_expand: false
+    BITRISE_APP_BUNDLE_IDENTIFIER: de.dealog.mobile.pilot

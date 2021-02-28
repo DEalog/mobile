@@ -10,21 +10,33 @@ import 'package:mobile/ui_kit/channel.dart';
 import '../support.dart';
 
 void main() {
-  testWidgets('Shows location place icon', (WidgetTester tester) async {
-    await createWidget(tester, LocationView(null));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Shows location place icon',
+    (WidgetTester tester) async {
+      await createWidget(
+        tester,
+        LocationView(
+          ChannelLocation(
+            null,
+            Coordinate(0, 0),
+            null,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.byWidgetPredicate((Widget widget) => widget is Icon),
-        findsWidgets);
-  });
+      expect(find.byWidgetPredicate((Widget widget) => widget is Icon),
+          findsWidgets);
+    },
+  );
 
   testWidgets('Shows location name', (WidgetTester tester) async {
     await createWidget(
       tester,
       LocationView(
-        Location(
+        ChannelLocation(
           "Foo",
-          Coordinate(0, 0),
+          null,
           Region.empty(),
         ),
       ),
@@ -36,9 +48,9 @@ void main() {
 
   testWidgets('Shows channel location name', (WidgetTester tester) async {
     var channel = Channel(
-        Location(
+        ChannelLocation(
           "Foo",
-          Coordinate(0, 0),
+          null,
           Region.empty(),
         ),
         Set.of([]),
@@ -58,7 +70,11 @@ void main() {
   });
 
   testWidgets('Shows single category in channel', (WidgetTester tester) async {
-    var channel = Channel(null, Set.of([]), Set.of([ChannelCategory.FIRE]));
+    var channel = Channel(
+      ChannelLocation.empty(),
+      Set.of([]),
+      Set.of([ChannelCategory.FIRE]),
+    );
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();
@@ -67,8 +83,11 @@ void main() {
   });
 
   testWidgets('Shows two categories in channel', (WidgetTester tester) async {
-    var channel = Channel(null, Set.of([]),
-        Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]));
+    var channel = Channel(
+      ChannelLocation.empty(),
+      Set.of([]),
+      Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]),
+    );
 
     await createWidget(tester, ChannelView(channel));
     await tester.pumpAndSettle();

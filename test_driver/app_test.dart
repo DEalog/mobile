@@ -15,6 +15,10 @@ void main() {
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
+      var health = await driver.checkHealth(timeout: Duration(seconds: 30));
+      if (health.status == HealthStatus.bad) {
+        throw ("Flutter Driver Healthstatus bad!");
+      }
     });
 
     // Close the connection to the driver after the tests have completed.
@@ -34,18 +38,44 @@ void main() {
 
       test('Add device location all channels but fire channel', () async {
         await driver.tap(find.byValueKey("wizardUseLocationButton"));
+        await driver.waitFor(
+          find.byValueKey("wizardUseLocationIconSolid"),
+          timeout: Duration(seconds: 5),
+        );
         await driver.tap(find.byValueKey("wizardContinue"));
+        await driver.waitForAbsent(
+          find.byValueKey("wizardUseLocationIconSolid"),
+        );
         await driver.tap(find.byValueKey("wizardContinue"));
         await scrollAndTap("state_FIRE", 'listview_multiselect', driver);
         await driver.tap(find.byValueKey("wizardSave"));
         await driver.waitFor(find.byValueKey('locationView'));
         await driver.waitFor(find.byValueKey('locationViewCurrentLocation'));
       });
+    });
 
+    group('Home Screen', () {
+      test('Homescreen setup', () async {
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
+        await driver.waitFor(find.byValueKey("AppBarWizardButton"));
+      });
+    });
+
+    group('Add Channel on homescreen', () {
+      test('Open Wizard for new channel', () async {
+        await driver.tap(find.byValueKey("AppBarWizardButton"));
+        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
+        await driver.waitFor(find.byValueKey("wizardCancel"));
+        await driver.waitFor(find.byValueKey("wizardContinue"));
+        await driver.waitFor(find.byValueKey("wizardFormOneText"));
+        await driver.tap(find.byValueKey("wizardCancel"));
+        await driver.waitFor(find.byValueKey("AppBarWizardButton"));
+      });
       test('Add custom location without weather and env channel', () async {
         await driver.tap(find.byValueKey("AppBarWizardButton"));
 
-        await driver.tap(find.byValueKey('wizardLocationTextField'));
+        await driver.tap(find.byValueKey('wizardLocationTextField_toggle'));
         await driver.enterText('Arnsberg');
         await driver.tap(find.byValueKey("wizardContinue"));
         await driver.tap(find.byValueKey("wizardContinue"));
@@ -56,22 +86,6 @@ void main() {
         await driver.tap(find.byValueKey("wizardSave"));
         await driver.waitFor(find.byValueKey('locationView'));
         await driver.waitFor(find.text("Arnsberg"));
-      });
-    });
-
-    group('Home Screen', () {
-      test('Homescreen setup', () async {
-        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
-        await driver.waitFor(find.byValueKey("AppBarButtonSettings"));
-        await driver.waitFor(find.byValueKey("AppBarWizardButton"));
-      });
-
-      test('Open Wizard for new channel', () async {
-        await driver.tap(find.byValueKey("AppBarWizardButton"));
-        await driver.waitFor(find.byValueKey("DEalogLogoKey"));
-        await driver.waitFor(find.byValueKey("wizardCancel"));
-        await driver.waitFor(find.byValueKey("wizardContinue"));
-        await driver.waitFor(find.byValueKey("wizardFormOneText"));
       });
     });
   });

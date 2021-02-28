@@ -6,7 +6,7 @@ import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/model/channel.dart';
 
 class LocationView extends StatelessWidget {
-  final Location location;
+  final ChannelLocation location;
   final Alignment alignment;
 
   LocationView(this.location, {this.alignment = Alignment.center});
@@ -14,7 +14,13 @@ class LocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget locationView;
-    if (location == null) {
+    if (location.coordinate == null) {
+      var name = location.name;
+      locationView = Padding(
+          key: Key('locationViewStaticLocation'),
+          padding: EdgeInsets.all(5.0),
+          child: Text(name != null || name.isEmpty ? name : "n/a"));
+    } else {
       locationView = Row(
         key: Key('locationViewCurrentLocation'),
         children: [
@@ -26,12 +32,6 @@ class LocationView extends StatelessWidget {
           ),
         ],
       );
-    } else {
-      var name = location.name;
-      locationView = Padding(
-          key: Key('locationViewStaticLocation'),
-          padding: EdgeInsets.all(5.0),
-          child: Text(name != null ? name : "n/a"));
     }
     return Container(
       key: Key('locationView'),

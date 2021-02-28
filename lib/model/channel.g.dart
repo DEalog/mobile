@@ -6,8 +6,8 @@ part of 'channel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Location _$LocationFromJson(Map<String, dynamic> json) {
-  return Location(
+ChannelLocation _$LocationFromJson(Map<String, dynamic> json) {
+  return ChannelLocation(
     json['name'] as String,
     json['coordinate'] == null
         ? null
@@ -18,7 +18,8 @@ Location _$LocationFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
+Map<String, dynamic> _$LocationToJson(ChannelLocation instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'coordinate': instance.coordinate,
       'region': instance.region,
@@ -28,7 +29,7 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
   return Channel(
     json['location'] == null
         ? null
-        : Location.fromJson(json['location'] as Map<String, dynamic>),
+        : ChannelLocation.fromJson(json['location'] as Map<String, dynamic>),
     (json['levels'] as List)
         ?.map((e) => _$enumDecodeNullable(_$RegionLevelEnumMap, e))
         ?.toSet(),

@@ -25,11 +25,14 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.0
+  cupertino_list_tile: ^0.1.4
   easy_localization: ^2.3.3
   fimber: ^0.4.4
-  flutter_platform_widgets: ^0.71.0
+  flutter_platform_widgets: ^0.72.0
+  flutter_typeahead: ^2.0.0
   get_it: ^5.0.1
   json_annotation: ^3.1.0
+  location: ^3.2.4
   optional: ^5.0.0+1
   package_info: ">=0.4.3 <2.0.0"
   shared_preferences: ^0.5.12+4
