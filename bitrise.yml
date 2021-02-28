@@ -119,7 +119,7 @@ workflows:
         is_always_run: true
     - avd-manager@1:
         inputs:
-        - api_level: '26'
+        - api_level: '29'
         - profile: '18'
     # - avd-manager@1:
     #     inputs:

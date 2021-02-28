@@ -15,6 +15,10 @@ void main() {
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
+      var health = await driver.checkHealth(timeout: Duration(seconds: 30));
+      if (health.status == HealthStatus.bad) {
+        throw ("Flutter Driver Healthstatus bad!");
+      }
     });
 
     // Close the connection to the driver after the tests have completed.
