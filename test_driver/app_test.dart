@@ -5,28 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:io';
-
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
-
-import 'package:vm_service_client/vm_service_client.dart';
-
-Future<VMIsolateRef> getMainIsolate() async {
-  final dartVmServiceUrl = Platform.environment['VM_SERVICE_URL'];
-  final VMServiceClientConnection connection = await vmServiceConnectFunction(
-    dartVmServiceUrl,
-    headers: <String, dynamic>{},
-  );
-  final VMServiceClient client = connection.client;
-  final VM vm = await client.getVM();
-  print("Available isolates:");
-  vm.isolates.forEach((element) {
-    print("Isolate: ${element.name} ${element.number}");
-  });
-  return Future.value(
-      vm.isolates.firstWhere((VMIsolateRef isolate) => isolate.name == "main"));
-}
 
 void main() {
   group('Mobile App Navigation', () {
@@ -34,29 +14,7 @@ void main() {
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
-      // final Map<String, String> envVars = Platform.environment;
-      // final String adbPath =
-      //     envVars['ANDROID_SDK_ROOT'] + '/platform-tools/adb';
-      // await Process.run(adbPath, [
-      //   'shell',
-      //   'pm',
-      //   'grant',
-      //   'de.dealog.mobile.pilot',
-      //   'android.permission.ACCESS_COARSE_LOCATION'
-      // ]);
-      // await Process.run(adbPath, [
-      //   'shell',
-      //   'pm',
-      //   'grant',
-      //   'de.dealog.mobile.pilot',
-      //   'android.permission.ACCESS_FINE_LOCATION'
-      // ]);
-
-      /// Github workaround
-      /// https://github.com/flutter/flutter/issues/42433
-      final mainIsolate = await getMainIsolate();
-      await mainIsolate.loadRunnable();
-      driver = await FlutterDriver.connect(isolateNumber: mainIsolate.number);
+      driver = await FlutterDriver.connect();
     });
 
     // Close the connection to the driver after the tests have completed.
