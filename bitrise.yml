@@ -117,16 +117,16 @@ workflows:
         inputs:
         - content: sdkmanager --list
         is_always_run: true
-    # - avd-manager@1:
-    #     inputs:
-    #     - api_level: '26'
-    #     - profile: '18'
     - avd-manager@1:
         inputs:
-        - api_level: '29'
-        - tag: default
-        - abi: x86_64
-        - profile: 'Nexus 5'
+        - api_level: '26'
+        - profile: '18'
+    # - avd-manager@1:
+    #     inputs:
+    #     - api_level: '29'
+    #     - tag: default
+    #     - abi: x86_64
+    #     - profile: 'Nexus 5'
     # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
     #     title: AVD manager
     #     inputs:
