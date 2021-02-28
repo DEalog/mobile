@@ -117,22 +117,22 @@ workflows:
         inputs:
         - content: sdkmanager --list
         is_always_run: true
-    - avd-manager@1:
-        inputs:
-        - api_level: '29'
-        - profile: '18'
+    # - avd-manager@1:
+    #     inputs:
+    #     - api_level: '29'
+    #     - profile: '18'
     # - avd-manager@1:
     #     inputs:
     #     - api_level: '29'
     #     - tag: default
     #     - abi: x86_64
     #     - profile: 'Nexus 5'
-    # - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
-    #     title: AVD manager
-    #     inputs:
-    #     - api_level: '27'
-    #     - start_command_flags: '-camera-back none -camera-front none'
-    #     - profile: 'Nexus 5'
+    - 'git::https://github.com/DEalog/steps-avd-manager.git@master':
+        title: AVD manager
+        inputs:
+        - api_level: '26'
+        - start_command_flags: '-camera-back none -camera-front none'
+        - profile: 'Pixel'
     - activate-ssh-key@4:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4: {}
