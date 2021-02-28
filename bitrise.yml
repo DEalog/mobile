@@ -147,6 +147,10 @@ workflows:
         - version: $BITRISE_FLUTTER_VERSION
         - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
         title: Flutter Drive
+    - script@1:
+        inputs:
+        - content: >-
+            $ANDROID_SDK_ROOT/platform-tools/adb emu kill
     - deploy-to-bitrise-io@1: {}
     - cache-push@2: {}
     after_run:
@@ -175,7 +179,7 @@ workflows:
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --target=test_driver/app.dart
+        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
         title: Flutter Drive
     - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
         title: Stop Simulator
