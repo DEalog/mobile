@@ -1,4 +1,4 @@
-import 'package:fimber/fimber_base.dart';
+import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

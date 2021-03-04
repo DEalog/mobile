@@ -36,9 +36,9 @@ class LocationService {
       }
 
       _permissionGranted = await location.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
+      if (_permissionGranted == PermissionStatus.DENIED) {
         _permissionGranted = await location.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
+        if (_permissionGranted != PermissionStatus.GRANTED) {
           return throw ("Permission couldn't be granted.");
         }
       }
