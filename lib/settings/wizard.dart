@@ -125,8 +125,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   ),
                   enabled: !useLocation(),
                 ),
-                cupertinoTextFieldConfiguration:
-                    CupertinoTextFieldConfiguration(
+                cupertinoTextFieldConfiguration: CupertinoTextFieldConfiguration(
+                  onChanged: (text) {},
                   controller: editingLocation,
                   placeholder: LocaleKeys.settings_enter_location.tr(),
                   enabled: !useLocation(),
@@ -141,7 +141,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 },
                 validator: (value) {
                   if (!useLocation() && value.length < 3) {
-                    return 'a minimum of 3 characters is required';
+                    return LocaleKeys.settings_enter_location_minimum_characters.tr();
                   }
                   return null;
                 },

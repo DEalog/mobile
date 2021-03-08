@@ -48,7 +48,8 @@
     "select_location": "For which location do you want to be informed?",
     "select_layer": "From which federal layers would you like to be informed?",
     "select_category": "For which areas would you like to be informed?",
-    "enter_location": "Enter location"
+    "enter_location": "Enter location",
+    "enter_location_minimum_characters": "A minimum of 3 characters is required"
   }
 }
 
