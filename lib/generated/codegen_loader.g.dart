@@ -64,7 +64,8 @@ class CodegenLoader extends AssetLoader{
     "select_location": "Für welchen Ort möchtest du informiert werden?",
     "select_layer": "Aus welchen föderalen Ebenen möchtest du informiert werden?",
     "select_category": "Für welche Bereiche möchtest du informiert werden?",
-    "enter_location": "Ort eingeben"
+    "enter_location": "Ort eingeben",
+    "enter_location_minimum_characters": "Mindestens 3 Buchstaben sind erforderlich"
   }
 };
 static const Map<String,dynamic> en = {
@@ -117,7 +118,8 @@ static const Map<String,dynamic> en = {
     "select_location": "For which location do you want to be informed?",
     "select_layer": "From which federal layers would you like to be informed?",
     "select_category": "For which areas would you like to be informed?",
-    "enter_location": "Enter location"
+    "enter_location": "Enter location",
+    "enter_location_minimum_characters": "A minimum of 3 characters is required"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"de": de, "en": en};

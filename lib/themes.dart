@@ -7,6 +7,7 @@ class AppLightTheme {
     Fimber.d("Setting theme: light");
 
     return new ThemeData(
+      brightness: Brightness.light,
       primarySwatch: Colors.blue,
       primaryColor: Colors.white,
       appBarTheme: AppBarTheme(
@@ -42,7 +43,9 @@ class AppDarkTheme {
 class AppCupertinoTheme {
   static get theme {
     Fimber.d("Setting theme: cupertino");
+    
     return new CupertinoThemeData(
+      brightness: Brightness.light,
       primaryColor: Colors.black,
       scaffoldBackgroundColor: Colors.white,
       barBackgroundColor: Colors.white,

@@ -113,13 +113,13 @@ workflows:
         inputs:
         - content: avdmanager list device
         is_always_run: true
-    # - script@1:
-    #     inputs:
-    #     - content: sdkmanager --list
-    #     is_always_run: true
+    - script@1:
+        inputs:
+        - content: sdkmanager --list
+        is_always_run: true
     # - avd-manager@1:
     #     inputs:
-    #     - api_level: '26'
+    #     - api_level: '29'
     #     - profile: 'pixel'
     # # - avd-manager@1:
     # #     inputs:
