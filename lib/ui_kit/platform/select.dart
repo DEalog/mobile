@@ -109,10 +109,6 @@ class _MultiSelectState<E> extends State {
           .toList();
     }
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-    });
-
     return Scrollbar(
       isAlwaysShown: true,
       controller: _scrollController,
@@ -149,8 +145,8 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   createCupertinoWidget(BuildContext context) {
+    var mediaQuerySize = MediaQuery.of(context).size;
     return Container(
-        padding: EdgeInsets.only(top: 3.0, bottom: 3.0),
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           child: Row(
@@ -161,7 +157,12 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
               ),
               Spacer(),
               Container(
-                padding: EdgeInsets.all(4.0),
+                padding: EdgeInsets.fromLTRB(
+                  mediaQuerySize.width * 0.01,
+                  mediaQuerySize.width * 0.01,
+                  mediaQuerySize.width * 0.03,
+                  mediaQuerySize.width * 0.01,
+                ),
                 child: Icon(
                     value
                         ? CupertinoIcons.check_mark_circled_solid
@@ -179,16 +180,25 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   createMaterialWidget(BuildContext context) {
+    var mediaQuerySize = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(this.label),
         Spacer(),
-        Checkbox(
-          key: getStateKey(),
-          value: value,
-          onChanged: (e) => onChanged(),
-        )
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            mediaQuerySize.width * 0.01,
+            mediaQuerySize.width * 0.01,
+            mediaQuerySize.width * 0.03,
+            mediaQuerySize.width * 0.01,
+          ),
+          child: Checkbox(
+            key: getStateKey(),
+            value: value,
+            onChanged: (e) => onChanged(),
+          ),
+        ),
       ],
     );
   }
