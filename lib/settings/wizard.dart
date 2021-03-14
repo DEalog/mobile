@@ -60,7 +60,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
   List<Channel> channels = List<Channel>();
   int _stepNumber = 1;
   ChannelLocation channelLocation;
-  Set<RegionLevel> levels;
+  Set<RegionLevel> _levels;
+  List<Region> _regionHierarchy;
   Set<ChannelCategory> categories;
   DataService dataService = getIt<DataService>();
   LocationService _locationService = getIt<LocationService>();
@@ -136,12 +137,16 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 },
                 itemBuilder: (context, region) {
                   return PlatformListTile(
+                    key: Key('WizardLocationTextFieldSuggestionTile'),
                     title: PlatformText(region.name),
                   );
                 },
                 validator: (value) {
                   if (!useLocation() && value.length < 3) {
                     return LocaleKeys.settings_enter_location_minimum_characters.tr();
+                  }
+                  if (channelLocation.isEmpty) {
+                    return LocaleKeys.settings_no_valid_location_selected.tr();
                   }
                   return null;
                 },
@@ -152,7 +157,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     Region suggestedRegion =
                         await dataService.getMunicipalRegion(suggestion);
 
-                    if (!suggestedRegion.isEmpty()) {
+                    if (!suggestedRegion.isEmpty) {
                       setState(
                         () {
                           this.editingLocation.text = suggestedRegion.name;
@@ -216,6 +221,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     if (!useLocation()) {
                       _locationService.getLocationFromDevice().then(
                         (locationData) {
+                          Fimber.i("Location fetched: $locationData");
                           setState(() {
                             this.editingLocation.clear();
                             this.channelLocation = ChannelLocation(
@@ -277,6 +283,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   final arsMap = HashMap.fromEntries(
                       arsEntries.map((e) => MapEntry(e.type, e)));
                   return MultiSelectFormField<RegionLevel>(
+                    key: Key('RegionHierarchyMultiSelect'),
                     elements: regionLevels,
                     elementName: (regionLevel) =>
                         "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
@@ -285,7 +292,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       Fimber.i("RegionLevels selected: $regionLevels");
                       if (regionLevels != null && regionLevels.isNotEmpty) {
                         setState(() {
-                          levels = regionLevels;
+                          _levels = regionLevels;
+                          _regionHierarchy = arsEntries;
                         });
                       }
                     },
@@ -469,7 +477,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
           if (submit()) {
             this.channels.add(Channel(
                   this.channelLocation,
-                  this.levels,
+                  this._levels,
+                  this._regionHierarchy,
                   this.categories,
                 ));
             this.channelSettings.setValue(

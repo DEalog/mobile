@@ -28,9 +28,22 @@ void main() {
   AppSettings appSettings;
   StreamingSharedPreferences streamingSharedPreferences;
 
+  var testMessageListEmpty = {
+    {
+      "content": [],
+      "meta": {
+        "number": 0,
+        "size": 0,
+        "totalElements": 1,
+        "totalPages": 1,
+      }
+    }
+  };
+
   final Channel channelWithoutLocationAndCategories = Channel(
     ChannelLocation.empty(),
     Set.of([]),
+    List.empty(),
     Set.of([]),
   );
 
@@ -65,8 +78,14 @@ void main() {
       (WidgetTester tester) async {
         // Set test messages to feed service
         // mock raw feed
-        when(restClient.fetchRawFeed()).thenAnswer(
-          (_) => Future.value([]),
+        when(
+          restClient.fetchMessages('1235', 1, 1),
+        ).thenAnswer(
+          (_) => Future.value(
+            jsonEncode(
+              testMessageListEmpty,
+            ),
+          ),
         );
 
         when(version.state).thenReturn(

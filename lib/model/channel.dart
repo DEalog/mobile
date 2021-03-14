@@ -2,10 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobile/model/region.dart';
-
 import 'gis.dart';
 
 part 'channel.g.dart';
+
+int foldSetHashCode(Set anySet) => anySet.fold(
+    0, (previousValue, element) => previousValue ^ element.hashCode);
 
 enum ChannelCategory {
   GEO,
@@ -40,10 +42,15 @@ class ChannelLocation {
 
   ChannelLocation.empty() : this("", null, Region.empty());
 
-  factory ChannelLocation.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
+  bool get isEmpty => this.name == '' && this.coordinate == null && this.region.isEmpty;
 
-  Map<String, dynamic> toJson() => _$LocationToJson(this);
+  factory ChannelLocation.fromJson(Map<String, dynamic> json) =>
+      _$ChannelLocationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChannelLocationToJson(this);
+
+  @override
+  int get hashCode => name.hashCode ^ coordinate.hashCode ^ region.hashCode;
 
   @override
   bool operator ==(o) =>
@@ -63,18 +70,21 @@ class Channel {
   final ChannelLocation location;
   @JsonKey(nullable: true)
   final Set<RegionLevel> levels;
+  @JsonKey(nullable: true)
+  final List<Region> regionhierarchy;
   final Set<ChannelCategory> categories;
 
-  Channel(this.location, this.levels, this.categories);
+  Channel(this.location, this.levels, this.regionhierarchy, this.categories);
 
   Channel.deviceLocation(
       Set<RegionLevel> levels, Set<ChannelCategory> categories)
-      : this(null, levels, categories);
+      : this(null, levels, null, categories);
 
   Channel.empty()
       : this(
           ChannelLocation.empty(),
           Set.of([]),
+          List.empty(),
           Set.of([]),
         );
 
@@ -82,4 +92,20 @@ class Channel {
       _$ChannelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChannelToJson(this);
+
+  @override
+  int get hashCode =>
+      (location == null ? 0 : location.hashCode) ^ (levels == null ? 0 : foldSetHashCode(levels)) ^ foldSetHashCode(categories);
+
+  @override
+  bool operator ==(o) {
+    var levelsAreEqual = setEquals(o.levels, levels);
+    var categoriesAreEqual = setEquals(o.categories, categories);
+    var locationIsEqual = o.location == location;
+
+    return o is Channel &&
+        locationIsEqual &&
+        levelsAreEqual &&
+        categoriesAreEqual;
+  }
 }

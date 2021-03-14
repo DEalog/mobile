@@ -85,6 +85,7 @@ class _ChannelFormState extends State<ChannelForm> {
                       model.update((channel) => Channel(
                           value ? null : ChannelLocation.empty(),
                           channel.levels,
+                          null,
                           channel.categories));
                     });
                   },
@@ -113,8 +114,12 @@ class _ChannelFormState extends State<ChannelForm> {
                   Fimber.i("Categories saved: $value");
                   if (value == null) return;
                   setState(() {
-                    model.update((channel) => Channel(channel.location,
-                        Set.of(RegionLevel.values), value.toSet()));
+                    model.update((channel) => Channel(
+                          channel.location,
+                          Set.of(RegionLevel.values),
+                          null,
+                          value.toSet(),
+                        ));
                   });
                 },
               )
@@ -136,6 +141,7 @@ class _ChannelFormState extends State<ChannelForm> {
           return Channel(
               ChannelLocation(value, location.coordinate, location.region),
               channel.levels,
+              null,
               channel.categories);
         });
       });

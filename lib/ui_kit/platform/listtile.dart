@@ -4,9 +4,13 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class PlatformListTile extends PlatformWidgetBase {
   final title;
+  final leading;
+  final subtitle;
 
   PlatformListTile({
     this.title,
+    this.leading,
+    this.subtitle,
     key,
   }) : super(key: key);
 
@@ -14,6 +18,8 @@ class PlatformListTile extends PlatformWidgetBase {
   Widget createCupertinoWidget(BuildContext context) {
     return CupertinoListTile(
       title: this.title,
+      leading: this.leading,
+      subtitle: this.subtitle,
     );
   }
 
@@ -21,6 +27,8 @@ class PlatformListTile extends PlatformWidgetBase {
   Widget createMaterialWidget(BuildContext context) {
     return ListTile(
       title: this.title,
+      leading: this.leading,
+      subtitle: this.subtitle,
     );
   }
 }

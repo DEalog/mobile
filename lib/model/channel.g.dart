@@ -6,7 +6,7 @@ part of 'channel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChannelLocation _$LocationFromJson(Map<String, dynamic> json) {
+ChannelLocation _$ChannelLocationFromJson(Map<String, dynamic> json) {
   return ChannelLocation(
     json['name'] as String,
     json['coordinate'] == null
@@ -18,7 +18,7 @@ ChannelLocation _$LocationFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$LocationToJson(ChannelLocation instance) =>
+Map<String, dynamic> _$ChannelLocationToJson(ChannelLocation instance) =>
     <String, dynamic>{
       'name': instance.name,
       'coordinate': instance.coordinate,
@@ -33,6 +33,10 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
     (json['levels'] as List)
         ?.map((e) => _$enumDecodeNullable(_$RegionLevelEnumMap, e))
         ?.toSet(),
+    (json['regionhierarchy'] as List)
+        ?.map((e) =>
+            e == null ? null : Region.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     (json['categories'] as List)
         .map((e) => _$enumDecode(_$ChannelCategoryEnumMap, e))
         .toSet(),
@@ -42,6 +46,7 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ChannelToJson(Channel instance) => <String, dynamic>{
       'location': instance.location,
       'levels': instance.levels?.map((e) => _$RegionLevelEnumMap[e])?.toList(),
+      'regionhierarchy': instance.regionhierarchy,
       'categories':
           instance.categories.map((e) => _$ChannelCategoryEnumMap[e]).toList(),
     };
