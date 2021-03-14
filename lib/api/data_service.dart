@@ -4,24 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/model/regions.dart';
 import 'package:mobile/model/channel.dart';
-import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/model/region.dart';
 
+import 'model/messages.dart';
+
 class DataService {
   final RestClient _restClient = getIt<RestClient>();
 
-  Future<List<FeedMessage>> getFeed() async {
-    List<String> rawFeed = await _restClient.fetchRawFeed();
-    List<FeedMessage> serializedMessagesFromFeed = rawFeed
-        .map(
-          (rawFeedMessageString) => FeedMessage.fromJson(
-            jsonDecode(rawFeedMessageString),
-          ),
-        )
-        .toList();
-    return serializedMessagesFromFeed;
+  Future<Messages> getFeedMessages(String ars, int size, int page) async {
+    String rawFeed = await _restClient.fetchMessages(ars, size, page,);
+    var messages = Messages.fromJson(jsonDecode(rawFeed));
+    return messages;
   }
 
   /// Region name must be at least 3 characters long

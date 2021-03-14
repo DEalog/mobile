@@ -43,8 +43,8 @@ void main() {
           timeout: Duration(seconds: 5),
         );
         await driver.tap(find.byValueKey("wizardContinue"));
-        await driver.waitForAbsent(
-          find.byValueKey("wizardUseLocationIconSolid"),
+        await driver.waitFor(
+          find.byValueKey('RegionHierarchyMultiSelect'),
         );
         await driver.tap(find.byValueKey("wizardContinue"));
         await scrollAndTap("state_FIRE", 'listview_multiselect', driver);
@@ -77,7 +77,18 @@ void main() {
 
         await driver.tap(find.byValueKey('wizardLocationTextField_toggle'));
         await driver.enterText('Arnsberg');
+
+        await driver.tap(
+          find.descendant(
+            of: find.byValueKey('WizardLocationTextFieldSuggestionTile'),
+            matching: find.text("Arnsberg"),
+          ),
+        );
+        await driver.waitForAbsent(find.byValueKey('WizardLocationTextFieldSuggestionTile'));
         await driver.tap(find.byValueKey("wizardContinue"));
+        await driver.waitFor(
+          find.byValueKey('RegionHierarchyMultiSelect'),
+        );
         await driver.tap(find.byValueKey("wizardContinue"));
 
         await scrollAndTap("state_MET", 'listview_multiselect', driver);

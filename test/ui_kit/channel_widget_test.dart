@@ -54,6 +54,7 @@ void main() {
           Region.empty(),
         ),
         Set.of([]),
+        List.empty(),
         Set.of([]));
 
     await createWidget(tester, ChannelView(channel));
@@ -73,6 +74,7 @@ void main() {
     var channel = Channel(
       ChannelLocation.empty(),
       Set.of([]),
+        List.empty(),
       Set.of([ChannelCategory.FIRE]),
     );
 
@@ -86,6 +88,7 @@ void main() {
     var channel = Channel(
       ChannelLocation.empty(),
       Set.of([]),
+        List.empty(),
       Set.of([ChannelCategory.FIRE, ChannelCategory.HEALTH]),
     );
 

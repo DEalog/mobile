@@ -60,6 +60,7 @@ void main() {
             },
           },
           "levels": [],
+          "regionhierarchy": [],
           "categories": [],
         },
       )
@@ -76,13 +77,18 @@ void main() {
   test('Write channel data without location', () async {
     uut.setValue(prefs, key, [
       Channel(
-          null, Set.of([]), Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
+        null,
+        Set.of([]),
+        null,
+        Set.of([ChannelCategory.FIRE, ChannelCategory.MET]),
+      )
     ]);
 
     verify(prefs.setStringList(key, [
       jsonEncode({
         "location": null,
         "levels": [],
+        "regionhierarchy": null,
         "categories": ["FIRE", "MET"]
       })
     ]));
@@ -97,6 +103,7 @@ void main() {
             Region("123", "Munich", RegionLevel.DISTRICT),
           ),
           Set.of([RegionLevel.DISTRICT]),
+          List.empty(),
           Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
     ]);
 
@@ -118,6 +125,7 @@ void main() {
           "levels": [
             "DISTRICT",
           ],
+          "regionhierarchy": [],
           "categories": [
             "FIRE",
             "MET",

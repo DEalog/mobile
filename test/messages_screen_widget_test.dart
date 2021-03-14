@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/api/data_service.dart';
+import 'package:mobile/api/model/messages.dart';
+import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
@@ -35,19 +37,120 @@ void main() {
   AppSettings appSettings;
   StreamingSharedPreferences streamingSharedPreferences;
 
-  final String message1 =
-      '{ "identifier": "Message Heading 1", "description": "Message Content 1" }';
-  final String message2 =
-      '{ "identifier": "Message Heading 2", "description": "Message Content 2" }';
-  final messageKey = Key('Message');
+  var testMessageListEmpty = {
+    "content": [],
+    "meta": {
+      "size": 10,
+      "number": 0,
+      "totalElements": 0,
+      "totalPages": 0,
+    }
+  };
 
-  final Channel channelWithoutLocationAndCategories = Channel.empty();
+  var testMessageListWith2Messages = {
+    "content": [
+      {
+        "ars": "059580004004",
+        "category": "Other",
+        "description": "Message Content 1",
+        "headline": "Message Heading 1",
+        "identifier": "1f3f84e6-ae09-405b-968e-8a231a5abb70",
+        "organization": "DEalog Team",
+        "publishedAt": "2020-11-25T20:34:38.098+0000"
+      },
+      {
+        "ars": "059580004004",
+        "category": "Other",
+        "description": "Message Content 2",
+        "headline": "Message Heading 2",
+        "identifier": "90325ca5-5c5e-4cb3-987d-af830e13f707",
+        "organization": "DEalog Team",
+        "publishedAt": "2020-10-17T10:45:06.670+0000"
+      },
+    ],
+    "meta": {
+      "number": 0,
+      "size": 2,
+      "totalElements": 1,
+      "totalPages": 1,
+    }
+  };
+
+  var testMessageList2With2Messages = {
+    "content": [
+      {
+        "ars": "059580004004",
+        "category": "Other",
+        "description": "Message Content 3",
+        "headline": "Message Heading 3",
+        "identifier": "1f3f84e6-ae09-405b-968e-8a231a5abb70",
+        "organization": "DEalog Team",
+        "publishedAt": "2020-11-25T20:34:38.098+0000"
+      },
+      {
+        "ars": "059580004004",
+        "category": "Other",
+        "description": "Message Content 4",
+        "headline": "Message Heading 4",
+        "identifier": "90325ca5-5c5e-4cb3-987d-af830e13f707",
+        "organization": "DEalog Team",
+        "publishedAt": "2020-10-17T10:45:06.670+0000"
+      },
+    ],
+    "meta": {
+      "number": 0,
+      "size": 2,
+      "totalElements": 1,
+      "totalPages": 1,
+    }
+  };
+
+  final pageSize = 10;
+
+  final Channel channelWithoutLocationAndCategories = Channel(
+    ChannelLocation(
+      'Arnsberg',
+      null,
+      Region(
+        '059580004004',
+        'Arnsberg',
+        RegionLevel.MUNICIPALITY,
+      ),
+    ),
+    Set.of([
+      RegionLevel.COUNTRY,
+      RegionLevel.DISTRICT,
+      RegionLevel.MUNICIPALITY,
+    ]),
+    null,
+    Set.of([
+      ChannelCategory.CBRNE,
+      ChannelCategory.FIRE,
+    ]),
+  );
 
   final Channel channelWithBerlinLocationWithoutCategories = Channel(
     ChannelLocation(
-        "Berlin", Coordinate(13.4105300, 52.5243700), Region.empty()),
-    Set.of([]),
-    Set.of([]),
+      "Berlin",
+      Coordinate(13.4105300, 52.5243700),
+      Region.empty(),
+    ),
+    Set.of([
+      RegionLevel.COUNTRY,
+      RegionLevel.DISTRICT,
+      RegionLevel.MUNICIPALITY,
+    ]),
+    [
+      Region(
+        '001',
+        'Berlin',
+        RegionLevel.MUNICIPALITY,
+      ),
+    ],
+    Set.of([
+      ChannelCategory.CBRNE,
+      ChannelCategory.FIRE,
+    ]),
   );
 
   setUpAll(
@@ -76,22 +179,25 @@ void main() {
     });
 
     testWidgets('restClient returns no message', (WidgetTester tester) async {
-      final progressIndicatorFinder =
-          find.byKey(Key("CircularProgressIndicator"));
+      final noMessagesReturned = find.byKey(Key("NoFeedMessagesAvailable"));
 
       // Set test messages to feed service
       // mock raw feed
       when(
-        restClient.fetchRawFeed(),
+        restClient.fetchMessages("059580004004", pageSize, 0),
       ).thenAnswer(
-        (_) async => [],
+        (_) => Future.value(
+          jsonEncode(
+            testMessageListEmpty,
+          ),
+        ),
       );
 
       await createWidgetWrappedInColumn(tester, MessagesScreen());
-      await tester.pump();
-      await untilCalled(restClient.fetchRawFeed());
+      await tester.pumpAndSettle();
+      await untilCalled(restClient.fetchMessages("059580004004", pageSize, 0));
 
-      expect(progressIndicatorFinder, findsOneWidget);
+      expect(noMessagesReturned, findsOneWidget);
       expect(find.text('Message Heading 1'), findsNothing);
       expect(find.text('Message Content 1'), findsNothing);
       expect(find.text('Message Heading 2'), findsNothing);
@@ -102,15 +208,19 @@ void main() {
         (WidgetTester tester) async {
       // Set test messages to feed service
       // mock raw feed
-      when(restClient.fetchRawFeed()).thenAnswer(
-        (_) async => [message1],
+      when(restClient.fetchMessages("059580004004", pageSize, 0)).thenAnswer(
+        (_) => Future.value(
+          jsonEncode(
+            testMessageListWith2Messages,
+          ),
+        ),
       );
 
       await createWidgetWrappedInColumn(tester, MessagesScreen());
-      await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
+      await untilCalled(restClient.fetchMessages('059580004004', pageSize, 0));
 
-      expect(find.byKey(messageKey), findsOneWidget);
+      expect(find.byKey(Key('Message_0_0')), findsOneWidget);
       expect(find.text('Message Heading 1'), findsOneWidget);
       expect(find.text('Message Content 1'), findsOneWidget);
       expect(find.text('Message Heading 2'), findsNothing);
@@ -119,24 +229,43 @@ void main() {
 
     testWidgets('Message List shows test message 1 and test message 2',
         (WidgetTester tester) async {
-      final finders = [
+      final findersMessage1 = [
+        find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
         find.text('Message Content 1'),
+      ];
+
+      final findersMessage2 = [
+        find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
         find.text('Message Content 2'),
       ];
 
       // Set test messages to feed service
       // mock raw feed
-      when(restClient.fetchRawFeed()).thenAnswer(
-        (_) async => [message1, message2],
+      when(restClient.fetchMessages('059580004004', pageSize, 0)).thenAnswer(
+        (_) => Future.value(
+          jsonEncode(
+            testMessageListWith2Messages,
+          ),
+        ),
       );
 
       await createWidgetWrappedInColumn(tester, MessagesScreen());
-      await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
+      await untilCalled(restClient.fetchMessages('059580004004', pageSize, 0));
 
-      finders.forEach((finder) async {
+      findersMessage1.forEach((finder) async {
+        expect(finder, findsOneWidget);
+      });
+
+      await tester.dragUntilVisible(
+        find.byKey(Key('Message_0_1')),
+        find.byKey(Key('PageListViewMessages_0')),
+        const Offset(-50.0, 0.0),
+      );
+
+      findersMessage2.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
     });
@@ -160,25 +289,82 @@ void main() {
     testWidgets(
         'Message List shows test message 1 and test message 2 for two channels',
         (WidgetTester tester) async {
-      final finders = [
+      final findersMessage01 = [
+        find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
         find.text('Message Content 1'),
+      ];
+
+      final findersMessage02 = [
+        find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
         find.text('Message Content 2'),
       ];
 
+      final findersMessage11 = [
+        find.byKey(Key('Message_1_0')),
+        find.text('Message Heading 3'),
+        find.text('Message Content 3'),
+      ];
+
+      final findersMessage12 = [
+        find.byKey(Key('Message_1_1')),
+        find.text('Message Heading 4'),
+        find.text('Message Content 4'),
+      ];
+
       // Set test messages to feed service
       // mock raw feed
-      when(restClient.fetchRawFeed()).thenAnswer(
-        (_) async => [message1, message2],
+      when(restClient.fetchMessages('001', pageSize, 0)).thenAnswer(
+        (_) => Future.value(
+          jsonEncode(
+            testMessageList2With2Messages,
+          ),
+        ),
+      );
+      when(restClient.fetchMessages('059580004004', pageSize, 0)).thenAnswer(
+        (_) => Future.value(
+          jsonEncode(
+            testMessageListWith2Messages,
+          ),
+        ),
       );
 
       await createWidgetWrappedInColumn(tester, MessagesScreen());
-      await untilCalled(restClient.fetchRawFeed());
       await tester.pumpAndSettle();
+      
+      // Check first channel
+      await untilCalled(restClient.fetchMessages('059580004004', pageSize, 0));
 
-      finders.forEach((finder) async {
-        expect(finder, findsNWidgets(2));
+      findersMessage01.forEach((finder) async {
+        expect(finder, findsOneWidget);
+      });
+
+      await tester.dragUntilVisible(
+        find.byKey(Key('Message_0_1')),
+        find.byKey(Key('PageListViewMessages_0')),
+        const Offset(-50.0, 0.0),
+      );
+
+      findersMessage02.forEach((finder) async {
+        expect(finder, findsOneWidget);
+      });
+
+      // Check second channel
+      await untilCalled(restClient.fetchMessages('001', pageSize, 0));
+
+      findersMessage11.forEach((finder) async {
+        expect(finder, findsOneWidget);
+      });
+
+      await tester.dragUntilVisible(
+        find.byKey(Key('Message_1_1')),
+        find.byKey(Key('PageListViewMessages_1')),
+        const Offset(-50.0, 0.0),
+      );
+
+      findersMessage12.forEach((finder) async {
+        expect(finder, findsOneWidget);
       });
     });
 

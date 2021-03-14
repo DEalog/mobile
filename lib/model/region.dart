@@ -33,7 +33,7 @@ class Region {
 
   Region.empty() : this("", "", RegionLevel.UNKNOWN);
 
-  bool isEmpty() => name == '' || ars == '' || type == RegionLevel.UNKNOWN;
+  bool get isEmpty => name == '' || ars == '' || type == RegionLevel.UNKNOWN;
 
   factory Region.fromJson(Map<String, dynamic> json) => _$RegionFromJson(json);
 

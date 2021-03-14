@@ -9,12 +9,12 @@ class LocationService {
     );
     if (testEnvironment == 'int') {
       Fimber.i(
-        "Flutter Test Env $testEnvironment is set. Use static location 11.1, 52.1 for testing",
+        "Flutter Test Env $testEnvironment is set. Use static location 52.1, 11.1 for testing",
       );
       return LocationData.fromMap(
         {
-          'latitude': 11.1,
-          'longitude': 52.1,
+          'latitude': 52.1,
+          'longitude': 11.1,
           'accuracy': 0.0,
           'altitude': 0.0,
           'speed': 0.0,

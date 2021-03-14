@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:mobile/model/feed_message.dart';
 
 class RestClient {
   final authority = "api.dev.dealog.de";
@@ -10,12 +11,6 @@ class RestClient {
     '{ "identifier": "Warntag", "description": "oh ... jetzt schon." }',
     '{ "identifier": "WirVsVirus Finale", "description": "Danke an alle Beteiligten. Spitzen Leistung" }'
   ];
-
-  Future<List<String>> fetchRawFeed() async {
-    final List<String> rawFeed = [];
-
-    return rawFeed == [] ? rawFeed : dummyMessages;
-  }
 
   Future<String> getRegions(String regionName) async {
     var queryParameters = {
@@ -88,6 +83,26 @@ class RestClient {
       "charset": encoding,
     };
     var uri = Uri.https(authority, "/api/regions/hierarchy", queryParameters);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      return utf8.decode(response.bodyBytes);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<String> fetchMessages(String ars, int size, int page) async {
+    var queryParameters = {
+      "page": page.toString(),
+      "size": size.toString(),
+      "ars": ars,
+      "charset": encoding,
+    };
+    var uri = Uri.https(authority, "/api/messages", queryParameters);
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {

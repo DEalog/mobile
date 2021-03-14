@@ -13,4 +13,11 @@ class Coordinate {
       _$CoordinateFromJson(json);
 
   Map<String, dynamic> toJson() => _$CoordinateToJson(this);
+
+  @override
+  int get hashCode => longitude.hashCode ^ latitude.hashCode;
+
+  @override
+  bool operator ==(o) =>
+      o is Coordinate && o.longitude == longitude && o.latitude == latitude;
 }
