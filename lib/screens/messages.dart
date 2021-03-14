@@ -103,7 +103,7 @@ class MessagesScreenState extends State<MessagesScreen> {
       if (isLastPage) {
         _pagingControllers[channel].appendLastPage(newItems.messages);
       } else {
-        final nextPageKey = pageKey + newItems.messages.length;
+        final nextPageKey = pageKey + 1;
         _pagingControllers[channel].appendPage(newItems.messages, nextPageKey);
       }
     } catch (error) {
