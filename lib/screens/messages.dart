@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'package:fimber/fimber.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mobile/api/data_service.dart';
@@ -84,8 +86,10 @@ class MessagesScreenState extends State<MessagesScreen> {
               this.channels = newChannels;
             },
           );
-          Future.delayed(Duration(milliseconds: 200),
-              () => disposePagingControllers(channelsToBeDisposed));
+          Future.delayed(
+            Duration(milliseconds: 200),
+            () => disposePagingControllers(channelsToBeDisposed),
+          );
         }
       },
     );
@@ -111,96 +115,78 @@ class MessagesScreenState extends State<MessagesScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> channelBoxes = channels.map((channel) {
-      var channelIndex = channels.indexOf(channel);
-      return Column(
-        children: [
-          LocationView(
-            channel.location,
-            alignment: Alignment.centerLeft,
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.2,
-            width: MediaQuery.of(context).size.height * 0.7,
-            child: PagedListView<int, FeedMessage>(
-              key: Key('PageListViewMessages_$channelIndex'),
-              scrollDirection: Axis.horizontal,
-              pagingController: _pagingControllers[channel],
-              builderDelegate: PagedChildBuilderDelegate<FeedMessage>(
-                itemBuilder: (context, item, index) {
-                  Key messageKey = Key("Message_${channelIndex}_$index");
-                  return MessageCardUi(
-                    key: messageKey,
-                    identifier: item.headline,
-                    description: item.description,
-                  );
-                },
-                noItemsFoundIndicatorBuilder: (context) => MessageCardUi(
-                  key: Key("NoFeedMessagesAvailable"),
-                  identifier:
-                      LocaleKeys.messages_no_feed_messages_available.tr(),
-                  description: '',
+  List<Widget> buildChannels() => channels.map((channel) {
+        var channelIndex = channels.indexOf(channel);
+        var _scrollController = new ScrollController();
+        var _displacement = 40.0;
+        _scrollController.addListener(() {
+          if (_scrollController.offset + _displacement <
+              _scrollController.position.minScrollExtent) {
+            _pagingControllers[channel].refresh();
+          }
+        });
+        return Column(
+          children: [
+            LocationView(
+              channel.location,
+              alignment: Alignment.centerLeft,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Container(
+                child: PagedListView<int, FeedMessage>(
+                  key: Key('PageListViewMessages_$channelIndex'),
+                  scrollDirection: Axis.horizontal,
+                  scrollController: _scrollController,
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  pagingController: _pagingControllers[channel],
+                  builderDelegate: PagedChildBuilderDelegate<FeedMessage>(
+                    itemBuilder: (context, item, index) {
+                      Key messageKey = Key("Message_${channelIndex}_$index");
+                      return MessageCardUi(
+                        key: messageKey,
+                        identifier: item.headline,
+                        description: item.description,
+                      );
+                    },
+                    noItemsFoundIndicatorBuilder: (context) => MessageCardUi(
+                      key: Key("NoFeedMessagesAvailable"),
+                      identifier:
+                          LocaleKeys.messages_no_feed_messages_available.tr(),
+                      description: '',
+                    ),
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        );
+      }).toList(
+        growable: false,
       );
 
-      // return FutureBuilder(
-      //   future: futureFeedMessages[channel],
-      //   builder: (context, snapshot) {
-      //     if (snapshot.hasData) {
-      //       Fimber.d("Snapshot has Data");
-      //       return Column(
-      //         children: [
-      //           LocationView(
-      //             channel.location,
-      //             alignment: Alignment.centerLeft,
-      //           ),
-      //           Container(
-      //             height: MediaQuery.of(context).size.height * 0.2,
-      //             child: ListView.separated(
-      //                 separatorBuilder: (context, index) => Divider(
-      //                       thickness: 0,
-      //                     ),
-      //                 scrollDirection: Axis.horizontal,
-      //                 padding: const EdgeInsets.all(8),
-      //                 itemCount: snapshot.data.length,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   var entry = snapshot.data[index];
-      //                   Key messageKey = Key("Message");
-      //                   return MessageCardUi(
-      //                     key: messageKey,
-      //                     identifier: entry.identifier,
-      //                     description: entry.description,
-      //                   );
-      //                 }),
-      //           ),
-      //         ],
-      //       );
-      //     } else if (snapshot.hasError) {
-      //       Fimber.d("Home - Snapshot has error");
-      //       return Text("${snapshot.error}");
-      //     }
-
-      //     // By default, show a loading spinner.
-      //     return PlatformCircularProgressIndicator(
-      //       key: Key("CircularProgressIndicator"),
-      //     );
-      //   },
-      // );
-    }).toList();
-    List<Widget> homeWidgets = [];
-    homeWidgets.addAll(channelBoxes);
-
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       key: Key("HomeScreen"),
       // height: MediaQuery.of(context).size.height * 0.867,
-      child: ListView(
-        children: homeWidgets,
+      child: RefreshIndicator(
+        onRefresh: () => Future.sync(
+          () {
+            Fimber.d("Home - Refresh all channels called");
+            _pagingControllers.forEach(
+              (channel, pagingController) {
+                Fimber.d(
+                    "Home - Refresh individual channel ${channel.location.name}");
+                pagingController.refresh();
+              },
+            );
+          },
+        ),
+        child: ListView(
+          children: buildChannels(),
+        ),
       ),
     );
   }

@@ -46,6 +46,25 @@ void main() {
       "totalPages": 0,
     }
   };
+  var testMessageListWith1Message = {
+    "content": [
+      {
+        "ars": "059580004004",
+        "category": "Other",
+        "description": "Message Content 1",
+        "headline": "Message Heading 1",
+        "identifier": "1f3f84e6-ae09-405b-968e-8a231a5abb70",
+        "organization": "DEalog Team",
+        "publishedAt": "2020-11-25T20:34:38.098+0000"
+      },
+    ],
+    "meta": {
+      "number": 0,
+      "size": 1,
+      "totalElements": 1,
+      "totalPages": 1,
+    }
+  };
 
   var testMessageListWith2Messages = {
     "content": [
@@ -211,7 +230,7 @@ void main() {
       when(restClient.fetchMessages("059580004004", pageSize, 0)).thenAnswer(
         (_) => Future.value(
           jsonEncode(
-            testMessageListWith2Messages,
+            testMessageListWith1Message,
           ),
         ),
       );
@@ -332,7 +351,7 @@ void main() {
 
       await createWidgetWrappedInColumn(tester, MessagesScreen());
       await tester.pumpAndSettle();
-      
+
       // Check first channel
       await untilCalled(restClient.fetchMessages('059580004004', pageSize, 0));
 

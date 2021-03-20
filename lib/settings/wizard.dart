@@ -126,8 +126,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   ),
                   enabled: !useLocation(),
                 ),
-                cupertinoTextFieldConfiguration: CupertinoTextFieldConfiguration(
-                  onChanged: (text) {},
+                cupertinoTextFieldConfiguration: CupertinoTextFieldConfiguration(                
                   controller: editingLocation,
                   placeholder: LocaleKeys.settings_enter_location.tr(),
                   enabled: !useLocation(),
@@ -138,7 +137,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 itemBuilder: (context, region) {
                   return PlatformListTile(
                     key: Key('WizardLocationTextFieldSuggestionTile'),
-                    title: PlatformText(region.name),
+                    title: Text(region.name),
                   );
                 },
                 validator: (value) {
