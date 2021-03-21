@@ -12,8 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
-  ChannelAdapter uut;
-  SharedPreferences prefs;
+  late ChannelAdapter uut;
+  late SharedPreferences prefs;
   final String key = "<key>";
 
   setUp(() {
@@ -69,9 +69,9 @@ void main() {
     var result = uut.getValue(prefs, key);
 
     Channel channel = result[0];
-    expect(channel.location.name, "Town");
-    expect(channel.location.region.name, "Germany");
-    expect(channel.location.region.type, RegionLevel.COUNTRY);
+    expect(channel.location!.name, "Town");
+    expect(channel.location!.region!.name, "Germany");
+    expect(channel.location!.region!.type, RegionLevel.COUNTRY);
   });
 
   test('Write channel data without location', () async {

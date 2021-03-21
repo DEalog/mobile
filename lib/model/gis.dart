@@ -2,10 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'gis.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class Coordinate {
-  final double longitude;
-  final double latitude;
+  final double? longitude;
+  final double? latitude;
 
   Coordinate(this.longitude, this.latitude);
 

@@ -2,15 +2,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'feed_message.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class FeedMessage {
-  final String identifier;
-  final String organization;
-  final String headline;
-  final String description;
-  final String ars;
-  final String category;
-  final String publishedAt;
+  final String? identifier;
+  final String? organization;
+  final String? headline;
+  final String? description;
+  final String? ars;
+  final String? category;
+  final String? publishedAt;
 
   FeedMessage({
     this.identifier,

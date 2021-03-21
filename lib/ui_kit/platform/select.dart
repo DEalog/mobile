@@ -4,20 +4,19 @@ import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class MultiSelectFormField<T> extends FormField<Set<T>> {
-  final Iterable<T> elements;
-  final String Function(T) elementName;
+  final Iterable<T>? elements;
+  final String Function(T)? elementName;
 
   MultiSelectFormField(
       {this.elements,
       this.elementName,
-      Key key,
-      Set<T> initialValue,
-      FormFieldValidator<Set<T>> validator,
-      FormFieldSetter<Set<T>> onSaved})
+      Key? key,
+      Set<T>? initialValue,
+      FormFieldValidator<Set<T>>? validator,
+      FormFieldSetter<Set<T>>? onSaved})
       : super(
             builder: (FormFieldState<Set<T>> field) {
               void onChangedHandler(Set<T> value) {
@@ -26,7 +25,7 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
               }
 
               return MultiSelect(
-                elements: elements,
+                elements: elements as List<T>?,
                 selected: initialValue,
                 elementName: elementName,
                 onChanged: onChangedHandler,
@@ -41,10 +40,10 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
 }
 
 class MultiSelect<T> extends StatefulWidget {
-  final List<T> elements;
-  final Iterable<T> selected;
-  final String Function(T) elementName;
-  final ValueChanged<Set<T>> onChanged;
+  final List<T>? elements;
+  final Iterable<T>? selected;
+  final String Function(T)? elementName;
+  final ValueChanged<Set<T>>? onChanged;
 
   MultiSelect(
       {this.elements, this.selected, this.elementName, this.onChanged}) {
@@ -54,17 +53,17 @@ class MultiSelect<T> extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     final selected =
-        HashSet<T>.from(this.selected != null ? this.selected : []);
+        HashSet<T>.from((this.selected != null ? this.selected! : []) as Iterable<dynamic>);
     return _MultiSelectState<T>(
         this.elements, selected.toSet(), this.elementName, this.onChanged);
   }
 }
 
 class _MultiSelectState<E> extends State {
-  final Iterable<E> elements;
+  final Iterable<E>? elements;
   final Set<E> selected;
-  final ValueChanged<Set<E>> onChanged;
-  final String Function(E) elementName;
+  final ValueChanged<Set<E>>? onChanged;
+  final String Function(E)? elementName;
   final bool required = false;
   final _scrollController = ScrollController();
 
@@ -83,7 +82,7 @@ class _MultiSelectState<E> extends State {
   Widget build(BuildContext context) {
     var mediaQuerySize = MediaQuery.of(context).size;
 
-    List<Widget> entries = elements.map((e) {
+    List<Widget> entries = elements!.map((e) {
       final isSelected = selected.contains(e);
       return PlatformSelectListTile(
           value: isSelected,
@@ -95,10 +94,10 @@ class _MultiSelectState<E> extends State {
                 selected.add(e);
               }
             });
-            onChanged.call(selected);
+            onChanged!.call(selected);
           },
-          label: elementName.call(e),
-          keyId: describeEnum(e));
+          label: elementName!.call(e),
+          keyId: describeEnum(e!));
     }).toList();
 
     if (isCupertino(context)) {
@@ -130,17 +129,17 @@ class _MultiSelectState<E> extends State {
 }
 
 class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
-  final String label;
-  final String keyId;
-  final bool value;
-  final void Function() onChanged;
+  final String? label;
+  final String? keyId;
+  final bool? value;
+  final void Function()? onChanged;
 
   PlatformSelectListTile({
     this.label,
     this.value,
     this.onChanged,
     this.keyId,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -153,7 +152,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                this.label,
+                this.label!,
               ),
               Spacer(),
               Container(
@@ -164,7 +163,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
                   mediaQuerySize.width * 0.01,
                 ),
                 child: Icon(
-                    value
+                    value!
                         ? CupertinoIcons.check_mark_circled_solid
                         : CupertinoIcons.circle,
                     color: Theme.of(context).accentColor,
@@ -173,7 +172,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
             ],
           ),
           onTap: () {
-            onChanged();
+            onChanged!();
           },
         ));
   }
@@ -184,7 +183,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(this.label),
+        Text(this.label!),
         Spacer(),
         Padding(
           padding: EdgeInsets.fromLTRB(
@@ -196,7 +195,7 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
           child: Checkbox(
             key: getStateKey(),
             value: value,
-            onChanged: (e) => onChanged(),
+            onChanged: (e) => onChanged!(),
           ),
         ),
       ],

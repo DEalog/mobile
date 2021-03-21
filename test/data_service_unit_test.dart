@@ -16,8 +16,8 @@ class MockRestClient extends Mock implements RestClient {}
 GetIt getIt = GetIt.instance;
 
 void main() {
-  RestClient restClient;
-  DataService dataService;
+  RestClient? restClient;
+  DataService? dataService;
 
   var testRegionMun = {
     "content": [
@@ -124,7 +124,7 @@ void main() {
   group('rest mock message service', () {
     setUp(() async {
       restClient = MockRestClient();
-      getIt.registerSingletonAsync<RestClient>(() async => restClient);
+      getIt.registerSingletonAsync<RestClient>((() async => restClient!));
       getIt.registerSingletonWithDependencies(
         () => DataService(),
         dependsOn: [RestClient],
@@ -140,7 +140,7 @@ void main() {
       var size = 10;
       var page = 1;
 
-      when(restClient.fetchMessages(testingArs, size, page)).thenAnswer(
+      when(restClient!.fetchMessages(testingArs, size, page)).thenAnswer(
         (_) => Future.value(
           jsonEncode(
             testMessageList,
@@ -149,22 +149,22 @@ void main() {
       );
 
       // test getFeed
-      var test = await dataService.getFeedMessages(testingArs, size, page);
+      var test = await dataService!.getFeedMessages(testingArs, size, page);
 
       // Get mocked Message 1 from dataService
       expect(
-          test.messages[0].identifier, "1f3f84e6-ae09-405b-968e-8a231a5abb70");
-      expect(test.messages[0].description,
+          test.messages![0].identifier, "1f3f84e6-ae09-405b-968e-8a231a5abb70");
+      expect(test.messages![0].description,
           "In dieser Meldung wird der Ablauf für das Onboarding Schritt für Schritt erklärt.");
 
       // Get mocked Message 2 from dataService
       expect(
-          test.messages[1].identifier, "90325ca5-5c5e-4cb3-987d-af830e13f707");
-      expect(test.messages[1].description,
+          test.messages![1].identifier, "90325ca5-5c5e-4cb3-987d-af830e13f707");
+      expect(test.messages![1].description,
           "Facilisineglegentur appetere vix curabitur deserunt.  Explicarinoluisse integer qui sententiae metus torquent ligula dapibus.");
 
       verifyInOrder([
-        restClient.fetchMessages(testingArs, size, page),
+        restClient!.fetchMessages(testingArs, size, page),
       ]);
     });
 
@@ -176,7 +176,7 @@ void main() {
   group('rest mock region', () {
     setUp(() async {
       restClient = MockRestClient();
-      getIt.registerSingletonAsync<RestClient>(() async => restClient);
+      getIt.registerSingletonAsync<RestClient>((() async => restClient!));
       getIt.registerSingletonWithDependencies(
         () => DataService(),
         dependsOn: [RestClient],
@@ -189,30 +189,30 @@ void main() {
     test('Request ars Mun with two regions in response', () async {
       var regionName = "Mun";
       // mock raw feed
-      when(restClient.getRegions(regionName)).thenAnswer(
+      when(restClient!.getRegions(regionName)).thenAnswer(
         (_) => Future.value(
           jsonEncode(testRegionMun),
         ),
       );
 
-      var test = await dataService.getRegions(regionName);
+      var test = await dataService!.getRegions(regionName);
 
       var testRegions = Regions.fromJson(testRegionMun);
-      var testRegion1 = testRegions.regions[0];
-      var testRegion2 = testRegions.regions[1];
+      var testRegion1 = testRegions.regions![0];
+      var testRegion2 = testRegions.regions![1];
 
       // Get mocked region 1 from dataService
-      expect(test.regions[0].ars, testRegion1.ars);
-      expect(test.regions[0].name, testRegion1.name);
-      expect(test.regions[0].type, testRegion1.type);
+      expect(test.regions![0].ars, testRegion1.ars);
+      expect(test.regions![0].name, testRegion1.name);
+      expect(test.regions![0].type, testRegion1.type);
 
       // Get mocked region 2 from dataService
-      expect(test.regions[1].ars, testRegion2.ars);
-      expect(test.regions[1].name, testRegion2.name);
-      expect(test.regions[1].type, testRegion2.type);
+      expect(test.regions![1].ars, testRegion2.ars);
+      expect(test.regions![1].name, testRegion2.name);
+      expect(test.regions![1].type, testRegion2.type);
 
       verifyInOrder([
-        restClient.getRegions,
+        restClient!.getRegions,
       ]);
     });
 
@@ -236,13 +236,13 @@ void main() {
     test('Request ars Starnberg', () async {
       var regionName = starnbergRegion.name;
 
-      var test = await dataService.getRegions(regionName);
+      var test = await dataService!.getRegions(regionName);
 
       // Get mocked region 1 from dataService
-      expect(test.regions.contains(starnbergRegion), true);
+      expect(test.regions!.contains(starnbergRegion), true);
 
       verifyInOrder([
-        restClient.getRegions,
+        restClient!.getRegions,
       ]);
     });
 
@@ -254,7 +254,7 @@ void main() {
   group('rest mock region hierarchy', () {
     setUp(() async {
       restClient = MockRestClient();
-      getIt.registerSingletonAsync<RestClient>(() async => restClient);
+      getIt.registerSingletonAsync<RestClient>((() async => restClient!));
       getIt.registerSingletonWithDependencies(
         () => DataService(),
         dependsOn: [RestClient],
@@ -272,7 +272,7 @@ void main() {
       );
 
       // mock raw feed
-      when(restClient.getRegionHierarchyById(location.region.ars)).thenAnswer(
+      when(restClient!.getRegionHierarchyById(location.region!.ars)).thenAnswer(
         (_) => Future.value(jsonEncode([
           germanyRegion,
           bavariaRegion,
@@ -282,7 +282,7 @@ void main() {
         ])),
       );
 
-      var testRegionHierarchy = await dataService.getRegionHierarchy(location);
+      var testRegionHierarchy = await dataService!.getRegionHierarchy(location);
 
       expect(testRegionHierarchy.regionHierarchy.length, 5);
       expect(testRegionHierarchy.regionHierarchy[4], starnbergRegion);
@@ -291,7 +291,7 @@ void main() {
       expect(testRegionHierarchy.regionHierarchy[2], upperBavariaRegion);
 
       verifyInOrder([
-        restClient.getRegions,
+        restClient!.getRegions,
       ]);
     });
 
@@ -319,7 +319,7 @@ void main() {
         starnbergRegion,
       );
 
-      var testRegionHierarchy = await dataService.getRegionHierarchy(location);
+      var testRegionHierarchy = await dataService!.getRegionHierarchy(location);
 
       expect(testRegionHierarchy.regionHierarchy.length, 5);
       expect(testRegionHierarchy.regionHierarchy[4], starnbergRegion);
@@ -328,7 +328,7 @@ void main() {
       expect(testRegionHierarchy.regionHierarchy[2], upperBavariaRegion);
 
       verifyInOrder([
-        restClient.getRegions,
+        restClient!.getRegions,
       ]);
     });
 

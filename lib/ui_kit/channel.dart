@@ -6,7 +6,7 @@ import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/model/channel.dart';
 
 class LocationView extends StatelessWidget {
-  final ChannelLocation location;
+  final ChannelLocation? location;
   final Alignment alignment;
 
   LocationView(this.location, {this.alignment = Alignment.center});
@@ -14,12 +14,12 @@ class LocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget locationView;
-    if (location.coordinate == null) {
-      var name = location.name;
+    if (location!.coordinate == null) {
+      var name = location!.name;
       locationView = Padding(
           key: Key('locationViewStaticLocation'),
           padding: EdgeInsets.all(5.0),
-          child: Text(name != null || name.isEmpty ? name : "n/a"));
+          child: Text(name != null || name!.isEmpty ? name : "n/a"));
     } else {
       locationView = Row(
         key: Key('locationViewCurrentLocation'),
@@ -50,7 +50,7 @@ class ChannelView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var categories = Wrap(
-      children: channel.categories
+      children: channel.categories!
           .map((e) => Padding(
                 child: ChannelCategoryView(e),
                 padding: EdgeInsets.all(2.0),
@@ -68,14 +68,14 @@ class ChannelView extends StatelessWidget {
 }
 
 class ChannelCategoryView extends StatelessWidget {
-  final ChannelCategory category;
+  final ChannelCategory? category;
 
   ChannelCategoryView(this.category);
 
   @override
   Widget build(BuildContext context) {
     var text = Text(
-      categoryLocalizationKey(category).tr(),
+      categoryLocalizationKey(category!).tr(),
     );
     return Container(
       child: text,

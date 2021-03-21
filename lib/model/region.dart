@@ -19,15 +19,17 @@ String regionLevelLocalizationKey(RegionLevel regionLevel) =>
 String regionLevelName(RegionLevel regionLevel) =>
     regionLevelLocalizationKey(regionLevel).tr();
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class Region {
-  @JsonKey(nullable: false, required: true)
-  String ars;
-  @JsonKey(nullable: false, required: true)
-  String name;
+  @JsonKey(required: true)
+  String? ars;
+  @JsonKey(required: true)
+  String? name;
   @JsonKey(
-      nullable: false, required: true, unknownEnumValue: RegionLevel.UNKNOWN)
-  RegionLevel type;
+    required: true,
+    unknownEnumValue: RegionLevel.UNKNOWN,
+  )
+  RegionLevel? type;
 
   Region(this.ars, this.name, this.type);
 

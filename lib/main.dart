@@ -21,6 +21,7 @@ GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   Fimber.plantTree(DebugTree());
   register(getIt);
 
@@ -49,7 +50,7 @@ class App extends StatelessWidget {
     final materialLightTheme = AppLightTheme.theme;
     // final materialDarkTheme = AppDarkTheme.theme; // enable for darkmode
     final version = getIt<Version>();
-    final appSettings = getIt<AppSettings>();
+    final AppSettings? appSettings = getIt<AppSettings>();
     final settings = PlatformSettingsData(iosUsesMaterialWidgets: false);
     Fimber.i("version is ready: ${version.state.toString()}");
 
@@ -76,11 +77,11 @@ class App extends StatelessWidget {
           ),
           initialRoute: version.isInitialVersion ? '/wizard' : '/',
           routes: {
-            '/': (context) => Home(),
-            '/wizard': (context) => ChannelWizard(
-                  channelSettings: appSettings.channels,
+            '/': (context) => new Home(),
+            '/wizard': (context) => new ChannelWizard(
+                  channelSettings: appSettings!.channels,
                 ),
-            '/settings': (context) => SettingsScreen(),
+            '/settings': (context) => new SettingsScreen(),
           },
         ),
       ),

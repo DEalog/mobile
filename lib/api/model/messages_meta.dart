@@ -4,14 +4,14 @@ part 'messages_meta.g.dart';
 
 @JsonSerializable()
 class MessagesMeta {
-  @JsonKey(nullable: false, required: true)
-  int size;
-  @JsonKey(nullable: false, required: true)
-  int number;
-  @JsonKey(nullable: false, required: true)
-  int totalElements;
-  @JsonKey(nullable: false, required: true)
-  int totalPages;
+  @JsonKey(required: true)
+  int? size;
+  @JsonKey(required: true)
+  int? number;
+  @JsonKey(required: true)
+  int? totalElements;
+  @JsonKey(required: true)
+  int? totalPages;
 
   MessagesMeta();
 

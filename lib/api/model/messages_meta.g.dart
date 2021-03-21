@@ -10,10 +10,10 @@ MessagesMeta _$MessagesMetaFromJson(Map<String, dynamic> json) {
   $checkKeys(json,
       requiredKeys: const ['size', 'number', 'totalElements', 'totalPages']);
   return MessagesMeta()
-    ..size = json['size'] as int
-    ..number = json['number'] as int
-    ..totalElements = json['totalElements'] as int
-    ..totalPages = json['totalPages'] as int;
+    ..size = json['size'] as int?
+    ..number = json['number'] as int?
+    ..totalElements = json['totalElements'] as int?
+    ..totalPages = json['totalPages'] as int?;
 }
 
 Map<String, dynamic> _$MessagesMetaToJson(MessagesMeta instance) =>

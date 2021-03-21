@@ -5,8 +5,8 @@ part 'region_hierarchy.g.dart';
 
 @JsonSerializable(createToJson: false)
 class RegionHierarchy {
-  @JsonKey(nullable: false, required: true)
-  List<Region> regionHierarchy;
+  @JsonKey(required: true)
+  late List<Region> regionHierarchy;
 
   RegionHierarchy();
 

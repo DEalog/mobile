@@ -13,8 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/api/data_service.dart';
-import 'package:mobile/api/model/messages.dart';
-import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
@@ -35,7 +33,7 @@ GetIt getIt = GetIt.instance;
 void main() {
   RestClient restClient = MockRestClient();
   AppSettings appSettings;
-  StreamingSharedPreferences streamingSharedPreferences;
+  late StreamingSharedPreferences streamingSharedPreferences;
 
   var testMessageListEmpty = {
     "content": [],

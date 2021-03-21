@@ -8,8 +8,8 @@ part of 'gis.dart';
 
 Coordinate _$CoordinateFromJson(Map<String, dynamic> json) {
   return Coordinate(
-    (json['longitude'] as num).toDouble(),
-    (json['latitude'] as num).toDouble(),
+    (json['longitude'] as num?)?.toDouble(),
+    (json['latitude'] as num?)?.toDouble(),
   );
 }
 

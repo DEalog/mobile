@@ -8,13 +8,13 @@ part of 'feed_message.dart';
 
 FeedMessage _$FeedMessageFromJson(Map<String, dynamic> json) {
   return FeedMessage(
-    identifier: json['identifier'] as String,
-    organization: json['organization'] as String,
-    headline: json['headline'] as String,
-    description: json['description'] as String,
-    ars: json['ars'] as String,
-    category: json['category'] as String,
-    publishedAt: json['publishedAt'] as String,
+    identifier: json['identifier'] as String?,
+    organization: json['organization'] as String?,
+    headline: json['headline'] as String?,
+    description: json['description'] as String?,
+    ars: json['ars'] as String?,
+    category: json['category'] as String?,
+    publishedAt: json['publishedAt'] as String?,
   );
 }
 

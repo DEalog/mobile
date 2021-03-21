@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'package:fimber/fimber.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mobile/api/data_service.dart';
@@ -15,15 +14,15 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class MessagesScreen extends StatefulWidget {
-  MessagesScreen({Key key}) : super(key: key);
+  MessagesScreen({Key? key}) : super(key: key);
 
   @override
   MessagesScreenState createState() => MessagesScreenState();
 }
 
 class MessagesScreenState extends State<MessagesScreen> {
-  DataService dataService;
-  Preference<List<Channel>> channelsPref;
+  DataService? dataService;
+  late Preference<List<Channel>> channelsPref;
   List<Channel> channels = List.empty();
   static const _pageSize = 10;
 
@@ -76,7 +75,7 @@ class MessagesScreenState extends State<MessagesScreen> {
                   _pagingControllers[newChannel] =
                       PagingController(firstPageKey: 0);
 
-                  _pagingControllers[newChannel].addPageRequestListener(
+                  _pagingControllers[newChannel]!.addPageRequestListener(
                     (pageKey) {
                       _fetchFeedMessagePage(newChannel, pageKey);
                     },
@@ -98,20 +97,20 @@ class MessagesScreenState extends State<MessagesScreen> {
 
   Future<void> _fetchFeedMessagePage(Channel channel, int pageKey) async {
     try {
-      var ars = channel.location.coordinate == null
-          ? channel.location.region.ars
-          : channel.regionhierarchy.last.ars;
+      var ars = channel.location!.coordinate == null
+          ? channel.location!.region!.ars
+          : channel.regionhierarchy!.last.ars;
       final newItems =
-          await dataService.getFeedMessages(ars, _pageSize, pageKey);
-      final isLastPage = newItems.messages.length < _pageSize;
+          await dataService!.getFeedMessages(ars, _pageSize, pageKey);
+      final isLastPage = newItems.messages!.length < _pageSize;
       if (isLastPage) {
-        _pagingControllers[channel].appendLastPage(newItems.messages);
+        _pagingControllers[channel]!.appendLastPage(newItems.messages!);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingControllers[channel].appendPage(newItems.messages, nextPageKey);
+        _pagingControllers[channel]!.appendPage(newItems.messages!, nextPageKey);
       }
     } catch (error) {
-      _pagingControllers[channel].error = error;
+      _pagingControllers[channel]!.error = error;
     }
   }
 
@@ -122,7 +121,7 @@ class MessagesScreenState extends State<MessagesScreen> {
         _scrollController.addListener(() {
           if (_scrollController.offset + _displacement <
               _scrollController.position.minScrollExtent) {
-            _pagingControllers[channel].refresh();
+            _pagingControllers[channel]!.refresh();
           }
         });
         return Column(
@@ -140,7 +139,7 @@ class MessagesScreenState extends State<MessagesScreen> {
                   scrollController: _scrollController,
                   physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics()),
-                  pagingController: _pagingControllers[channel],
+                  pagingController: _pagingControllers[channel]!,
                   builderDelegate: PagedChildBuilderDelegate<FeedMessage>(
                     itemBuilder: (context, item, index) {
                       Key messageKey = Key("Message_${channelIndex}_$index");
@@ -178,7 +177,7 @@ class MessagesScreenState extends State<MessagesScreen> {
             _pagingControllers.forEach(
               (channel, pagingController) {
                 Fimber.d(
-                    "Home - Refresh individual channel ${channel.location.name}");
+                    "Home - Refresh individual channel ${channel.location!.name}");
                 pagingController.refresh();
               },
             );
@@ -199,7 +198,7 @@ class MessagesScreenState extends State<MessagesScreen> {
 
   void disposePagingControllers(channelsToBeDispose) {
     channelsToBeDispose.forEach((channel) {
-      _pagingControllers[channel].dispose();
+      _pagingControllers[channel]!.dispose();
       _pagingControllers.remove(channel);
     });
   }

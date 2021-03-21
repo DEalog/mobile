@@ -13,13 +13,13 @@ class AppSettings {
 
   final StreamingSharedPreferences preferences;
 
-  final Preference<int> lastKnownVersionCodePrefs;
+  final Preference<int?> lastKnownVersionCodePrefs;
 
   final Preference<List<Channel>> channels;
 
-  int get lastKnownVersionCode => lastKnownVersionCodePrefs.getValue();
+  int? get lastKnownVersionCode => lastKnownVersionCodePrefs.getValue();
 
-  set lastKnownVersionCode(int current) {
+  set lastKnownVersionCode(int? current) {
     lastKnownVersionCodePrefs.setValue(current);
   }
 

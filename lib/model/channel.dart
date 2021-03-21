@@ -27,22 +27,22 @@ enum ChannelCategory {
 String categoryLocalizationKey(ChannelCategory category) =>
     "model.categories.${describeEnum(category)}";
 
-String categoryName(ChannelCategory category) =>
-    categoryLocalizationKey(category).tr();
+String categoryName(ChannelCategory? category) =>
+    categoryLocalizationKey(category!).tr();
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class ChannelLocation {
-  final String name;
-  @JsonKey(nullable: true)
-  final Coordinate coordinate;
-  @JsonKey(nullable: true)
-  final Region region;
+  final String? name;
+  @JsonKey()
+  final Coordinate? coordinate;
+  @JsonKey()
+  final Region? region;
 
   ChannelLocation(this.name, this.coordinate, this.region);
 
   ChannelLocation.empty() : this("", null, Region.empty());
 
-  bool get isEmpty => this.name == '' && this.coordinate == null && this.region.isEmpty;
+  bool get isEmpty => this.name == '' && this.coordinate == null && this.region!.isEmpty;
 
   factory ChannelLocation.fromJson(Map<String, dynamic> json) =>
       _$ChannelLocationFromJson(json);
@@ -64,15 +64,15 @@ Map<String, ChannelCategory> categoryMap = ChannelCategory.values
     .asMap()
     .map((key, value) => MapEntry(describeEnum(value), value));
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class Channel {
-  @JsonKey(nullable: true)
-  final ChannelLocation location;
-  @JsonKey(nullable: true)
-  final Set<RegionLevel> levels;
-  @JsonKey(nullable: true)
-  final List<Region> regionhierarchy;
-  final Set<ChannelCategory> categories;
+  @JsonKey()
+  final ChannelLocation? location;
+  @JsonKey()
+  final Set<RegionLevel?>? levels;
+  @JsonKey()
+  final List<Region>? regionhierarchy;
+  final Set<ChannelCategory?>? categories;
 
   Channel(this.location, this.levels, this.regionhierarchy, this.categories);
 
@@ -95,17 +95,13 @@ class Channel {
 
   @override
   int get hashCode =>
-      (location == null ? 0 : location.hashCode) ^ (levels == null ? 0 : foldSetHashCode(levels)) ^ foldSetHashCode(categories);
+      (location == null ? 0 : location.hashCode) ^ (levels == null ? 0 : foldSetHashCode(levels!)) ^ foldSetHashCode(categories!);
 
   @override
-  bool operator ==(o) {
-    var levelsAreEqual = setEquals(o.levels, levels);
-    var categoriesAreEqual = setEquals(o.categories, categories);
-    var locationIsEqual = o.location == location;
-
+  bool operator ==(o ) {
     return o is Channel &&
-        locationIsEqual &&
-        levelsAreEqual &&
-        categoriesAreEqual;
+        o.location == location &&
+        setEquals(o.levels, levels) &&
+        setEquals(o.categories, categories);
   }
 }

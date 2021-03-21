@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 
 class MessageCardUi extends StatelessWidget {
-  final String identifier;
-  final String description;
+  final String? identifier;
+  final String? description;
   final double width;
 
   const MessageCardUi({
-    Key key,
+    Key? key,
     this.identifier,
     this.description,
     this.width = -1.0,
@@ -46,7 +45,7 @@ class MessageCardUi extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    this.description,
+                    this.description!,
                   ),
                 ],
               ),
@@ -66,10 +65,10 @@ class MessageCardUi extends StatelessWidget {
             ),
             title: Padding(
               padding: EdgeInsets.only(bottom: contextSize.height * 0.02),
-              child: Text(this.identifier),
+              child: Text(this.identifier!),
             ),
             subtitle: Text(
-              this.description,
+              this.description!,
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
             ),

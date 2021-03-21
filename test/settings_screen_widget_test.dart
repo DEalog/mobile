@@ -26,7 +26,7 @@ void main() {
   RestClient restClient = MockRestClient();
   Version version = MockVersion();
   AppSettings appSettings;
-  StreamingSharedPreferences streamingSharedPreferences;
+  late StreamingSharedPreferences streamingSharedPreferences;
 
   var testMessageListEmpty = {
     {

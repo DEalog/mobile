@@ -7,10 +7,10 @@ part 'regions.g.dart';
 
 @JsonSerializable()
 class Regions {
-  @JsonKey(nullable: false, required: true, name: "content")
-  List<Region> regions;
-  @JsonKey(nullable: false, required: true)
-  RegionsMeta meta;
+  @JsonKey(required: true, name: "content")
+  List<Region>? regions;
+  @JsonKey(required: true)
+  RegionsMeta? meta;
 
   Regions();
 

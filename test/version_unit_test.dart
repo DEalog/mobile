@@ -9,8 +9,8 @@ class MockSettings extends Mock implements AppSettings {}
 class MockInfo extends Mock implements PackageInfo {}
 
 void main() {
-  AppSettings settings;
-  PackageInfo info;
+  late AppSettings settings;
+  late PackageInfo info;
 
   setUp(() {
     settings = MockSettings();

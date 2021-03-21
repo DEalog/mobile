@@ -35,9 +35,7 @@ install the Android SDK manually then.
 For json serialization we are using [json_serializable](https://pub.dev/packages/json_serializable).
 
 * One-time code generation
-  ```
-  flutter pub run build_runner build
-  ```
+  ```flutter pub run build_runner build --delete-conflicting-outputs```
 * Generating code continuously
   ```
   flutter pub run build_runner watch

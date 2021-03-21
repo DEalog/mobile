@@ -5,15 +5,15 @@ import 'package:package_info/package_info.dart';
 class Version {
   final AppSettings settings;
   final PackageInfo info;
-  String _version;
-  int _versionCode;
+  String? _version;
+  int? _versionCode;
   VersionState _state = VersionState.UNCHANGED;
 
-  String get version => _version;
+  String? get version => _version;
 
-  int get versionCode => _versionCode;
+  int? get versionCode => _versionCode;
 
-  int get lastKnownVersionCode => settings.lastKnownVersionCode;
+  int? get lastKnownVersionCode => settings.lastKnownVersionCode;
 
   bool get isInitialVersion => state == VersionState.INITIAL;
 

@@ -11,17 +11,17 @@ import 'package:mobile/model/region.dart';
 import 'model/messages.dart';
 
 class DataService {
-  final RestClient _restClient = getIt<RestClient>();
+  final RestClient? _restClient = getIt<RestClient>();
 
-  Future<Messages> getFeedMessages(String ars, int size, int page) async {
-    String rawFeed = await _restClient.fetchMessages(ars, size, page,);
+  Future<Messages> getFeedMessages(String? ars, int size, int page) async {
+    String rawFeed = await _restClient!.fetchMessages(ars, size, page,);
     var messages = Messages.fromJson(jsonDecode(rawFeed));
     return messages;
   }
 
   /// Region name must be at least 3 characters long
-  Future<Regions> getRegions(String name) async {
-    String rawRegionsJson = await _restClient.getRegions(name);
+  Future<Regions> getRegions(String? name) async {
+    String rawRegionsJson = await _restClient!.getRegions(name);
     var regions = Regions.fromJson(jsonDecode(rawRegionsJson));
     return regions;
   }
@@ -32,35 +32,35 @@ class DataService {
       return List.empty();
     }
 
-    String rawRegionsJson = await _restClient.getRegionsByType(
+    String rawRegionsJson = await _restClient!.getRegionsByType(
       name,
       [
         describeEnum(RegionLevel.MUNICIPALITY),
       ],
     );
     var regions = Regions.fromJson(jsonDecode(rawRegionsJson)).regions;
-    return regions;
+    return regions!;
   }
 
   /// Municipal region name must be at least 3 characters long
   Future<Region> getMunicipalRegion(String name) async {
-    List<Region> regions = await getMunicipalRegions(name);
+    List<Region> regions = await (getMunicipalRegions(name) as FutureOr<List<Region>>);
     return regions.firstWhere(
       (region) => region.name == name,
       orElse: () => Region.empty(),
     );
   }
 
-  Future<RegionHierarchy> getRegionHierarchy(ChannelLocation location) async {
-    var regionHierarchyJson = (ChannelLocation location) {
-      if (location.region != null && location.region.ars.isNotEmpty) {
-        return _restClient.getRegionHierarchyById(
-          location.region.ars,
+  Future<RegionHierarchy> getRegionHierarchy(ChannelLocation? location) async {
+    var regionHierarchyJson = (ChannelLocation? location) {
+      if (location!.region != null && location.region!.ars!.isNotEmpty) {
+        return _restClient!.getRegionHierarchyById(
+          location.region!.ars,
         );
       }
-      return _restClient.getRegionHierarchyByCoordinates(
-        location.coordinate.latitude,
-        location.coordinate.longitude,
+      return _restClient!.getRegionHierarchyByCoordinates(
+        location.coordinate!.latitude,
+        location.coordinate!.longitude,
       );
     };
     var rawJson = await regionHierarchyJson(location);
