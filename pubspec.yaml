@@ -28,6 +28,7 @@ dependencies:
   cupertino_list_tile: ^0.2.0-nullsafety.0
   easy_localization: ^2.3.3
   fimber: ^0.6.1
+  flutter_animator: ^3.1.0
   flutter_platform_widgets: ^0.80.0
   flutter_typeahead: ^2.0.0
   get_it: ^6.0.0
@@ -38,7 +39,7 @@ dependencies:
   optional: ^5.0.0+1
   package_info: ^2.0.0
   shared_preferences: ^0.5.12+4
-  streaming_shared_preferences: ^1.0.1
+  streaming_shared_preferences: ^1.0.2
 
 dev_dependencies:
   integration_test: ^1.0.0
