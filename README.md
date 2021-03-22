@@ -35,9 +35,13 @@ install the Android SDK manually then.
 For json serialization we are using [json_serializable](https://pub.dev/packages/json_serializable).
 
 * One-time code generation
-  ```flutter pub run build_runner build```
+  ```
+  flutter pub run build_runner build
+  ```
 * Generating code continuously
-  ```flutter pub run build_runner watch``` 
+  ```
+  flutter pub run build_runner watch
+  ``` 
 
 ### i18n & l10n
 
@@ -93,8 +97,15 @@ Integration tests allows to test a whole app, so the interaction between multipl
 
 #### Test Execution
 
-- Unit and widget tests will be executed by the "flutter test" command within the app root directory.
-- Integration tests will be executed by the "flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart" command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
+- Unit and widget tests will be executed by the following command within the app root directory.
+  ```
+  flutter test
+  ``` 
+- Integration tests will be executed by the following command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
+  ```
+  flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+  ``` 
+
 
 #### Best Practices
 
@@ -108,7 +119,7 @@ For extensible logging we use [fimber](https://pub.dev/packages/fimber) package.
 
   * Android App Bundle:
     ```shell script
-    $ flutter build appbundle
+    flutter build appbundle
     ```
 ### Build
 

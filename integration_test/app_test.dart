@@ -10,70 +10,123 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Onboarding Tests Form', () {
-    // setUpAll(() async {
-    //   app.main();
-    // });
-
     testWidgets('Should start with settings at first run',
         (WidgetTester tester) async {
       app.main();
-      await tester.pumpAndSettle(
-        Duration(seconds: 5),
-      );
+
+      /*
+        Should start with settings at first run
+       */
+      await tester.pumpAndSettle();
 
       expect(find.byKey(Key('DEalogLogoKey')), findsOneWidget);
       expect(find.byKey(Key('wizardContinue')), findsOneWidget);
       expect(find.byKey(Key('wizardFormOneText')), findsOneWidget);
       expect(find.byKey(Key('wizardCancel')), findsNothing);
-    });
 
-    testWidgets('Add device location all channels but fire channel',
-        (WidgetTester tester) async {
-      // app.main();
-      await tester.pumpAndSettle(
-        Duration(seconds: 5),
-      );
-
+      /* 
+        Add device location all channels but fire channel 
+      */
       await tester.tap(find.byKey(Key("wizardUseLocationButton")));
 
-      await tester.pumpAndSettle(
-        Duration(seconds: 1),
-      );
+      await tester.pump();
       expect(find.byKey(Key("wizardUseLocationIconSolid")), findsOneWidget);
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pumpAndSettle(
+      await tester.pump(
         Duration(seconds: 1),
       );
       expect(find.byKey(Key("RegionHierarchyMultiSelect")), findsOneWidget);
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pumpAndSettle(
-        Duration(seconds: 1),
-      );
+      await tester.pump();
       await scrollAndTapDy50("state_FIRE", 'listview_multiselect', tester);
 
-      await tester.pumpAndSettle(
-        Duration(seconds: 1),
-      );
       await tester.tap(find.byKey(Key("wizardSave")));
-      await tester.pumpAndSettle(
-        Duration(seconds: 1),
-      );
+      await tester.pump(Duration(seconds: 2));
       expect(find.byKey(Key("locationView")), findsOneWidget);
       expect(find.byKey(Key("locationViewCurrentLocation")), findsOneWidget);
+
+      /* 
+        Homescreen setup 
+      */
+      expect(find.byKey(Key("DEalogLogoKey")), findsOneWidget);
+      expect(find.byKey(Key("AppBarButtonSettings")), findsOneWidget);
+      expect(find.byKey(Key("AppBarWizardButton")), findsOneWidget);
+
+      /*
+        Open Wizard for new channel
+       */
+      await tester.tap(find.byKey(Key("AppBarWizardButton")));
+      await tester.pump(Duration(seconds: 2));
+
+      expect(find.byKey(Key("DEalogLogoKey")), findsOneWidget);
+      expect(find.byKey(Key("wizardCancel")), findsOneWidget);
+      expect(find.byKey(Key("wizardContinue")), findsOneWidget);
+      expect(find.byKey(Key("wizardFormOneText")), findsOneWidget);
+
+      await tester.tap(find.byKey(Key("wizardCancel")));
+      await tester.pump(Duration(seconds: 2));
+      expect(find.byKey(Key("AppBarWizardButton")), findsOneWidget);
+
+      /*
+        Add custom location without weather and env channel
+       */
+      await tester.tap(find.byKey(Key("AppBarWizardButton")));
+      await tester.pump(Duration(seconds: 1));
+
+      await tester.tap(find.byKey(Key("wizardLocationTextField_toggle")));
+      await tester.pump(Duration(milliseconds: 300));
+
+      await tester.enterText(
+        find.byKey(Key("wizardLocationTextField_toggle")),
+        'Arnsberg',
+      );
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(Key('WizardLocationTextFieldSuggestionTile')),
+          matching: find.text("Arnsberg"),
+        ),
+      );
+
+      await tester.pump(Duration(milliseconds: 400));
+      expect(
+        find.byKey(Key("WizardLocationTextFieldSuggestionTile")),
+        findsNothing,
+      );
+
+      await tester.tap(find.byKey(Key("wizardContinue")));
+      await tester.pump(
+        Duration(seconds: 1),
+      );
+      expect(find.byKey(Key("RegionHierarchyMultiSelect")), findsOneWidget);
+
+      await tester.tap(find.byKey(Key("wizardContinue")));
+      await tester.pump();
+      await scrollAndTapDy50("state_MET", 'listview_multiselect', tester);
+      await scrollAndTapDy50("state_ENV", 'listview_multiselect', tester);
+
+      await tester.tap(find.byKey(Key("wizardSave")));
+      await tester.pump(Duration(seconds: 2));
+      expect(find.byKey(Key("locationView")), findsNWidgets(2));
+      expect(find.byKey(Key("locationViewCurrentLocation")), findsOneWidget);
+      expect(find.text('Arnsberg'), findsOneWidget);
     });
   });
 }
 
 Future scrollAndTapDx50(
     String itemKey, String scrollWidgetKey, WidgetTester tester) async {
-  scrollAndTap(itemKey, scrollWidgetKey, tester, const Offset(-50.0, 0.0));
+  await scrollAndTap(
+      itemKey, scrollWidgetKey, tester, const Offset(-50.0, 0.0));
 }
 
 Future scrollAndTapDy50(
     String itemKey, String scrollWidgetKey, WidgetTester tester) async {
-  scrollAndTap(itemKey, scrollWidgetKey, tester, const Offset(0.0, -50.0));
+  await scrollAndTap(
+      itemKey, scrollWidgetKey, tester, const Offset(0.0, -50.0));
 }
 
 Future scrollAndTap(String itemKey, String scrollWidgetKey, WidgetTester tester,
@@ -85,10 +138,12 @@ Future scrollAndTap(String itemKey, String scrollWidgetKey, WidgetTester tester,
     itemFinder,
     scrollable,
     offset,
+    // duration: Duration(milliseconds: 500),
   );
 
   await tester.tap(
     itemFinder,
   );
-  await Future.delayed(Duration(milliseconds: 200));
+
+  await tester.pump();
 }
