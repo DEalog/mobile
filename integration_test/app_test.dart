@@ -12,12 +12,12 @@ void main() {
   group('Onboarding Tests Form', () {
     testWidgets('Should start with settings at first run',
         (WidgetTester tester) async {
-      app.main();
+      await app.main();
 
       /*
         Should start with settings at first run
        */
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(seconds: 2));
 
       expect(find.byKey(Key('DEalogLogoKey')), findsOneWidget);
       expect(find.byKey(Key('wizardContinue')), findsOneWidget);
@@ -80,7 +80,7 @@ void main() {
         find.byKey(Key("wizardLocationTextField_toggle")),
         'Arnsberg',
       );
-      await tester.pump(Duration(seconds: 1));
+      await tester.pump();
       await tester.pumpAndSettle(Duration(seconds: 2));
 
       await tester.tap(

@@ -126,7 +126,9 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   ),
                   enabled: !useLocation(),
                 ),
-                cupertinoTextFieldConfiguration: CupertinoTextFieldConfiguration(                
+                cupertinoTextFieldConfiguration:
+                    CupertinoTextFieldConfiguration(
+                  onChanged: (value) {},
                   controller: editingLocation,
                   placeholder: LocaleKeys.settings_enter_location.tr(),
                   enabled: !useLocation(),
@@ -142,7 +144,8 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 },
                 validator: (value) {
                   if (!useLocation() && value.length < 3) {
-                    return LocaleKeys.settings_enter_location_minimum_characters.tr();
+                    return LocaleKeys.settings_enter_location_minimum_characters
+                        .tr();
                   }
                   if (channelLocation.isEmpty) {
                     return LocaleKeys.settings_no_valid_location_selected.tr();
