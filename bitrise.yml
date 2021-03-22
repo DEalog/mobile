@@ -179,11 +179,18 @@ workflows:
         - BITRISE_SIMCTL_SERVICE: location-always
         - BITRISE_SIMCTL_ACTION: grant
         - BITRISE_IOS_BUNDLE_ID: $BITRISE_APP_BUNDLE_IDENTIFIER
-    - flutter@0:
+    # - flutter@0:
+    #     inputs:
+    #     - version: $BITRISE_FLUTTER_VERSION
+    #     - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+    #     title: Flutter Drive
+    - flutter-installer@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
-        title: Flutter Drive
+    - script@1:
+        inputs:
+        - content: >-
+            flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
     - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
         title: Stop Simulator
         inputs:
@@ -192,7 +199,7 @@ workflows:
     - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: "2.0.2"
+  - BITRISE_FLUTTER_VERSION: "2.0.3"
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
