@@ -29,17 +29,15 @@ void main() {
       */
       await tester.tap(find.byKey(Key("wizardUseLocationButton")));
 
-      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
       expect(find.byKey(Key("wizardUseLocationIconSolid")), findsOneWidget);
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pump(
-        Duration(seconds: 1),
-      );
+      await tester.pump(Duration(seconds: 2));
       expect(find.byKey(Key("RegionHierarchyMultiSelect")), findsOneWidget);
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pump();
+      await tester.pump(Duration(seconds: 2));
       await scrollAndTapDy50("state_FIRE", 'listview_multiselect', tester);
 
       await tester.tap(find.byKey(Key("wizardSave")));
@@ -73,16 +71,17 @@ void main() {
         Add custom location without weather and env channel
        */
       await tester.tap(find.byKey(Key("AppBarWizardButton")));
-      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 2));
 
       await tester.tap(find.byKey(Key("wizardLocationTextField_toggle")));
-      await tester.pump(Duration(milliseconds: 300));
+      await tester.pump(Duration(seconds: 2));
 
       await tester.enterText(
         find.byKey(Key("wizardLocationTextField_toggle")),
         'Arnsberg',
       );
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 2));
 
       await tester.tap(
         find.descendant(
@@ -91,20 +90,18 @@ void main() {
         ),
       );
 
-      await tester.pump(Duration(milliseconds: 400));
+      await tester.pump(Duration(seconds: 2));
       expect(
         find.byKey(Key("WizardLocationTextFieldSuggestionTile")),
         findsNothing,
       );
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pump(
-        Duration(seconds: 1),
-      );
+      await tester.pump(Duration(seconds: 2));
       expect(find.byKey(Key("RegionHierarchyMultiSelect")), findsOneWidget);
 
       await tester.tap(find.byKey(Key("wizardContinue")));
-      await tester.pump();
+      await tester.pump(Duration(seconds: 2));
       await scrollAndTapDy50("state_MET", 'listview_multiselect', tester);
       await scrollAndTapDy50("state_ENV", 'listview_multiselect', tester);
 
