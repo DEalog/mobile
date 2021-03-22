@@ -144,7 +144,7 @@ workflows:
     - script@1:
         inputs:
         - content: >-
-            flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
+            flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
     # - flutter@0:
     #     inputs:
     #     - version: $BITRISE_FLUTTER_VERSION
@@ -182,7 +182,7 @@ workflows:
     - flutter@0:
         inputs:
         - version: $BITRISE_FLUTTER_VERSION
-        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --target=test_driver/app.dart
+        - commands: drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
         title: Flutter Drive
     - 'git::https://github.com/DEalog/bitrise-step-launch-xcode-simulator.git@master':
         title: Stop Simulator
