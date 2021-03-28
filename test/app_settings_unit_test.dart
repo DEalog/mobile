@@ -1,25 +1,22 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/model/region.dart';
 import 'package:mobile/model/channel.dart';
-import 'package:mobile/model/gis.dart';
 import 'package:mobile/app_settings.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'app_settings_unit_test.mocks.dart';
 
-// Mock class
-class MockSharedPreferences extends Mock implements SharedPreferences {}
-
+@GenerateMocks([SharedPreferences])
 void main() {
-  late ChannelAdapter uut;
-  late SharedPreferences prefs;
+  ChannelAdapter uut = ChannelAdapter();
+  SharedPreferences prefs = MockSharedPreferences();
   final String key = "<key>";
 
-  setUp(() {
-    uut = ChannelAdapter();
-    prefs = MockSharedPreferences();
-  });
+  setUp(() {});
 
   test('Reads empty JSON', () async {
     when(prefs.getStringList(key)).thenReturn(List.of(["{}"]));
@@ -38,8 +35,18 @@ void main() {
   });
 
   test('Read channel with single category', () async {
-    when(prefs.getStringList(key))
-        .thenReturn(List.of(["{\"categories\":[\"FIRE\"]}"]));
+    when(prefs.getStringList(key)).thenReturn(
+      [
+        jsonEncode(
+          {
+            "location": ChannelLocation.empty(),
+            "levels": [],
+            "regionhierarchy": [],
+            "categories": ["FIRE"],
+          },
+        ),
+      ],
+    );
 
     var result = uut.getValue(prefs, key);
 
@@ -48,66 +55,70 @@ void main() {
   });
 
   test('Read channel with location name only', () async {
-    when(prefs.getStringList(key)).thenReturn([
-      jsonEncode(
-        {
-          "location": {
-            "name": "Town",
-            "region": {
-              "ars": "123",
-              "type": "COUNTRY",
-              "name": "Germany",
-            },
+    when(prefs.getStringList(key)).thenReturn(
+      [
+        jsonEncode(
+          {
+            "location": ChannelLocation(
+              "Town",
+              Coordinate.invalid(),
+              Region(
+                "123",
+                "Germany",
+                RegionLevel.COUNTRY,
+              ),
+            ).toJson(),
+            "levels": [],
+            "regionhierarchy": [],
+            "categories": [],
           },
-          "levels": [],
-          "regionhierarchy": [],
-          "categories": [],
-        },
-      )
-    ]);
+        )
+      ],
+    );
 
     var result = uut.getValue(prefs, key);
 
     Channel channel = result[0];
-    expect(channel.location!.name, "Town");
-    expect(channel.location!.region!.name, "Germany");
-    expect(channel.location!.region!.type, RegionLevel.COUNTRY);
+    expect(channel.location.name, "Town");
+    expect(channel.location.region.name, "Germany");
+    expect(channel.location.region.type, RegionLevel.COUNTRY);
   });
 
   test('Write channel data without location', () async {
-    uut.setValue(prefs, key, [
+    var stringListToBeTested = [
+      jsonEncode({
+        "location": ChannelLocation.empty().toJson(),
+        "levels": [],
+        "regionhierarchy": [],
+        "categories": ["FIRE", "MET"]
+      })
+    ];
+    when(
+      prefs.setStringList(key, stringListToBeTested),
+    ).thenAnswer(
+      (_) => Future.value(
+        true,
+      ),
+    );
+    var retVal = await uut.setValue(prefs, key, [
       Channel(
-        null,
+        ChannelLocation.empty(),
         Set.of([]),
-        null,
+        [],
         Set.of([ChannelCategory.FIRE, ChannelCategory.MET]),
       )
     ]);
 
-    verify(prefs.setStringList(key, [
-      jsonEncode({
-        "location": null,
-        "levels": [],
-        "regionhierarchy": null,
-        "categories": ["FIRE", "MET"]
-      })
-    ]));
+    expect(retVal, true);
+
+    verify(prefs.setStringList(
+      key,
+      stringListToBeTested,
+    ));
   });
 
   test('Write all channel data', () async {
-    uut.setValue(prefs, key, [
-      Channel(
-          ChannelLocation(
-            "Location",
-            Coordinate(11.5754, 48.1374),
-            Region("123", "Munich", RegionLevel.DISTRICT),
-          ),
-          Set.of([RegionLevel.DISTRICT]),
-          List.empty(),
-          Set.of([ChannelCategory.FIRE, ChannelCategory.MET]))
-    ]);
-
-    verify(prefs.setStringList(key, [
+    var stringListToBeTested = [
       jsonEncode(
         {
           "location": {
@@ -132,6 +143,38 @@ void main() {
           ],
         },
       )
-    ]));
+    ];
+    when(
+      prefs.setStringList(key, stringListToBeTested),
+    ).thenAnswer(
+      (_) => Future.value(
+        true,
+      ),
+    );
+    uut.setValue(
+      prefs,
+      key,
+      [
+        Channel(
+          ChannelLocation(
+            "Location",
+            Coordinate(11.5754, 48.1374),
+            Region(
+              "123",
+              "Munich",
+              RegionLevel.DISTRICT,
+            ),
+          ),
+          Set.of([RegionLevel.DISTRICT]),
+          List.empty(),
+          Set.of([
+            ChannelCategory.FIRE,
+            ChannelCategory.MET,
+          ]),
+        ),
+      ],
+    );
+
+    verify(prefs.setStringList(key, stringListToBeTested));
   });
 }

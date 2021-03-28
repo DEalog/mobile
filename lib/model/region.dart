@@ -22,20 +22,20 @@ String regionLevelName(RegionLevel regionLevel) =>
 @JsonSerializable()
 class Region {
   @JsonKey(required: true)
-  String? ars;
+  String ars;
   @JsonKey(required: true)
-  String? name;
+  String name;
   @JsonKey(
     required: true,
     unknownEnumValue: RegionLevel.UNKNOWN,
   )
-  RegionLevel? type;
+  RegionLevel type;
 
   Region(this.ars, this.name, this.type);
 
   Region.empty() : this("", "", RegionLevel.UNKNOWN);
 
-  bool get isEmpty => name == '' || ars == '' || type == RegionLevel.UNKNOWN;
+  bool get isEmpty => name.isEmpty || ars.isEmpty || type == RegionLevel.UNKNOWN;
 
   factory Region.fromJson(Map<String, dynamic> json) => _$RegionFromJson(json);
 

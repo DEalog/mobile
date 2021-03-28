@@ -27,13 +27,13 @@ final _formKey = GlobalKey<FormState>();
 const _totalSteps = 3;
 
 class ChannelWizard extends StatefulWidget {
-  final Preference<List<Channel>>? channelSettings;
+  final Preference<List<Channel>> channelSettings;
 
-  ChannelWizard({this.channelSettings});
+  ChannelWizard(this.channelSettings);
 
   @override
   _ChannelWizardState createState() =>
-      _ChannelWizardState(channelSettings: this.channelSettings);
+      _ChannelWizardState(this.channelSettings);
 }
 
 class ArsEntry {
@@ -56,30 +56,32 @@ class DataProvider {
 }
 
 class _ChannelWizardState extends State<ChannelWizard> {
-  final Preference<List<Channel>>? channelSettings;
-  List<Channel> channels = [];
+  final Preference<List<Channel>> channelSettings;
+  List<Channel> channels;
   int _stepNumber = 1;
-  ChannelLocation? channelLocation;
-  Set<RegionLevel?>? _levels;
-  List<Region>? _regionHierarchy;
-  Set<ChannelCategory>? categories;
-  DataService? dataService = getIt<DataService>();
-  LocationService? _locationService = getIt<LocationService>();
+  ChannelLocation channelLocation;
+  Set<RegionLevel> _levels;
+  List<Region> _regionHierarchy;
+  Set<ChannelCategory> categories;
+  DataService dataService = getIt<DataService>();
+  LocationService _locationService = getIt<LocationService>();
 
-  _ChannelWizardState({this.channelSettings}) {
-    this.channels.addAll(channelSettings!.getValue());
-    this.channelLocation = ChannelLocation.empty();
-  }
+  _ChannelWizardState(this.channelSettings)
+      : _levels = {},
+        _regionHierarchy = [],
+        categories = {},
+        channelLocation = ChannelLocation.empty(),
+        channels = List.empty(growable: true);
 
   @override
   void initState() {
+    channels.addAll(channelSettings.getValue());
     super.initState();
   }
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() =>
-      (this.channelLocation != null && this.channelLocation!.coordinate != null);
+  bool useLocation() => this.channelLocation.coordinate.isValid;
 
   void saveData(BuildContext context) {
     _formKey.currentState!.save();
@@ -134,7 +136,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   enabled: !useLocation(),
                 ),
                 suggestionsCallback: (pattern) {
-                  return dataService!.getMunicipalRegions(pattern);
+                  return dataService.getMunicipalRegions(pattern);
                 },
                 itemBuilder: (context, region) {
                   return PlatformListTile(
@@ -144,9 +146,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 },
                 validator: (value) {
                   if (!useLocation() && value!.length < 3) {
-                    return LocaleKeys.settings_enter_location_minimum_characters.tr();
+                    return LocaleKeys.settings_enter_location_minimum_characters
+                        .tr();
                   }
-                  if (channelLocation!.isEmpty) {
+                  if (channelLocation.isEmpty) {
                     return LocaleKeys.settings_no_valid_location_selected.tr();
                   }
                   return null;
@@ -154,17 +157,17 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 autovalidateMode: AutovalidateMode.always,
                 hideOnEmpty: true,
                 onSaved: (suggestion) async {
-                  if (!useLocation() && channelLocation!.name != suggestion) {
+                  if (!useLocation() && channelLocation.name != suggestion) {
                     Region suggestedRegion =
-                        await dataService!.getMunicipalRegion(suggestion!);
+                        await dataService.getMunicipalRegion(suggestion!);
 
                     if (!suggestedRegion.isEmpty) {
                       setState(
                         () {
-                          this.editingLocation.text = suggestedRegion.name!;
+                          this.editingLocation.text = suggestedRegion.name;
                           this.channelLocation = ChannelLocation(
                             suggestedRegion.name,
-                            null,
+                            Coordinate.invalid(),
                             suggestedRegion,
                           );
                         },
@@ -175,10 +178,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 onSuggestionSelected: (suggestion) {
                   Region suggestedRegion = suggestion;
                   setState(() {
-                    this.editingLocation.text = suggestedRegion.name!;
+                    this.editingLocation.text = suggestedRegion.name;
                     this.channelLocation = ChannelLocation(
                       suggestedRegion.name,
-                      null,
+                      Coordinate.invalid(),
                       suggestedRegion,
                     );
                   });
@@ -220,18 +223,18 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   onPressed: () async {
                     Fimber.i("Update useLocation: $useLocation()");
                     if (!useLocation()) {
-                      _locationService!.getLocationFromDevice().then(
+                      _locationService.getLocationFromDevice().then(
                         (locationData) {
                           Fimber.i("Location fetched: $locationData");
                           setState(() {
                             this.editingLocation.clear();
                             this.channelLocation = ChannelLocation(
-                              null,
+                              '',
                               Coordinate(
-                                locationData.longitude,
-                                locationData.latitude,
+                                locationData.longitude!,
+                                locationData.latitude!,
                               ),
-                              null,
+                              Region.empty(),
                             );
                           });
                         },
@@ -275,7 +278,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
         ),
         Expanded(
           child: FutureBuilder<RegionHierarchy>(
-              future: dataService!.getRegionHierarchy(channelLocation),
+              future: dataService.getRegionHierarchy(channelLocation),
               builder: (BuildContext context,
                   AsyncSnapshot<RegionHierarchy> snapshot) {
                 if (snapshot.hasData) {
@@ -283,11 +286,11 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   final regionLevels = arsEntries.map((e) => e.type).toList();
                   final arsMap = HashMap.fromEntries(
                       arsEntries.map((e) => MapEntry(e.type, e)));
-                  return MultiSelectFormField<RegionLevel?>(
+                  return MultiSelectFormField<RegionLevel>(
                     key: Key('RegionHierarchyMultiSelect'),
                     elements: regionLevels,
                     elementName: (regionLevel) =>
-                        "${arsMap[regionLevel]!.name} (${regionLevelName(regionLevel!)})",
+                        "${arsMap[regionLevel]!.name} (${regionLevelName(regionLevel)})",
                     initialValue: regionLevels.toSet(),
                     onSaved: (regionLevels) {
                       Fimber.i("RegionLevels selected: $regionLevels");
@@ -482,7 +485,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   this._regionHierarchy,
                   this.categories,
                 ));
-            this.channelSettings!.setValue(
+            this.channelSettings.setValue(
                   this.channels,
                 );
 

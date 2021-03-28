@@ -6,7 +6,7 @@ import 'gis.dart';
 
 part 'channel.g.dart';
 
-int foldSetHashCode(Set anySet) => anySet.fold(
+int foldIterableHashCode(Iterable<dynamic> iterable) => iterable.fold(
     0, (previousValue, element) => previousValue ^ element.hashCode);
 
 enum ChannelCategory {
@@ -32,17 +32,25 @@ String categoryName(ChannelCategory? category) =>
 
 @JsonSerializable()
 class ChannelLocation {
-  final String? name;
+  final String name;
   @JsonKey()
-  final Coordinate? coordinate;
+  final Coordinate coordinate;
   @JsonKey()
-  final Region? region;
+  final Region region;
 
   ChannelLocation(this.name, this.coordinate, this.region);
 
-  ChannelLocation.empty() : this("", null, Region.empty());
+  ChannelLocation.empty()
+      : this(
+          "",
+          Coordinate.invalid(),
+          Region.empty(),
+        );
 
-  bool get isEmpty => this.name == '' && this.coordinate == null && this.region!.isEmpty;
+  bool get isEmpty =>
+      this.name.isEmpty &&
+      this.coordinate.isValid == false &&
+      this.region.isEmpty;
 
   factory ChannelLocation.fromJson(Map<String, dynamic> json) =>
       _$ChannelLocationFromJson(json);
@@ -67,18 +75,14 @@ Map<String, ChannelCategory> categoryMap = ChannelCategory.values
 @JsonSerializable()
 class Channel {
   @JsonKey()
-  final ChannelLocation? location;
+  final ChannelLocation location;
   @JsonKey()
-  final Set<RegionLevel?>? levels;
+  final Set<RegionLevel> levels;
   @JsonKey()
-  final List<Region>? regionhierarchy;
-  final Set<ChannelCategory?>? categories;
+  final List<Region> regionhierarchy;
+  final Set<ChannelCategory> categories;
 
   Channel(this.location, this.levels, this.regionhierarchy, this.categories);
-
-  Channel.deviceLocation(
-      Set<RegionLevel> levels, Set<ChannelCategory> categories)
-      : this(null, levels, null, categories);
 
   Channel.empty()
       : this(
@@ -88,6 +92,12 @@ class Channel {
           Set.of([]),
         );
 
+  bool get isEmpty =>
+      this.location.isEmpty &&
+      this.levels.isEmpty &&
+      this.regionhierarchy.isEmpty &&
+      this.categories.isEmpty;
+
   factory Channel.fromJson(Map<String, dynamic> json) =>
       _$ChannelFromJson(json);
 
@@ -95,13 +105,17 @@ class Channel {
 
   @override
   int get hashCode =>
-      (location == null ? 0 : location.hashCode) ^ (levels == null ? 0 : foldSetHashCode(levels!)) ^ foldSetHashCode(categories!);
+      location.hashCode ^
+      foldIterableHashCode(levels) ^
+      foldIterableHashCode(regionhierarchy) ^
+      foldIterableHashCode(categories);
 
   @override
-  bool operator ==(o ) {
+  bool operator ==(o) {
     return o is Channel &&
         o.location == location &&
         setEquals(o.levels, levels) &&
+        listEquals(o.regionhierarchy, regionhierarchy) &&
         setEquals(o.categories, categories);
   }
 }

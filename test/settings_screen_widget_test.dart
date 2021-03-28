@@ -10,18 +10,17 @@ import 'package:mobile/model/channel.dart';
 import 'package:mobile/screens/settings.dart';
 import 'package:mobile/app_settings.dart';
 import 'package:mobile/version.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'support.dart';
-
-class MockRestClient extends Mock implements RestClient {}
-
-class MockVersion extends Mock implements Version {}
+import 'settings_screen_widget_test.mocks.dart';
 
 // This is our global ServiceLocator
 GetIt getIt = GetIt.instance;
 
+@GenerateMocks([Version, RestClient])
 void main() {
   RestClient restClient = MockRestClient();
   Version version = MockVersion();

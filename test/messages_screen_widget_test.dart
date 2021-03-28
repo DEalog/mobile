@@ -7,6 +7,7 @@
 
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +20,17 @@ import 'package:mobile/model/gis.dart';
 import 'package:mobile/model/region.dart';
 import 'package:mobile/screens/messages.dart';
 import 'package:mobile/app_settings.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'support.dart';
-
-// Mock class
-class MockRestClient extends Mock implements RestClient {}
+import 'messages_screen_widget_test.mocks.dart';
 
 // This is our global ServiceLocator
 GetIt getIt = GetIt.instance;
 
+@GenerateMocks([RestClient])
 void main() {
   RestClient restClient = MockRestClient();
   AppSettings appSettings;
@@ -127,7 +128,7 @@ void main() {
   final Channel channelWithoutLocationAndCategories = Channel(
     ChannelLocation(
       'Arnsberg',
-      null,
+      Coordinate.invalid(),
       Region(
         '059580004004',
         'Arnsberg',
@@ -139,7 +140,7 @@ void main() {
       RegionLevel.DISTRICT,
       RegionLevel.MUNICIPALITY,
     ]),
-    null,
+    [],
     Set.of([
       ChannelCategory.CBRNE,
       ChannelCategory.FIRE,
@@ -178,6 +179,7 @@ void main() {
       getIt.registerSingleton(appSettings);
       getIt.registerSingleton(restClient);
       getIt.registerSingleton(DataService());
+      await EasyLocalization.ensureInitialized();
     },
   );
 
@@ -189,9 +191,12 @@ void main() {
 
   group('Message List for one channel', () {
     setUp(() async {
-      streamingSharedPreferences.setStringList(
-        AppSettings.LOCATIONS_KEY,
-        [jsonEncode(channelWithoutLocationAndCategories.toJson())],
+      expect(
+        await streamingSharedPreferences.setStringList(
+          AppSettings.LOCATIONS_KEY,
+          [jsonEncode(channelWithoutLocationAndCategories.toJson())],
+        ),
+        true,
       );
     });
 

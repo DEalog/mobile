@@ -14,10 +14,12 @@ Future<void> createWidget(WidgetTester tester, Widget widget) async {
   await tester.pumpWidget(EasyLocalization(
     path: 'assets/translations',
     useOnlyLangCode: true,
-    assetLoader: CodegenLoader(),
-    fallbackLocale: const Locale('en_US'),
+    assetLoader: new CodegenLoader(),
+    fallbackLocale: const Locale('en'),
+    startLocale: const Locale('en'),
     supportedLocales: [Locale('en')],
     saveLocale: false,
+    useFallbackTranslations: true,
     child: Theme(
       data: brightness == Brightness.light
           ? AppLightTheme.theme

@@ -9,9 +9,9 @@ part of 'region.dart';
 Region _$RegionFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['ars', 'name', 'type']);
   return Region(
-    json['ars'] as String?,
-    json['name'] as String?,
-    _$enumDecodeNullable(_$RegionLevelEnumMap, json['type'],
+    json['ars'] as String,
+    json['name'] as String,
+    _$enumDecode(_$RegionLevelEnumMap, json['type'],
         unknownValue: RegionLevel.UNKNOWN),
   );
 }
@@ -46,17 +46,6 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$RegionLevelEnumMap = {

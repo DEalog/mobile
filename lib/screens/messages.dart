@@ -21,17 +21,15 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class MessagesScreenState extends State<MessagesScreen> {
-  DataService? dataService;
-  late Preference<List<Channel>> channelsPref;
+  DataService dataService;
+  Preference<List<Channel>> channelsPref;
   List<Channel> channels = List.empty();
   static const _pageSize = 10;
 
   HashMap<Channel, PagingController<int, FeedMessage>> _pagingControllers =
       HashMap();
 
-  MessagesScreenState() {
-    dataService = getIt<DataService>();
-    channelsPref = getIt<AppSettings>().channels;
+  MessagesScreenState() : dataService = getIt<DataService>(), channelsPref = getIt<AppSettings>().channels {
     // channels = channelsPref.getValue();
     // channels.forEach((channel) =>
     //     _pagingControllers[channel] = PagingController(firstPageKey: 0));
@@ -97,11 +95,11 @@ class MessagesScreenState extends State<MessagesScreen> {
 
   Future<void> _fetchFeedMessagePage(Channel channel, int pageKey) async {
     try {
-      var ars = channel.location!.coordinate == null
-          ? channel.location!.region!.ars
-          : channel.regionhierarchy!.last.ars;
+      var ars = channel.location.coordinate.isValid
+          ? channel.regionhierarchy.last.ars
+          : channel.location.region.ars;
       final newItems =
-          await dataService!.getFeedMessages(ars, _pageSize, pageKey);
+          await dataService.getFeedMessages(ars, _pageSize, pageKey);
       final isLastPage = newItems.messages!.length < _pageSize;
       if (isLastPage) {
         _pagingControllers[channel]!.appendLastPage(newItems.messages!);
@@ -177,7 +175,7 @@ class MessagesScreenState extends State<MessagesScreen> {
             _pagingControllers.forEach(
               (channel, pagingController) {
                 Fimber.d(
-                    "Home - Refresh individual channel ${channel.location!.name}");
+                    "Home - Refresh individual channel ${channel.location.name}");
                 pagingController.refresh();
               },
             );

@@ -29,25 +29,24 @@ class Model<T> {
 }
 
 class ChannelForm extends StatefulWidget {
-  final Function(Channel)? onUpdate;
+  final Function(Channel) onUpdate;
   final Model<Channel> model;
-  final GlobalKey<FormState>? formKey;
+  final GlobalKey<FormState> formKey;
 
-  ChannelForm({this.onUpdate, Channel? initialValue, this.formKey})
-      : model = Model(initialValue != null ? initialValue : Channel.empty());
+  ChannelForm(this.onUpdate, Channel initialValue, this.formKey)
+      : model = Model(initialValue);
 
   @override
   State<StatefulWidget> createState() {
-    return _ChannelFormState(
-        onUpdate: onUpdate, model: model, formKey: formKey);
+    return _ChannelFormState(this.onUpdate, this.model, this.formKey);
   }
 
   void submit() {
     Fimber.i("Submit pressed");
-    if (formKey!.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       Fimber.i("Form validates");
-      formKey!.currentState!.save();
-      onUpdate!(model.get());
+      formKey.currentState!.save();
+      onUpdate(model.get());
     } else {
       Fimber.i("Form does not validate");
     }
@@ -55,12 +54,11 @@ class ChannelForm extends StatefulWidget {
 }
 
 class _ChannelFormState extends State<ChannelForm> {
-  final Function(Channel)? onUpdate;
-  final Model<Channel>? model;
+  final Function(Channel) onUpdate;
+  final Model<Channel> model;
   final GlobalKey<FormState> _formKey;
 
-  _ChannelFormState({this.onUpdate, this.model, GlobalKey<FormState>? formKey})
-      : _formKey = formKey != null ? formKey : GlobalKey<FormState>();
+  _ChannelFormState(this.onUpdate, this.model, this._formKey);
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +80,10 @@ class _ChannelFormState extends State<ChannelForm> {
                   onChanged: (bool value) {
                     setState(() {
                       Fimber.i("Update useLocation: $value");
-                      model!.update((channel) => Channel(
-                          value ? null : ChannelLocation.empty(),
+                      model.update((channel) => Channel(
+                          ChannelLocation.empty(),
                           channel.levels,
-                          null,
+                          [],
                           channel.categories));
                     });
                   },
@@ -99,13 +97,13 @@ class _ChannelFormState extends State<ChannelForm> {
             child: Column(children: [
               Text(LocaleKeys.model_category.tr(),
                   style: Theme.of(context).textTheme.caption),
-              MultiSelectFormField<ChannelCategory?>(
+              MultiSelectFormField<ChannelCategory>(
                 elements: ChannelCategory.values,
-                initialValue: model!.get().categories,
+                initialValue: model.get().categories,
                 elementName: categoryName,
                 validator: (value) {
                   Fimber.i("Validate Categories: $value");
-                  if (value == null || value.length == 0) {
+                  if (value!.length == 0) {
                     return 'Please select one or more options';
                   }
                   return null;
@@ -114,10 +112,10 @@ class _ChannelFormState extends State<ChannelForm> {
                   Fimber.i("Categories saved: $value");
                   if (value == null) return;
                   setState(() {
-                    model!.update((channel) => Channel(
+                    model.update((channel) => Channel(
                           channel.location,
                           Set.of(RegionLevel.values),
-                          null,
+                          [],
                           value.toSet(),
                         ));
                   });
@@ -131,17 +129,17 @@ class _ChannelFormState extends State<ChannelForm> {
     );
   }
 
-  bool useLocation() => model!.get().location == null;
+  bool useLocation() => model.get().location.coordinate.isValid;
 
   Widget buildTextForm(BuildContext context) {
     Function(String) onChanged = (value) {
       setState(() {
-        model!.update((channel) {
-          var location = channel.location!;
+        model.update((channel) {
+          var location = channel.location;
           return Channel(
               ChannelLocation(value, location.coordinate, location.region),
               channel.levels,
-              null,
+              [],
               channel.categories);
         });
       });
@@ -151,11 +149,11 @@ class _ChannelFormState extends State<ChannelForm> {
     if (isMaterial(context)) {
       return TextFormField(
           key: key,
-          initialValue: model!.get().location!.name,
+          initialValue: model.get().location.name,
           onChanged: onChanged);
     } else {
       final _controller =
-          new TextEditingController(text: model!.get().location!.name);
+          new TextEditingController(text: model.get().location.name);
       return PlatformTextField(
         key: key,
         controller: _controller,
@@ -171,20 +169,20 @@ class _ChannelFormState extends State<ChannelForm> {
 }
 
 class ChannelDialog extends StatelessWidget {
-  final Function(Channel)? onUpdate;
-  final String? submitText;
-  final Channel? initialValue;
+  final Function(Channel) onUpdate;
+  final String submitText;
+  final Channel initialValue;
 
-  ChannelDialog({this.onUpdate, this.submitText, this.initialValue});
+  ChannelDialog(this.onUpdate, this.submitText, this.initialValue);
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
 
     final channelForm = ChannelForm(
-      onUpdate: onUpdate,
-      initialValue: initialValue,
-      formKey: formKey,
+      this.onUpdate,
+      this.initialValue,
+      formKey,
     );
     return PlatformAlertDialog(
       material: (_, __) => MaterialAlertDialogData(scrollable: true),
@@ -203,7 +201,7 @@ class ChannelDialog extends StatelessWidget {
         ),
         PlatformButton(
             key: Key("submit_channel"),
-            child: Text(submitText!),
+            child: Text(submitText),
             onPressed: () {
               Fimber.i("Submit pressed");
               channelForm.submit();
@@ -257,8 +255,10 @@ class _ChannelSettingsState extends State<ChannelSettings> {
               context: context,
               builder: (BuildContext context) {
                 return ChannelDialog(
-                    onUpdate: addChannel,
-                    submitText: LocaleKeys.actions_add.tr());
+                  addChannel,
+                  LocaleKeys.actions_add.tr(),
+                  Channel.empty(),
+                );
               });
         },
       ));
@@ -314,13 +314,14 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         context: context,
         builder: (BuildContext context) {
           return ChannelDialog(
-              onUpdate: (channel) {
-                final updatedChannels = List.of(channels);
-                updatedChannels[index] = channel;
-                update(updatedChannels);
-              },
-              submitText: LocaleKeys.actions_update.tr(),
-              initialValue: channels[index]);
+            (channel) {
+              final updatedChannels = List.of(channels);
+              updatedChannels[index] = channel;
+              update(updatedChannels);
+            },
+            LocaleKeys.actions_update.tr(),
+            channels[index],
+          );
         });
   }
 

@@ -11,7 +11,7 @@ class RestClient {
     '{ "identifier": "WirVsVirus Finale", "description": "Danke an alle Beteiligten. Spitzen Leistung" }'
   ];
 
-  Future<String> getRegions(String? regionName) async {
+  Future<String> getRegions(String regionName) async {
     var queryParameters = {
       "charset": encoding,
       "name": regionName,
@@ -56,7 +56,7 @@ class RestClient {
     }
   }
 
-  Future<String> getRegionHierarchyById(String? id) async {
+  Future<String> getRegionHierarchyById(String id) async {
     var queryParameters = {
       "ars": id,
       "charset": encoding,
@@ -75,7 +75,7 @@ class RestClient {
   }
 
   Future<String> getRegionHierarchyByCoordinates(
-      double? lat, double? long) async {
+      double lat, double long) async {
     var queryParameters = {
       "long": long.toString(),
       "lat": lat.toString(),
@@ -94,7 +94,7 @@ class RestClient {
     }
   }
 
-  Future<String> fetchMessages(String? ars, int size, int page) async {
+  Future<String> fetchMessages(String ars, int size, int page) async {
     var queryParameters = {
       "page": page.toString(),
       "size": size.toString(),

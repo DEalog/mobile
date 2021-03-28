@@ -42,7 +42,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Text('App Version: ' + version.version! + " Build: $buildNumber")
+            Text('App Version: ' + version.version + " Build: $buildNumber")
           ],
         ),
       ),

@@ -50,7 +50,7 @@ class App extends StatelessWidget {
     final materialLightTheme = AppLightTheme.theme;
     // final materialDarkTheme = AppDarkTheme.theme; // enable for darkmode
     final version = getIt<Version>();
-    final AppSettings? appSettings = getIt<AppSettings>();
+    final AppSettings appSettings = getIt<AppSettings>();
     final settings = PlatformSettingsData(iosUsesMaterialWidgets: false);
     Fimber.i("version is ready: ${version.state.toString()}");
 
@@ -79,7 +79,7 @@ class App extends StatelessWidget {
           routes: {
             '/': (context) => new Home(),
             '/wizard': (context) => new ChannelWizard(
-                  channelSettings: appSettings!.channels,
+                  appSettings.channels,
                 ),
             '/settings': (context) => new SettingsScreen(),
           },

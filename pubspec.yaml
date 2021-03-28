@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+35
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 module:
   androidX: true
@@ -49,6 +49,8 @@ dev_dependencies:
   integration_test: ^1.0.0
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
   build: ^2.0.0
   convert: ^3.0.0
   crypto: ^3.0.0
@@ -56,16 +58,13 @@ dev_dependencies:
   intl: ^0.17.0
   json_serializable: ^4.1.0
   mockito: ^5.0.2
-  test: ^1.16.8
+  test: any
 
 dependency_overrides:
   args: ^2.0.0
-  # coverage: ^1.0.1
   crypto: ^3.0.0
   convert: ^3.0.0
   source_gen: ^1.0.0
-  test_api: ^0.3.0
-  vm_service: ^6.1.0
 
 flutter_icons:
   ios: true

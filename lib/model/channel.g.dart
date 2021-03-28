@@ -8,13 +8,9 @@ part of 'channel.dart';
 
 ChannelLocation _$ChannelLocationFromJson(Map<String, dynamic> json) {
   return ChannelLocation(
-    json['name'] as String?,
-    json['coordinate'] == null
-        ? null
-        : Coordinate.fromJson(json['coordinate'] as Map<String, dynamic>),
-    json['region'] == null
-        ? null
-        : Region.fromJson(json['region'] as Map<String, dynamic>),
+    json['name'] as String,
+    Coordinate.fromJson(json['coordinate'] as Map<String, dynamic>),
+    Region.fromJson(json['region'] as Map<String, dynamic>),
   );
 }
 
@@ -27,27 +23,25 @@ Map<String, dynamic> _$ChannelLocationToJson(ChannelLocation instance) =>
 
 Channel _$ChannelFromJson(Map<String, dynamic> json) {
   return Channel(
-    json['location'] == null
-        ? null
-        : ChannelLocation.fromJson(json['location'] as Map<String, dynamic>),
-    (json['levels'] as List<dynamic>?)
-        ?.map((e) => _$enumDecodeNullable(_$RegionLevelEnumMap, e))
+    ChannelLocation.fromJson(json['location'] as Map<String, dynamic>),
+    (json['levels'] as List<dynamic>)
+        .map((e) => _$enumDecode(_$RegionLevelEnumMap, e))
         .toSet(),
-    (json['regionhierarchy'] as List<dynamic>?)
-        ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
+    (json['regionhierarchy'] as List<dynamic>)
+        .map((e) => Region.fromJson(e as Map<String, dynamic>))
         .toList(),
-    (json['categories'] as List<dynamic>?)
-        ?.map((e) => _$enumDecodeNullable(_$ChannelCategoryEnumMap, e))
+    (json['categories'] as List<dynamic>)
+        .map((e) => _$enumDecode(_$ChannelCategoryEnumMap, e))
         .toSet(),
   );
 }
 
 Map<String, dynamic> _$ChannelToJson(Channel instance) => <String, dynamic>{
       'location': instance.location,
-      'levels': instance.levels?.map((e) => _$RegionLevelEnumMap[e]).toList(),
+      'levels': instance.levels.map((e) => _$RegionLevelEnumMap[e]).toList(),
       'regionhierarchy': instance.regionhierarchy,
       'categories':
-          instance.categories?.map((e) => _$ChannelCategoryEnumMap[e]).toList(),
+          instance.categories.map((e) => _$ChannelCategoryEnumMap[e]).toList(),
     };
 
 K _$enumDecode<K, V>(
@@ -74,17 +68,6 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$RegionLevelEnumMap = {

@@ -6,15 +6,16 @@ import 'package:mobile/api/data_service.dart';
 import 'package:mobile/api/model/regions.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/model/channel.dart';
+import 'package:mobile/model/gis.dart';
 import 'package:mobile/model/region.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
-// Mock class
-class MockRestClient extends Mock implements RestClient {}
+import 'data_service_unit_test.mocks.dart';
 
 // This is our global ServiceLocator
 GetIt getIt = GetIt.instance;
 
+@GenerateMocks([RestClient])
 void main() {
   RestClient? restClient;
   DataService? dataService;
@@ -267,12 +268,12 @@ void main() {
     test('Request hierarchy by ARS for starnberg', () async {
       var location = ChannelLocation(
         "Starnberg",
-        null,
+        Coordinate.invalid(),
         starnbergRegion,
       );
 
       // mock raw feed
-      when(restClient!.getRegionHierarchyById(location.region!.ars)).thenAnswer(
+      when(restClient!.getRegionHierarchyById(location.region.ars)).thenAnswer(
         (_) => Future.value(jsonEncode([
           germanyRegion,
           bavariaRegion,
@@ -315,7 +316,7 @@ void main() {
     test('Request hierarchy by ARS for starnberg', () async {
       var location = ChannelLocation(
         "Starnberg",
-        null,
+        Coordinate.invalid(),
         starnbergRegion,
       );
 
