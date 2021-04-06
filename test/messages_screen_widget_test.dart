@@ -244,7 +244,7 @@ void main() {
 
       expect(find.byKey(Key('Message_0_0')), findsOneWidget);
       expect(find.text('Message Heading 1'), findsOneWidget);
-      expect(find.text('Message Content 1'), findsOneWidget);
+      expect(find.text('Message Content 1'), findsNothing);
       expect(find.text('Message Heading 2'), findsNothing);
       expect(find.text('Message Content 2'), findsNothing);
     });
@@ -254,13 +254,11 @@ void main() {
       final findersMessage1 = [
         find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
-        find.text('Message Content 1'),
       ];
 
       final findersMessage2 = [
         find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
-        find.text('Message Content 2'),
       ];
 
       // Set test messages to feed service
@@ -290,6 +288,8 @@ void main() {
       findersMessage2.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 1'), findsNothing);
+      expect(find.text('Message Content 2'), findsNothing);
     });
 
     tearDown(() async {
@@ -314,25 +314,21 @@ void main() {
       final findersMessage01 = [
         find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
-        find.text('Message Content 1'),
       ];
 
       final findersMessage02 = [
         find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
-        find.text('Message Content 2'),
       ];
 
       final findersMessage11 = [
         find.byKey(Key('Message_1_0')),
         find.text('Message Heading 3'),
-        find.text('Message Content 3'),
       ];
 
       final findersMessage12 = [
         find.byKey(Key('Message_1_1')),
         find.text('Message Heading 4'),
-        find.text('Message Content 4'),
       ];
 
       // Set test messages to feed service
@@ -361,6 +357,7 @@ void main() {
       findersMessage01.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 1'), findsNothing);
 
       await tester.dragUntilVisible(
         find.byKey(Key('Message_0_1')),
@@ -371,6 +368,7 @@ void main() {
       findersMessage02.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 2'), findsNothing);
 
       // Check second channel
       await untilCalled(restClient.fetchMessages('001', pageSize, 0));
@@ -378,6 +376,8 @@ void main() {
       findersMessage11.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+
+      expect(find.text('Message Content 3'), findsNothing);
 
       await tester.dragUntilVisible(
         find.byKey(Key('Message_1_1')),
@@ -388,6 +388,7 @@ void main() {
       findersMessage12.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 4'), findsNothing);
     });
 
     tearDown(() async {

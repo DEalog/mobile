@@ -23,6 +23,9 @@ class LocationView extends StatelessWidget {
           ),
           Text(
             LocaleKeys.settings_current_location.tr(),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
           ),
         ],
       );
@@ -31,7 +34,12 @@ class LocationView extends StatelessWidget {
       locationView = Padding(
           key: Key('locationViewStaticLocation'),
           padding: EdgeInsets.all(5.0),
-          child: Text(name.isEmpty ? "n/a" : name));
+          child: Text(
+            name.isEmpty ? "n/a" : name,
+            style: Theme.of(context)
+                .textTheme
+                .headline6,
+          ));
     }
     return Container(
       key: Key('locationView'),

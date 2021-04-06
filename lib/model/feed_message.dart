@@ -4,22 +4,22 @@ part 'feed_message.g.dart';
 
 @JsonSerializable()
 class FeedMessage {
-  final String? identifier;
-  final String? organization;
-  final String? headline;
-  final String? description;
-  final String? ars;
-  final String? category;
-  final String? publishedAt;
+  final String identifier;
+  final String organization;
+  final String headline;
+  final String description;
+  final String ars;
+  final String category;
+  final DateTime publishedAt;
 
   FeedMessage({
-    this.identifier,
-    this.organization,
-    this.headline,
-    this.description,
-    this.ars,
-    this.category,
-    this.publishedAt,
+    required this.identifier,
+    required this.organization,
+    required this.headline,
+    required this.description,
+    required this.ars,
+    required this.category,
+    required this.publishedAt,
   });
 
   factory FeedMessage.fromJson(Map<String, dynamic> srcJson) =>

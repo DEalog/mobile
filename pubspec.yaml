@@ -24,11 +24,16 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  streaming_shared_preferences:
+    git:
+      url: https://github.com/roughike/streaming_shared_preferences
+      ref: a460743
+  collection: ^1.15.0-nullsafety.4
   cupertino_icons: ^1.0.0
   cupertino_list_tile: ^0.2.0-nullsafety.0
   easy_localization: ^3.0.0
   fimber: ^0.6.1
-  flutter_animator: ^3.1.0
+  flutter_animator: ^3.1.1
   flutter_platform_widgets: ^1.0.1-nullsafety.2
   flutter_typeahead: ^3.1.0
   get_it: ^6.0.0
@@ -36,25 +41,21 @@ dependencies:
   infinite_scroll_pagination: ^3.0.1
   json_annotation: ^4.0.1
   location: ^4.1.1
+  modal_bottom_sheet: ^2.0.0
   optional: ^6.0.0-nullsafety.0
   package_info: ^2.0.0
   shared_preferences: ^2.0.5
-  streaming_shared_preferences:
-    git:
-      url: https://github.com/roughike/streaming_shared_preferences
-      ref: a460743
-  collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
-  integration_test: ^1.0.0
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
   build: ^2.0.0
+  build_runner: ^1.0.0
   convert: ^3.0.0
   crypto: ^3.0.0
-  build_runner: ^1.0.0
+  integration_test: ^1.0.0
   intl: ^0.17.0
   json_serializable: ^4.1.0
   mockito: ^5.0.2

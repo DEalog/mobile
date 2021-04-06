@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mobile/api/data_service.dart';
 import 'package:mobile/generated/locale_keys.g.dart';
 import 'package:mobile/main.dart';
@@ -9,7 +10,7 @@ import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/feed_message.dart';
 import 'package:mobile/app_settings.dart';
 import 'package:mobile/ui_kit/channel.dart';
-import 'package:mobile/ui_kit/message_card_ui.dart';
+import 'package:mobile/ui_kit/message_detail.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -29,26 +30,12 @@ class MessagesScreenState extends State<MessagesScreen> {
   HashMap<Channel, PagingController<int, FeedMessage>> _pagingControllers =
       HashMap();
 
-  MessagesScreenState() : dataService = getIt<DataService>(), channelsPref = getIt<AppSettings>().channels {
-    // channels = channelsPref.getValue();
-    // channels.forEach((channel) =>
-    //     _pagingControllers[channel] = PagingController(firstPageKey: 0));
-  }
+  MessagesScreenState()
+      : dataService = getIt<DataService>(),
+        channelsPref = getIt<AppSettings>().channels;
 
   @override
   void initState() {
-    // if (mounted) {
-    //   setState(() {
-    //     channels.forEach(
-    //       (channel) => _pagingControllers[channel].addPageRequestListener(
-    //         (pageKey) {
-    //           _fetchFeedMessagePage(channel, pageKey);
-    //         },
-    //       ),
-    //     );
-    //   });
-    // }
-
     channelsPref.listen(
       (newChannels) {
         if (mounted) {
@@ -60,14 +47,6 @@ class MessagesScreenState extends State<MessagesScreen> {
 
           setState(
             () {
-              // channelsToBeDisposed.forEach((element) {
-              //   this.channels.remove(element);
-              // });
-              //  channelsToBeAdded.forEach(
-              // (newChannel) {
-              //   _pagingControllers[newChannel] =
-              //       PagingController(firstPageKey: 0);});
-
               channelsToBeAdded.forEach(
                 (newChannel) {
                   _pagingControllers[newChannel] =
@@ -105,14 +84,16 @@ class MessagesScreenState extends State<MessagesScreen> {
         _pagingControllers[channel]!.appendLastPage(newItems.messages!);
       } else {
         final nextPageKey = pageKey + 1;
-        _pagingControllers[channel]!.appendPage(newItems.messages!, nextPageKey);
+        _pagingControllers[channel]!
+            .appendPage(newItems.messages!, nextPageKey);
       }
     } catch (error) {
       _pagingControllers[channel]!.error = error;
     }
   }
 
-  List<Widget> buildChannels() => channels.map((channel) {
+  List<Widget> buildChannels(BuildContext context) => channels.map((channel) {
+        var contextSize = MediaQuery.of(context).size;
         var channelIndex = channels.indexOf(channel);
         var _scrollController = new ScrollController();
         var _displacement = 40.0;
@@ -124,35 +105,85 @@ class MessagesScreenState extends State<MessagesScreen> {
         });
         return Column(
           children: [
-            LocationView(
-              channel.location,
-              alignment: Alignment.centerLeft,
+            Padding(
+              padding: EdgeInsets.only(bottom: contextSize.height * 0.01),
+              child: LocationView(
+                channel.location,
+                alignment: Alignment.centerLeft,
+              ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              child: Container(
-                child: PagedListView<int, FeedMessage>(
-                  key: Key('PageListViewMessages_$channelIndex'),
-                  scrollDirection: Axis.horizontal,
-                  scrollController: _scrollController,
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  pagingController: _pagingControllers[channel]!,
-                  builderDelegate: PagedChildBuilderDelegate<FeedMessage>(
-                    itemBuilder: (context, item, index) {
-                      Key messageKey = Key("Message_${channelIndex}_$index");
-                      return MessageCardUi(
-                        key: messageKey,
-                        identifier: item.headline,
-                        description: item.description,
-                      );
-                    },
-                    noItemsFoundIndicatorBuilder: (context) => MessageCardUi(
-                      key: Key("NoFeedMessagesAvailable"),
-                      identifier:
+              padding: EdgeInsets.only(bottom: contextSize.height * 0.02),
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: PagedListView<int, FeedMessage>(
+                key: Key('PageListViewMessages_$channelIndex'),
+                scrollDirection: Axis.horizontal,
+                scrollController: _scrollController,
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                pagingController: _pagingControllers[channel]!,
+                builderDelegate: PagedChildBuilderDelegate<FeedMessage>(
+                  itemBuilder: (context, item, index) {
+                    String messageDetailTag =
+                        'MessageDetailHero_${channelIndex}_$index';
+                    String messageDetailKey = "Message_${channelIndex}_$index";
+                    return MessageDetail(
+                      key: Key(messageDetailKey),
+                      message: item,
+                      preview: true,
+                      tag: messageDetailTag,
+                      width: contextSize.width * 0.8,
+                      onTap: () => Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          barrierColor: Colors.white,
+                          fullscreenDialog: true,
+                          transitionDuration: Duration(milliseconds: 500),
+                          pageBuilder: (_, __, ___) => PlatformScaffold(
+                            material: (context, platform) =>
+                                MaterialScaffoldData(
+                                    resizeToAvoidBottomInset: false),
+                            cupertino: (context, platform) =>
+                                CupertinoPageScaffoldData(
+                              resizeToAvoidBottomInset: false,
+                            ),
+                            iosContentPadding: true,
+                            backgroundColor: Colors.transparent,
+                            body: SafeArea(
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(contextSize.width * 0.04),
+                                child: MessageDetail(
+                                  key: Key('{$messageDetailKey}_Fullscreen'),
+                                  tag: messageDetailTag,
+                                  message: item,
+                                  onTap: () => Navigator.pop(context),
+                                  preview: false,
+                                  width: contextSize.width,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  noItemsFoundIndicatorBuilder: (context) => MessageDetail(
+                    key: Key("NoFeedMessagesAvailable"),
+                    message: FeedMessage(
+                      headline:
                           LocaleKeys.messages_no_feed_messages_available.tr(),
                       description: '',
+                      ars: '',
+                      category: '',
+                      identifier: '',
+                      organization: '',
+                      publishedAt: DateTime.now(),
                     ),
+                    onTap: () {},
+                    preview: true,
+                    tag: '',
+                    width: contextSize.width,
                   ),
                 ),
               ),
@@ -182,7 +213,7 @@ class MessagesScreenState extends State<MessagesScreen> {
           },
         ),
         child: ListView(
-          children: buildChannels(),
+          children: buildChannels(context),
         ),
       ),
     );
