@@ -14,13 +14,7 @@ class LocationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget locationView;
-    if (location.coordinate == null) {
-      var name = location.name;
-      locationView = Padding(
-          key: Key('locationViewStaticLocation'),
-          padding: EdgeInsets.all(5.0),
-          child: Text(name != null || name.isEmpty ? name : "n/a"));
-    } else {
+    if (location.coordinate.isValid) {
       locationView = Row(
         key: Key('locationViewCurrentLocation'),
         children: [
@@ -29,9 +23,23 @@ class LocationView extends StatelessWidget {
           ),
           Text(
             LocaleKeys.settings_current_location.tr(),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
           ),
         ],
       );
+    } else {
+      var name = location.name;
+      locationView = Padding(
+          key: Key('locationViewStaticLocation'),
+          padding: EdgeInsets.all(5.0),
+          child: Text(
+            name.isEmpty ? "n/a" : name,
+            style: Theme.of(context)
+                .textTheme
+                .headline6,
+          ));
     }
     return Container(
       key: Key('locationView'),

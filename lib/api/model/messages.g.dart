@@ -9,10 +9,12 @@ part of 'messages.dart';
 Messages _$MessagesFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['content', 'meta']);
   return Messages()
-    ..messages = (json['content'] as List)
-        .map((e) => FeedMessage.fromJson(e as Map<String, dynamic>))
+    ..messages = (json['content'] as List<dynamic>?)
+        ?.map((e) => FeedMessage.fromJson(e as Map<String, dynamic>))
         .toList()
-    ..meta = MessagesMeta.fromJson(json['meta'] as Map<String, dynamic>);
+    ..meta = json['meta'] == null
+        ? null
+        : MessagesMeta.fromJson(json['meta'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$MessagesToJson(Messages instance) => <String, dynamic>{

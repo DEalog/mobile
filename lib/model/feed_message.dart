@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'feed_message.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class FeedMessage {
   final String identifier;
   final String organization;
@@ -10,16 +10,16 @@ class FeedMessage {
   final String description;
   final String ars;
   final String category;
-  final String publishedAt;
+  final DateTime publishedAt;
 
   FeedMessage({
-    this.identifier,
-    this.organization,
-    this.headline,
-    this.description,
-    this.ars,
-    this.category,
-    this.publishedAt,
+    required this.identifier,
+    required this.organization,
+    required this.headline,
+    required this.description,
+    required this.ars,
+    required this.category,
+    required this.publishedAt,
   });
 
   factory FeedMessage.fromJson(Map<String, dynamic> srcJson) =>

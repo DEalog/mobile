@@ -9,12 +9,8 @@ part of 'channel.dart';
 ChannelLocation _$ChannelLocationFromJson(Map<String, dynamic> json) {
   return ChannelLocation(
     json['name'] as String,
-    json['coordinate'] == null
-        ? null
-        : Coordinate.fromJson(json['coordinate'] as Map<String, dynamic>),
-    json['region'] == null
-        ? null
-        : Region.fromJson(json['region'] as Map<String, dynamic>),
+    Coordinate.fromJson(json['coordinate'] as Map<String, dynamic>),
+    Region.fromJson(json['region'] as Map<String, dynamic>),
   );
 }
 
@@ -27,17 +23,14 @@ Map<String, dynamic> _$ChannelLocationToJson(ChannelLocation instance) =>
 
 Channel _$ChannelFromJson(Map<String, dynamic> json) {
   return Channel(
-    json['location'] == null
-        ? null
-        : ChannelLocation.fromJson(json['location'] as Map<String, dynamic>),
-    (json['levels'] as List)
-        ?.map((e) => _$enumDecodeNullable(_$RegionLevelEnumMap, e))
-        ?.toSet(),
-    (json['regionhierarchy'] as List)
-        ?.map((e) =>
-            e == null ? null : Region.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    (json['categories'] as List)
+    ChannelLocation.fromJson(json['location'] as Map<String, dynamic>),
+    (json['levels'] as List<dynamic>)
+        .map((e) => _$enumDecode(_$RegionLevelEnumMap, e))
+        .toSet(),
+    (json['regionhierarchy'] as List<dynamic>)
+        .map((e) => Region.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    (json['categories'] as List<dynamic>)
         .map((e) => _$enumDecode(_$ChannelCategoryEnumMap, e))
         .toSet(),
   );
@@ -45,42 +38,36 @@ Channel _$ChannelFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ChannelToJson(Channel instance) => <String, dynamic>{
       'location': instance.location,
-      'levels': instance.levels?.map((e) => _$RegionLevelEnumMap[e])?.toList(),
+      'levels': instance.levels.map((e) => _$RegionLevelEnumMap[e]).toList(),
       'regionhierarchy': instance.regionhierarchy,
       'categories':
           instance.categories.map((e) => _$ChannelCategoryEnumMap[e]).toList(),
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$RegionLevelEnumMap = {

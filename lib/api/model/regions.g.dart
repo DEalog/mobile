@@ -9,10 +9,12 @@ part of 'regions.dart';
 Regions _$RegionsFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['content', 'meta']);
   return Regions()
-    ..regions = (json['content'] as List)
-        .map((e) => Region.fromJson(e as Map<String, dynamic>))
+    ..regions = (json['content'] as List<dynamic>?)
+        ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
         .toList()
-    ..meta = RegionsMeta.fromJson(json['meta'] as Map<String, dynamic>);
+    ..meta = json['meta'] == null
+        ? null
+        : RegionsMeta.fromJson(json['meta'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$RegionsToJson(Regions instance) => <String, dynamic>{

@@ -29,11 +29,11 @@ const _totalSteps = 3;
 class ChannelWizard extends StatefulWidget {
   final Preference<List<Channel>> channelSettings;
 
-  ChannelWizard({this.channelSettings});
+  ChannelWizard(this.channelSettings);
 
   @override
   _ChannelWizardState createState() =>
-      _ChannelWizardState(channelSettings: this.channelSettings);
+      _ChannelWizardState(this.channelSettings);
 }
 
 class ArsEntry {
@@ -57,7 +57,7 @@ class DataProvider {
 
 class _ChannelWizardState extends State<ChannelWizard> {
   final Preference<List<Channel>> channelSettings;
-  List<Channel> channels = List<Channel>();
+  List<Channel> channels;
   int _stepNumber = 1;
   ChannelLocation channelLocation;
   Set<RegionLevel> _levels;
@@ -66,23 +66,25 @@ class _ChannelWizardState extends State<ChannelWizard> {
   DataService dataService = getIt<DataService>();
   LocationService _locationService = getIt<LocationService>();
 
-  _ChannelWizardState({this.channelSettings}) {
-    this.channels.addAll(channelSettings.getValue());
-    this.channelLocation = ChannelLocation.empty();
-  }
+  _ChannelWizardState(this.channelSettings)
+      : _levels = {},
+        _regionHierarchy = [],
+        categories = {},
+        channelLocation = ChannelLocation.empty(),
+        channels = List.empty(growable: true);
 
   @override
   void initState() {
+    channels.addAll(channelSettings.getValue());
     super.initState();
   }
 
   final editingLocation = TextEditingController();
 
-  bool useLocation() =>
-      (this.channelLocation != null && this.channelLocation.coordinate != null);
+  bool useLocation() => this.channelLocation.coordinate.isValid;
 
   void saveData(BuildContext context) {
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
   }
 
   void nextPage(BuildContext context) {
@@ -143,7 +145,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   );
                 },
                 validator: (value) {
-                  if (!useLocation() && value.length < 3) {
+                  if (!useLocation() && value!.length < 3) {
                     return LocaleKeys.settings_enter_location_minimum_characters
                         .tr();
                   }
@@ -157,7 +159,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 onSaved: (suggestion) async {
                   if (!useLocation() && channelLocation.name != suggestion) {
                     Region suggestedRegion =
-                        await dataService.getMunicipalRegion(suggestion);
+                        await dataService.getMunicipalRegion(suggestion!);
 
                     if (!suggestedRegion.isEmpty) {
                       setState(
@@ -165,7 +167,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                           this.editingLocation.text = suggestedRegion.name;
                           this.channelLocation = ChannelLocation(
                             suggestedRegion.name,
-                            null,
+                            Coordinate.invalid(),
                             suggestedRegion,
                           );
                         },
@@ -179,7 +181,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     this.editingLocation.text = suggestedRegion.name;
                     this.channelLocation = ChannelLocation(
                       suggestedRegion.name,
-                      null,
+                      Coordinate.invalid(),
                       suggestedRegion,
                     );
                   });
@@ -227,12 +229,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
                           setState(() {
                             this.editingLocation.clear();
                             this.channelLocation = ChannelLocation(
-                              null,
+                              '',
                               Coordinate(
-                                locationData.longitude,
-                                locationData.latitude,
+                                locationData.longitude!,
+                                locationData.latitude!,
                               ),
-                              null,
+                              Region.empty(),
                             );
                           });
                         },
@@ -275,12 +277,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
           ),
         ),
         Expanded(
-          child: FutureBuilder<RegionHierarchy>(
+          child: FutureBuilder<RegionHierarchy>(            
               future: dataService.getRegionHierarchy(channelLocation),
               builder: (BuildContext context,
                   AsyncSnapshot<RegionHierarchy> snapshot) {
                 if (snapshot.hasData) {
-                  final arsEntries = snapshot.data.regionHierarchy;
+                  final arsEntries = snapshot.data!.regionHierarchy;
                   final regionLevels = arsEntries.map((e) => e.type).toList();
                   final arsMap = HashMap.fromEntries(
                       arsEntries.map((e) => MapEntry(e.type, e)));
@@ -288,8 +290,43 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     key: Key('RegionHierarchyMultiSelect'),
                     elements: regionLevels,
                     elementName: (regionLevel) =>
-                        "${arsMap[regionLevel].name} (${regionLevelName(regionLevel)})",
+                        "${arsMap[regionLevel]!.name} (${regionLevelName(regionLevel)})",
                     initialValue: regionLevels.toSet(),
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (selectedRegionLevels) {
+                      if (selectedRegionLevels == null ||
+                          selectedRegionLevels.isEmpty) {
+                        return LocaleKeys.settings_select_least_one_federal_layer.tr();
+                      }
+                      var selectedRegionLevelIndexesByOriginList =
+                          selectedRegionLevels
+                              .map((selectedRegionLevel) =>
+                                  regionLevels.indexOf(selectedRegionLevel))
+                              .toList();
+                      selectedRegionLevelIndexesByOriginList.sort();
+                      var selectedRegionLevelsIncreasingByOneAndStartingWithZero =
+                          selectedRegionLevelIndexesByOriginList.fold<int>(
+                        -1,
+                        (previousValue, element) {
+                          if (previousValue == -2) {
+                            return -2;
+                          } else if (previousValue == -1 && element == 0) {
+                            return 0;
+                          } else if (previousValue == -1 && element > 0) {
+                            return -2;
+                          } else if (element - previousValue > 1) {
+                            return -2;
+                          } else {
+                            return previousValue + element;
+                          }
+                        },
+                      );
+                      if (selectedRegionLevelsIncreasingByOneAndStartingWithZero ==
+                          -2) {
+                        return LocaleKeys.settings_interrupted_federal_layer_sequence.tr();
+                      }
+                      return null;
+                    },
                     onSaved: (regionLevels) {
                       Fimber.i("RegionLevels selected: $regionLevels");
                       if (regionLevels != null && regionLevels.isNotEmpty) {
@@ -300,6 +337,19 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       }
                     },
                   );
+                } else if (snapshot.hasError) {
+                  
+                  SnackBar(content: Text("No Internet connection!"),).createState();
+                  Fimber.e(
+                    "No regionlevels could be fetched from endpoint",
+                    stacktrace: snapshot.stackTrace,
+                  );
+                  return Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      Spacer(),
+                    ],
+                  );
                 }
                 return Container();
               }),
@@ -309,27 +359,22 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget formThreeBuilder(BuildContext context) {
-    var mediaQuerySize = MediaQuery.of(context).size;
     return Column(
       key: Key("ChannelWizardCategory"),
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-            top: mediaQuerySize.width * 0.1,
-            bottom: mediaQuerySize.width * 0.1,
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              LocaleKeys.settings_select_category.tr(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
+        Spacer(),
+        Center(
+          child: Text(
+            LocaleKeys.settings_select_category.tr(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
             ),
           ),
         ),
+        Spacer(),
         Expanded(
+          flex: 20,
           child: MultiSelectFormField<ChannelCategory>(
             initialValue: ChannelCategory.values.toSet(),
             elements: ChannelCategory.values,
@@ -351,12 +396,12 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   @override
   Widget build(BuildContext context) {
-    final version = getIt<Version>();
+    final Version? version = getIt<Version>();
     final form = buildForm(context);
     final mediaQuerySize = MediaQuery.of(context).size;
 
     return WillPopScope(
-      onWillPop: () async => !version.isInitialVersion,
+      onWillPop: () async => !version!.isInitialVersion,
       child: PlatformScaffold(
         material: (context, platform) =>
             MaterialScaffoldData(resizeToAvoidBottomInset: false),
@@ -380,25 +425,19 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 toolbarHeight: MediaQuery.of(context).size.height * 0.1,
               ),
               Expanded(
+                flex: 20,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: mediaQuerySize.width * 0.1),
                   child: form,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: mediaQuerySize.height * 0.01,
-                ),
-                child: bottomTopButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: mediaQuerySize.height * 0.005,
-                  bottom: mediaQuerySize.height * 0.02,
-                ),
-                child: bottomButton(),
-              ),
+              Spacer(),
+              bottomTopButton(),
+              Spacer(),
+              bottomButton(),
+              Spacer(),
+              // ),
             ],
           ),
         ),
@@ -431,9 +470,9 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   bottomButton() {
-    final version = getIt<Version>();
+    final Version? version = getIt<Version>();
     if (_stepNumber == 1) {
-      if (version.isInitialVersion) {
+      if (version!.isInitialVersion) {
         return Container();
       } else {
         return cancelButton();
@@ -465,7 +504,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget saveButton() {
-    final version = getIt<Version>();
+    final Version? version = getIt<Version>();
     return PlatformButton(
         key: Key("wizardSave"),
         materialFlat: (context, platform) => MaterialFlatButtonData(
@@ -487,7 +526,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
                   this.channels,
                 );
 
-            if (version.isInitialVersion) {
+            if (version!.isInitialVersion) {
               version.updateVersionState();
             }
 
@@ -530,9 +569,9 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   bool submit() {
     Fimber.i("Submit pressed");
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       Fimber.i("Form validates");
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       return true;
     } else {
       Fimber.i("Form does not validate");

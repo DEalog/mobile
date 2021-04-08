@@ -46,6 +46,8 @@ abstract class  LocaleKeys {
   static const settings_enter_location = 'settings.enter_location';
   static const settings_enter_location_minimum_characters = 'settings.enter_location_minimum_characters';
   static const settings_no_valid_location_selected = 'settings.no_valid_location_selected';
+  static const settings_select_least_one_federal_layer = 'settings.select_least_one_federal_layer';
+  static const settings_interrupted_federal_layer_sequence = 'settings.interrupted_federal_layer_sequence';
   static const settings = 'settings';
   static const messages_no_feed_messages_available = 'messages.no_feed_messages_available';
   static const messages = 'messages';

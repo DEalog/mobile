@@ -31,10 +31,9 @@ class Version {
 
   Version(AppSettings settings, PackageInfo info)
       : settings = settings,
-        info = info {
-    _version = info.version;
-    _versionCode = int.parse(info.buildNumber);
-
+        info = info,
+        _version = info.version,
+        _versionCode = int.parse(info.buildNumber) {
     updateVersionState();
     settings.lastKnownVersionCode = versionCode;
 

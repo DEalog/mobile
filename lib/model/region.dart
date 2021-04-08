@@ -19,21 +19,23 @@ String regionLevelLocalizationKey(RegionLevel regionLevel) =>
 String regionLevelName(RegionLevel regionLevel) =>
     regionLevelLocalizationKey(regionLevel).tr();
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class Region {
-  @JsonKey(nullable: false, required: true)
+  @JsonKey(required: true)
   String ars;
-  @JsonKey(nullable: false, required: true)
+  @JsonKey(required: true)
   String name;
   @JsonKey(
-      nullable: false, required: true, unknownEnumValue: RegionLevel.UNKNOWN)
+    required: true,
+    unknownEnumValue: RegionLevel.UNKNOWN,
+  )
   RegionLevel type;
 
   Region(this.ars, this.name, this.type);
 
   Region.empty() : this("", "", RegionLevel.UNKNOWN);
 
-  bool get isEmpty => name == '' || ars == '' || type == RegionLevel.UNKNOWN;
+  bool get isEmpty => name.isEmpty || ars.isEmpty || type == RegionLevel.UNKNOWN;
 
   factory Region.fromJson(Map<String, dynamic> json) => _$RegionFromJson(json);
 

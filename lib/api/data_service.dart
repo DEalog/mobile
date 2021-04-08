@@ -39,27 +39,27 @@ class DataService {
       ],
     );
     var regions = Regions.fromJson(jsonDecode(rawRegionsJson)).regions;
-    return regions;
+    return regions!;
   }
 
   /// Municipal region name must be at least 3 characters long
   Future<Region> getMunicipalRegion(String name) async {
-    List<Region> regions = await getMunicipalRegions(name);
+    List<Region> regions = await (getMunicipalRegions(name) as FutureOr<List<Region>>);
     return regions.firstWhere(
       (region) => region.name == name,
       orElse: () => Region.empty(),
     );
   }
 
-  Future<RegionHierarchy> getRegionHierarchy(ChannelLocation location) async {
-    var regionHierarchyJson = (ChannelLocation location) {
-      if (location.region != null && location.region.ars.isNotEmpty) {
+  Future<RegionHierarchy> getRegionHierarchy(ChannelLocation? location) async {
+    var regionHierarchyJson = (ChannelLocation? location) {
+      if (location != null && location.region.ars.isNotEmpty) {
         return _restClient.getRegionHierarchyById(
           location.region.ars,
         );
       }
       return _restClient.getRegionHierarchyByCoordinates(
-        location.coordinate.latitude,
+        location!.coordinate.latitude,
         location.coordinate.longitude,
       );
     };

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:mobile/model/feed_message.dart';
 
 class RestClient {
   final authority = "api.dev.dealog.de";

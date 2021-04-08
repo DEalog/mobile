@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:integration_test/integration_test.dart';
 
 // The application under test.
@@ -11,7 +12,7 @@ void main() {
 
   group('Onboarding Tests Form', () {
     testWidgets('Should start with settings at first run',
-        (WidgetTester tester) async {
+        (WidgetTester tester) async { 
       await app.main();
 
       /*

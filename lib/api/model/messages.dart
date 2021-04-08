@@ -8,16 +8,14 @@ part 'messages.g.dart';
 @JsonSerializable()
 class Messages {
   @JsonKey(
-    nullable: false,
     required: true,
     name: "content",
   )
-  List<FeedMessage> messages;
+  List<FeedMessage>? messages;
   @JsonKey(
-    nullable: false,
     required: true,
   )
-  MessagesMeta meta;
+  MessagesMeta? meta;
 
   Messages();
 

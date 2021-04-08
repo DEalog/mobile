@@ -7,35 +7,34 @@
 
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/api/data_service.dart';
-import 'package:mobile/api/model/messages.dart';
-import 'package:mobile/api/model/region_hierarchy.dart';
 import 'package:mobile/api/rest_client.dart';
 import 'package:mobile/model/channel.dart';
 import 'package:mobile/model/gis.dart';
 import 'package:mobile/model/region.dart';
 import 'package:mobile/screens/messages.dart';
 import 'package:mobile/app_settings.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'support.dart';
-
-// Mock class
-class MockRestClient extends Mock implements RestClient {}
+import 'messages_screen_widget_test.mocks.dart';
 
 // This is our global ServiceLocator
 GetIt getIt = GetIt.instance;
 
+@GenerateMocks([RestClient])
 void main() {
   RestClient restClient = MockRestClient();
   AppSettings appSettings;
-  StreamingSharedPreferences streamingSharedPreferences;
+  late StreamingSharedPreferences streamingSharedPreferences;
 
   var testMessageListEmpty = {
     "content": [],
@@ -129,7 +128,7 @@ void main() {
   final Channel channelWithoutLocationAndCategories = Channel(
     ChannelLocation(
       'Arnsberg',
-      null,
+      Coordinate.invalid(),
       Region(
         '059580004004',
         'Arnsberg',
@@ -141,7 +140,7 @@ void main() {
       RegionLevel.DISTRICT,
       RegionLevel.MUNICIPALITY,
     ]),
-    null,
+    [],
     Set.of([
       ChannelCategory.CBRNE,
       ChannelCategory.FIRE,
@@ -180,6 +179,7 @@ void main() {
       getIt.registerSingleton(appSettings);
       getIt.registerSingleton(restClient);
       getIt.registerSingleton(DataService());
+      await EasyLocalization.ensureInitialized();
     },
   );
 
@@ -191,9 +191,12 @@ void main() {
 
   group('Message List for one channel', () {
     setUp(() async {
-      streamingSharedPreferences.setStringList(
-        AppSettings.LOCATIONS_KEY,
-        [jsonEncode(channelWithoutLocationAndCategories.toJson())],
+      expect(
+        await streamingSharedPreferences.setStringList(
+          AppSettings.LOCATIONS_KEY,
+          [jsonEncode(channelWithoutLocationAndCategories.toJson())],
+        ),
+        true,
       );
     });
 
@@ -241,7 +244,7 @@ void main() {
 
       expect(find.byKey(Key('Message_0_0')), findsOneWidget);
       expect(find.text('Message Heading 1'), findsOneWidget);
-      expect(find.text('Message Content 1'), findsOneWidget);
+      expect(find.text('Message Content 1'), findsNothing);
       expect(find.text('Message Heading 2'), findsNothing);
       expect(find.text('Message Content 2'), findsNothing);
     });
@@ -251,13 +254,11 @@ void main() {
       final findersMessage1 = [
         find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
-        find.text('Message Content 1'),
       ];
 
       final findersMessage2 = [
         find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
-        find.text('Message Content 2'),
       ];
 
       // Set test messages to feed service
@@ -287,6 +288,8 @@ void main() {
       findersMessage2.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 1'), findsNothing);
+      expect(find.text('Message Content 2'), findsNothing);
     });
 
     tearDown(() async {
@@ -311,25 +314,21 @@ void main() {
       final findersMessage01 = [
         find.byKey(Key('Message_0_0')),
         find.text('Message Heading 1'),
-        find.text('Message Content 1'),
       ];
 
       final findersMessage02 = [
         find.byKey(Key('Message_0_1')),
         find.text('Message Heading 2'),
-        find.text('Message Content 2'),
       ];
 
       final findersMessage11 = [
         find.byKey(Key('Message_1_0')),
         find.text('Message Heading 3'),
-        find.text('Message Content 3'),
       ];
 
       final findersMessage12 = [
         find.byKey(Key('Message_1_1')),
         find.text('Message Heading 4'),
-        find.text('Message Content 4'),
       ];
 
       // Set test messages to feed service
@@ -358,6 +357,7 @@ void main() {
       findersMessage01.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 1'), findsNothing);
 
       await tester.dragUntilVisible(
         find.byKey(Key('Message_0_1')),
@@ -368,6 +368,7 @@ void main() {
       findersMessage02.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 2'), findsNothing);
 
       // Check second channel
       await untilCalled(restClient.fetchMessages('001', pageSize, 0));
@@ -375,6 +376,8 @@ void main() {
       findersMessage11.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+
+      expect(find.text('Message Content 3'), findsNothing);
 
       await tester.dragUntilVisible(
         find.byKey(Key('Message_1_1')),
@@ -385,6 +388,7 @@ void main() {
       findersMessage12.forEach((finder) async {
         expect(finder, findsOneWidget);
       });
+      expect(find.text('Message Content 4'), findsNothing);
     });
 
     tearDown(() async {

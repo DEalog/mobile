@@ -14,7 +14,7 @@ FeedMessage _$FeedMessageFromJson(Map<String, dynamic> json) {
     description: json['description'] as String,
     ars: json['ars'] as String,
     category: json['category'] as String,
-    publishedAt: json['publishedAt'] as String,
+    publishedAt: DateTime.parse(json['publishedAt'] as String),
   );
 }
 
@@ -26,5 +26,5 @@ Map<String, dynamic> _$FeedMessageToJson(FeedMessage instance) =>
       'description': instance.description,
       'ars': instance.ars,
       'category': instance.category,
-      'publishedAt': instance.publishedAt,
+      'publishedAt': instance.publishedAt.toIso8601String(),
     };

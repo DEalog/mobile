@@ -30,7 +30,7 @@ class Home extends StatelessWidget {
                       'assets/images/dealog_logo.png',
                       key: Key('DEalogLogoKey'),
                       fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height * 0.07,
+                      height: MediaQuery.of(context).size.height * 0.056,
                     ),
                     actions: [
                       PlatformIconButton(
