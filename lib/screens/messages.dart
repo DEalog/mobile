@@ -92,7 +92,7 @@ class MessagesScreenState extends State<MessagesScreen> {
     }
   }
 
-  List<Widget> buildChannels(BuildContext context) => channels.map((channel) {
+  List<StatelessWidget> buildChannels(BuildContext context) => channels.map((channel) {
         var contextSize = MediaQuery.of(context).size;
         var channelIndex = channels.indexOf(channel);
         var _scrollController = new ScrollController();
@@ -103,18 +103,16 @@ class MessagesScreenState extends State<MessagesScreen> {
             _pagingControllers[channel]!.refresh();
           }
         });
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: contextSize.height * 0.01),
-              child: LocationView(
-                channel.location,
-                alignment: Alignment.centerLeft,
-              ),
+        return [
+            LocationView(
+              channel.location,
+              alignment: Alignment.centerLeft,
             ),
             Container(
-              padding: EdgeInsets.only(bottom: contextSize.height * 0.02),
-              height: MediaQuery.of(context).size.height * 0.25,
+              padding: EdgeInsets.only(
+                bottom: contextSize.height * 0.02,
+              ),
+              height: contextSize.height * 0.28,
               child: PagedListView<int, FeedMessage>(
                 key: Key('PageListViewMessages_$channelIndex'),
                 scrollDirection: Axis.horizontal,
@@ -150,17 +148,13 @@ class MessagesScreenState extends State<MessagesScreen> {
                             iosContentPadding: true,
                             backgroundColor: Colors.transparent,
                             body: SafeArea(
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.all(contextSize.width * 0.04),
-                                child: MessageDetail(
-                                  key: Key('{$messageDetailKey}_Fullscreen'),
-                                  tag: messageDetailTag,
-                                  message: item,
-                                  onTap: () => Navigator.pop(context),
-                                  preview: false,
-                                  width: contextSize.width,
-                                ),
+                              child: MessageDetail(
+                                key: Key('{$messageDetailKey}_Fullscreen'),
+                                tag: messageDetailTag,
+                                message: item,
+                                onTap: () => Navigator.pop(context),
+                                preview: false,
+                                width: contextSize.width,
                               ),
                             ),
                           ),
@@ -187,18 +181,15 @@ class MessagesScreenState extends State<MessagesScreen> {
                   ),
                 ),
               ),
-            )
-          ],
-        );
-      }).toList(
-        growable: false,
-      );
+            ),
+          ];
+        
+      }).expand((e) => e).toList();
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       key: Key("HomeScreen"),
-      // height: MediaQuery.of(context).size.height * 0.867,
       child: RefreshIndicator(
         onRefresh: () => Future.sync(
           () {

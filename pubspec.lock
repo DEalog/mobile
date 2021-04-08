@@ -705,7 +705,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: a460743
+      ref: a460743730d4653176455747362579a76f542e18
       resolved-ref: a460743730d4653176455747362579a76f542e18
       url: "https://github.com/roughike/streaming_shared_preferences"
     source: git

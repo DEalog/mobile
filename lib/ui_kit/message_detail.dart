@@ -26,6 +26,7 @@ class MessageDetail extends StatelessWidget {
       child: Hero(
         tag: tag,
         child: Card(
+          margin: EdgeInsets.all(contextSize.width * 0.02),
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -36,19 +37,19 @@ class MessageDetail extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(contextSize.height * 0.015),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: contextSize.height * 0.01,
-                        bottom: contextSize.height * 0.02,
-                      ),
-                      child: Text(
-                        this.message.headline,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                    Text(
+                      this.message.headline,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    Spacer(
+                      flex: 2,
                     ),
                     Row(children: [
                       Text(
@@ -74,22 +75,34 @@ class MessageDetail extends StatelessWidget {
                         flex: 10,
                       ),
                     ]),
-                    preview ? Spacer() : Container(),
+                    Spacer(
+                      flex: 1,
+                    ),
                     Row(
                       children: [
                         Chip(
-                          padding: EdgeInsets.symmetric(
-                              vertical: contextSize.height * 0.01),
                           label: Text(this.message.category),
+                          backgroundColor: Theme.of(context).accentColor,
                         ),
                         Spacer(),
-                        Text(this.message.organization)
+                        Chip(
+                          label: Text(this.message.organization),
+                          backgroundColor: Theme.of(context).highlightColor,
+                        )
                       ],
                     ),
                     preview
                         ? Container()
-                        : Text(
-                            this.message.description,
+                        : Spacer(
+                            flex: 1,
+                          ),
+                    preview
+                        ? Container()
+                        : Expanded(
+                            flex: 40,
+                            child: Text(
+                              this.message.description,
+                            ),
                           ),
                   ],
                 ),
@@ -98,8 +111,6 @@ class MessageDetail extends StatelessWidget {
           ),
         ),
       ),
-      // ),
-      // ),
     );
   }
 }

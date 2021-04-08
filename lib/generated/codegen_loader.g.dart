@@ -66,7 +66,9 @@ class CodegenLoader extends AssetLoader{
     "select_category": "Für welche Bereiche möchtest du informiert werden?",
     "enter_location": "Ort eingeben",
     "enter_location_minimum_characters": "Mindestens 3 Buchstaben sind erforderlich",
-    "no_valid_location_selected": "Es wurde noch keiner gültiger Ort gewählt"
+    "no_valid_location_selected": "Es wurde noch keiner gültiger Ort gewählt",
+    "select_least_one_federal_layer": "Wählen Sie mindestens eine föderale Ebene",
+    "interrupted_federal_layer_sequence": "Die Reihenfolge der ausgewählten föderalen Ebenen darf nicht unterbrochen werden"
   },
   "messages": {
     "no_feed_messages_available": "Es sind keine Nachrichten für diesen Bereich verfügbar"
@@ -124,7 +126,9 @@ static const Map<String,dynamic> en = {
     "select_category": "For which areas would you like to be informed?",
     "enter_location": "Enter location",
     "enter_location_minimum_characters": "A minimum of 3 characters is required",
-    "no_valid_location_selected": "No valid location selected"
+    "no_valid_location_selected": "No valid location selected",
+    "select_least_one_federal_layer": "Select at least one federal layer",
+    "interrupted_federal_layer_sequence": "The sequence of the selected federal layers must not be interrupted"
   },
   "messages": {
     "no_feed_messages_available": "No messages available for this area"

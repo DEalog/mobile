@@ -16,6 +16,7 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
       Key? key,
       Set<T>? initialValue,
       FormFieldValidator<Set<T>>? validator,
+      AutovalidateMode? autovalidateMode,
       FormFieldSetter<Set<T>>? onSaved})
       : super(
             builder: (FormFieldState<Set<T>> field) {
@@ -24,14 +25,29 @@ class MultiSelectFormField<T> extends FormField<Set<T>> {
                 field.didChange(value);
               }
 
-              return MultiSelect(
-                elements: elements as List<T>?,
-                selected: initialValue,
-                elementName: elementName,
-                onChanged: onChangedHandler,
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: MultiSelect(
+                      elements: elements as List<T>?,
+                      selected: initialValue,
+                      elementName: elementName,
+                      onChanged: onChangedHandler,
+                    ),
+                  ),
+                  field.hasError
+                      ? Text(
+                          field.errorText!,
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : Container(),
+                  // Spacer(),
+                ],
               );
             },
             key: key,
+            autovalidateMode: autovalidateMode,
             initialValue: initialValue,
             validator: validator,
             onSaved: onSaved) {
@@ -52,8 +68,8 @@ class MultiSelect<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    final selected =
-        HashSet<T>.from((this.selected != null ? this.selected! : []) as Iterable<dynamic>);
+    final selected = HashSet<T>.from(
+        (this.selected != null ? this.selected! : []) as Iterable<dynamic>);
     return _MultiSelectState<T>(
         this.elements, selected.toSet(), this.elementName, this.onChanged);
   }
@@ -114,6 +130,7 @@ class _MultiSelectState<E> extends State {
       thickness: mediaQuerySize.width * 0.01,
       child: ListView.builder(
         key: Key('listview_multiselect'),
+        shrinkWrap: true,        
         controller: _scrollController,
         itemCount: entries.length,
         itemBuilder: (context, index) => entries[index],
@@ -147,34 +164,34 @@ class PlatformSelectListTile extends PlatformWidgetBase<Widget, Widget> {
     var mediaQuerySize = MediaQuery.of(context).size;
     return Container(
         child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                this.label!,
-              ),
-              Spacer(),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  mediaQuerySize.width * 0.01,
-                  mediaQuerySize.width * 0.01,
-                  mediaQuerySize.width * 0.03,
-                  mediaQuerySize.width * 0.01,
-                ),
-                child: Icon(
-                    value!
-                        ? CupertinoIcons.check_mark_circled_solid
-                        : CupertinoIcons.circle,
-                    color: Theme.of(context).accentColor,
-                    key: getStateKey()),
-              )
-            ],
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            this.label!,
           ),
-          onTap: () {
-            onChanged!();
-          },
-        ));
+          Spacer(),
+          Container(
+            padding: EdgeInsets.fromLTRB(
+              mediaQuerySize.width * 0.01,
+              mediaQuerySize.width * 0.01,
+              mediaQuerySize.width * 0.03,
+              mediaQuerySize.width * 0.01,
+            ),
+            child: Icon(
+                value!
+                    ? CupertinoIcons.check_mark_circled_solid
+                    : CupertinoIcons.circle,
+                color: Theme.of(context).accentColor,
+                key: getStateKey()),
+          )
+        ],
+      ),
+      onTap: () {
+        onChanged!();
+      },
+    ));
   }
 
   @override

@@ -89,7 +89,6 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   Widget createCupertinoWidget(BuildContext context) {
-    // TODO: implement createCupertinoWidget
     return CupertinoTypeAheadFormField(
       key: _toggleKey(),
       textFieldConfiguration: this.cupertinoTextFieldConfiguration!,
@@ -105,7 +104,6 @@ class PlatformTypeAhead extends PlatformWidgetBase<Widget, Widget> {
 
   @override
   Widget createMaterialWidget(BuildContext context) {
-    // TODO: implement createMaterialWidget
     return TypeAheadFormField(
       key: _toggleKey(),
       textFieldConfiguration: this.textFieldConfiguration!,

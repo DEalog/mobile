@@ -277,7 +277,7 @@ class _ChannelWizardState extends State<ChannelWizard> {
           ),
         ),
         Expanded(
-          child: FutureBuilder<RegionHierarchy>(
+          child: FutureBuilder<RegionHierarchy>(            
               future: dataService.getRegionHierarchy(channelLocation),
               builder: (BuildContext context,
                   AsyncSnapshot<RegionHierarchy> snapshot) {
@@ -292,6 +292,41 @@ class _ChannelWizardState extends State<ChannelWizard> {
                     elementName: (regionLevel) =>
                         "${arsMap[regionLevel]!.name} (${regionLevelName(regionLevel)})",
                     initialValue: regionLevels.toSet(),
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (selectedRegionLevels) {
+                      if (selectedRegionLevels == null ||
+                          selectedRegionLevels.isEmpty) {
+                        return LocaleKeys.settings_select_least_one_federal_layer.tr();
+                      }
+                      var selectedRegionLevelIndexesByOriginList =
+                          selectedRegionLevels
+                              .map((selectedRegionLevel) =>
+                                  regionLevels.indexOf(selectedRegionLevel))
+                              .toList();
+                      selectedRegionLevelIndexesByOriginList.sort();
+                      var selectedRegionLevelsIncreasingByOneAndStartingWithZero =
+                          selectedRegionLevelIndexesByOriginList.fold<int>(
+                        -1,
+                        (previousValue, element) {
+                          if (previousValue == -2) {
+                            return -2;
+                          } else if (previousValue == -1 && element == 0) {
+                            return 0;
+                          } else if (previousValue == -1 && element > 0) {
+                            return -2;
+                          } else if (element - previousValue > 1) {
+                            return -2;
+                          } else {
+                            return previousValue + element;
+                          }
+                        },
+                      );
+                      if (selectedRegionLevelsIncreasingByOneAndStartingWithZero ==
+                          -2) {
+                        return LocaleKeys.settings_interrupted_federal_layer_sequence.tr();
+                      }
+                      return null;
+                    },
                     onSaved: (regionLevels) {
                       Fimber.i("RegionLevels selected: $regionLevels");
                       if (regionLevels != null && regionLevels.isNotEmpty) {
@@ -302,6 +337,19 @@ class _ChannelWizardState extends State<ChannelWizard> {
                       }
                     },
                   );
+                } else if (snapshot.hasError) {
+                  
+                  SnackBar(content: Text("No Internet connection!"),).createState();
+                  Fimber.e(
+                    "No regionlevels could be fetched from endpoint",
+                    stacktrace: snapshot.stackTrace,
+                  );
+                  return Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      Spacer(),
+                    ],
+                  );
                 }
                 return Container();
               }),
@@ -311,27 +359,22 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget formThreeBuilder(BuildContext context) {
-    var mediaQuerySize = MediaQuery.of(context).size;
     return Column(
       key: Key("ChannelWizardCategory"),
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(
-            top: mediaQuerySize.width * 0.1,
-            bottom: mediaQuerySize.width * 0.1,
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              LocaleKeys.settings_select_category.tr(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
+        Spacer(),
+        Center(
+          child: Text(
+            LocaleKeys.settings_select_category.tr(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
             ),
           ),
         ),
+        Spacer(),
         Expanded(
+          flex: 20,
           child: MultiSelectFormField<ChannelCategory>(
             initialValue: ChannelCategory.values.toSet(),
             elements: ChannelCategory.values,
@@ -382,25 +425,19 @@ class _ChannelWizardState extends State<ChannelWizard> {
                 toolbarHeight: MediaQuery.of(context).size.height * 0.1,
               ),
               Expanded(
+                flex: 20,
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: mediaQuerySize.width * 0.1),
                   child: form,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: mediaQuerySize.height * 0.01,
-                ),
-                child: bottomTopButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: mediaQuerySize.height * 0.005,
-                  bottom: mediaQuerySize.height * 0.02,
-                ),
-                child: bottomButton(),
-              ),
+              Spacer(),
+              bottomTopButton(),
+              Spacer(),
+              bottomButton(),
+              Spacer(),
+              // ),
             ],
           ),
         ),

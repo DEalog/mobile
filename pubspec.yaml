@@ -27,7 +27,7 @@ dependencies:
   streaming_shared_preferences:
     git:
       url: https://github.com/roughike/streaming_shared_preferences
-      ref: a460743
+      ref: a460743730d4653176455747362579a76f542e18
   collection: ^1.15.0-nullsafety.4
   cupertino_icons: ^1.0.0
   cupertino_list_tile: ^0.2.0-nullsafety.0
@@ -66,6 +66,8 @@ dependency_overrides:
   crypto: ^3.0.0
   convert: ^3.0.0
   source_gen: ^1.0.0
+
+publish_to: none
 
 flutter_icons:
   ios: true
