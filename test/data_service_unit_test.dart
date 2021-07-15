@@ -213,7 +213,7 @@ void main() {
       expect(test.regions![1].type, testRegion2.type);
 
       verifyInOrder([
-        restClient!.getRegions,
+        restClient!.getRegions(regionName),
       ]);
     });
 
@@ -236,15 +236,10 @@ void main() {
 
     test('Request ars Starnberg', () async {
       var regionName = starnbergRegion.name;
-
       var test = await dataService!.getRegions(regionName);
 
       // Get mocked region 1 from dataService
       expect(test.regions!.contains(starnbergRegion), true);
-
-      verifyInOrder([
-        restClient!.getRegions,
-      ]);
     });
 
     tearDown(() {
@@ -292,7 +287,7 @@ void main() {
       expect(testRegionHierarchy.regionHierarchy[2], upperBavariaRegion);
 
       verifyInOrder([
-        restClient!.getRegions,
+        restClient!.getRegionHierarchyById(location.region.ars),
       ]);
     });
 
@@ -327,10 +322,6 @@ void main() {
       expect(testRegionHierarchy.regionHierarchy[0], germanyRegion);
       expect(testRegionHierarchy.regionHierarchy[1], bavariaRegion);
       expect(testRegionHierarchy.regionHierarchy[2], upperBavariaRegion);
-
-      verifyInOrder([
-        restClient!.getRegions,
-      ]);
     });
 
     tearDown(() {
