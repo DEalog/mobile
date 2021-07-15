@@ -5,7 +5,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:flutter_typeahead/cupertino_flutter_typeahead.dart';
 
 
 typedef FutureOr<Iterable<T>> SuggestionsCallback<T>(String pattern);
