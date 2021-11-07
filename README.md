@@ -6,10 +6,10 @@ This is the mobile app for the DEalog project.
 
 ## Prerequisites
 
-- Flutter 2.2.3
-- Dart 2.13.4
-- Xcode 12.4
-- Android SDK 30.0.3
+- Flutter 2.5.3
+- Dart 2.14.4
+- Xcode 13.1
+- Android SDK 31.0.0
 
 ## Development
 
@@ -101,7 +101,7 @@ Integration tests allows to test a whole app, so the interaction between multipl
   ``` 
 - Integration tests will be executed by the following command within the app root directory. This example tests the main app, anyway there could be more Integration tests to test certain widget groupings 
   ```
-  flutter drive --dart-define=FLUTTER_TEST_ENVIRONMENT=int --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+  flutter test --dart-define=FLUTTER_TEST_ENVIRONMENT=int integration_test/app_test.dart
   ``` 
 
 

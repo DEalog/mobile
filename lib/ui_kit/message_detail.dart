@@ -26,12 +26,12 @@ class MessageDetail extends StatelessWidget {
       child: Hero(
         tag: tag,
         child: Card(
-          margin: EdgeInsets.all(contextSize.width * 0.02),
+          margin: EdgeInsets.all(contextSize.width * 0.015),
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(contextSize.width * 0.02),
           ),
-          elevation: 4.0,
+          elevation: contextSize.width * 0.011,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -41,15 +41,21 @@ class MessageDetail extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    preview
+                        ? Expanded(
+                            flex: 4,
+                            child: Text(
+                              this.message.headline,
+                              overflow: TextOverflow.clip,
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          )
+                        : Text(
+                            this.message.headline,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
                     Spacer(
-                      flex: 1,
-                    ),
-                    Text(
-                      this.message.headline,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Spacer(
-                      flex: 2,
+                      flex: preview ? 2 : 1,
                     ),
                     Row(children: [
                       Text(
@@ -72,7 +78,7 @@ class MessageDetail extends StatelessWidget {
                         ),
                       ),
                       Spacer(
-                        flex: 10,
+                        flex: 1,
                       ),
                     ]),
                     Spacer(
@@ -99,9 +105,10 @@ class MessageDetail extends StatelessWidget {
                     preview
                         ? Container()
                         : Expanded(
-                            flex: 40,
+                            flex: 30,
                             child: Text(
                               this.message.description,
+                              overflow: TextOverflow.clip,
                             ),
                           ),
                   ],

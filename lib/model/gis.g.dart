@@ -6,12 +6,10 @@ part of 'gis.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Coordinate _$CoordinateFromJson(Map<String, dynamic> json) {
-  return Coordinate(
-    (json['longitude'] as num).toDouble(),
-    (json['latitude'] as num).toDouble(),
-  );
-}
+Coordinate _$CoordinateFromJson(Map<String, dynamic> json) => Coordinate(
+      (json['longitude'] as num).toDouble(),
+      (json['latitude'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$CoordinateToJson(Coordinate instance) =>
     <String, dynamic>{

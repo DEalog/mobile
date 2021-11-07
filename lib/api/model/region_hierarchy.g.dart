@@ -7,7 +7,10 @@ part of 'region_hierarchy.dart';
 // **************************************************************************
 
 RegionHierarchy _$RegionHierarchyFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['regionHierarchy']);
+  $checkKeys(
+    json,
+    requiredKeys: const ['regionHierarchy'],
+  );
   return RegionHierarchy()
     ..regionHierarchy = (json['regionHierarchy'] as List<dynamic>)
         .map((e) => Region.fromJson(e as Map<String, dynamic>))

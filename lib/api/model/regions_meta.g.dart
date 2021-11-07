@@ -7,8 +7,10 @@ part of 'regions_meta.dart';
 // **************************************************************************
 
 RegionsMeta _$RegionsMetaFromJson(Map<String, dynamic> json) {
-  $checkKeys(json,
-      requiredKeys: const ['size', 'number', 'totalElements', 'totalPages']);
+  $checkKeys(
+    json,
+    requiredKeys: const ['size', 'number', 'totalElements', 'totalPages'],
+  );
   return RegionsMeta()
     ..size = json['size'] as int?
     ..number = json['number'] as int?

@@ -7,7 +7,10 @@ part of 'regions.dart';
 // **************************************************************************
 
 Regions _$RegionsFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['content', 'meta']);
+  $checkKeys(
+    json,
+    requiredKeys: const ['content', 'meta'],
+  );
   return Regions()
     ..regions = (json['content'] as List<dynamic>?)
         ?.map((e) => Region.fromJson(e as Map<String, dynamic>))

@@ -7,8 +7,10 @@ part of 'messages_meta.dart';
 // **************************************************************************
 
 MessagesMeta _$MessagesMetaFromJson(Map<String, dynamic> json) {
-  $checkKeys(json,
-      requiredKeys: const ['size', 'number', 'totalElements', 'totalPages']);
+  $checkKeys(
+    json,
+    requiredKeys: const ['size', 'number', 'totalElements', 'totalPages'],
+  );
   return MessagesMeta()
     ..size = json['size'] as int?
     ..number = json['number'] as int?

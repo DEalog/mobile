@@ -6,17 +6,15 @@ part of 'feed_message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FeedMessage _$FeedMessageFromJson(Map<String, dynamic> json) {
-  return FeedMessage(
-    identifier: json['identifier'] as String,
-    organization: json['organization'] as String,
-    headline: json['headline'] as String,
-    description: json['description'] as String,
-    ars: json['ars'] as String,
-    category: json['category'] as String,
-    publishedAt: DateTime.parse(json['publishedAt'] as String),
-  );
-}
+FeedMessage _$FeedMessageFromJson(Map<String, dynamic> json) => FeedMessage(
+      identifier: json['identifier'] as String,
+      organization: json['organization'] as String,
+      headline: json['headline'] as String,
+      description: json['description'] as String,
+      ars: json['ars'] as String,
+      category: json['category'] as String,
+      publishedAt: DateTime.parse(json['publishedAt'] as String),
+    );
 
 Map<String, dynamic> _$FeedMessageToJson(FeedMessage instance) =>
     <String, dynamic>{
