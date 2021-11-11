@@ -55,10 +55,10 @@ workflows:
         inputs:
         - package_name: $BITRISE_APP_BUNDLE_IDENTIFIER
         - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
-    - ios-auto-provision-appstoreconnect@1:
+    - ios-auto-provision-appstoreconnect@2:
         inputs:
         - distribution_type: app-store
-    - xcode-archive@3:
+    - xcode-archive@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
@@ -69,7 +69,7 @@ workflows:
         inputs:
         - app_password: $APPLE_CONNECT_APP_PW_FS
         - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
-    - deploy-to-bitrise-io@1: {}
+    - deploy-to-bitrise-io@2: {}
     - cache-push@2: {}
     - slack@3:
         inputs:
@@ -100,7 +100,7 @@ workflows:
         - test_name: Test
         - search_pattern: '*'
         - base_path: $BITRISE_FLUTTER_TESTRESULT_PATH
-    - deploy-to-bitrise-io@1: {}
+    - deploy-to-bitrise-io@2: {}
     - cache-push@2: {}
     - slack@3:
         run_if: .IsBuildFailed
