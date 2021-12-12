@@ -6,8 +6,8 @@ This is the mobile app for the DEalog project.
 
 ## Prerequisites
 
-- Flutter 2.5.3
-- Dart 2.14.4
+- Flutter 2.8.0
+- Dart 2.15.0
 - Xcode 13.1
 - Android SDK 31.0.0
 
