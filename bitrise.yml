@@ -40,6 +40,7 @@ workflows:
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
     - flutter-test@1.0:
         inputs:
+        - generate_code_coverage_files: 'yes'
         - project_location: $BITRISE_FLUTTER_PROJECT_LOCATION
     - flutter-build@0:
         inputs:
@@ -54,7 +55,7 @@ workflows:
     - google-play-deploy@3:
         inputs:
         - package_name: $BITRISE_APP_BUNDLE_IDENTIFIER
-        - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
+        - service_account_json_key_path: $BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
     - xcode-archive@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
