@@ -210,3 +210,6 @@ app:
   - opts:
       is_expand: false
     BITRISE_APP_BUNDLE_IDENTIFIER: de.dealog.mobile.pilot
+meta:
+  bitrise.io:
+    stack: osx-xcode-12.4.x
