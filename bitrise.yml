@@ -55,20 +55,18 @@ workflows:
         inputs:
         - package_name: $BITRISE_APP_BUNDLE_IDENTIFIER
         - service_account_json_key_path: $BITRISEIO_BITRISEIO_SERVICE_ACCOUNT_JSON_KEY_URL
-    - ios-auto-provision-appstoreconnect@2:
-        inputs:
-        - distribution_type: app-store
     - xcode-archive@4:
         inputs:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
+        - distribution_method: app-store
+        - automatic_code_signing: apple-id
         - configuration: Release
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
-        - app_password: $APPLE_CONNECT_APP_PW_FS
-        - itunescon_user: $APPLE_CONNECT_LOGIN_ID_FS
+        - connection: apple_id
     - deploy-to-bitrise-io@2: {}
     - cache-push@2: {}
     - slack@3:
@@ -199,7 +197,7 @@ workflows:
     # - cache-push@2: {}
 app:
   envs:
-  - BITRISE_FLUTTER_VERSION: "2.8.1"
+  - BITRISE_FLUTTER_VERSION: 2.8.1
   - opts:
       is_expand: false
     BITRISE_FLUTTER_PROJECT_LOCATION: .
