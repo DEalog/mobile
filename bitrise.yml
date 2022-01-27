@@ -63,11 +63,11 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - team_id: $BITRISE_DEVELOPER_TEAM
         - distribution_method: app-store
-        - automatic_code_signing: apple-id
+        - automatic_code_signing: api-key
         - configuration: Release
     - deploy-to-itunesconnect-application-loader@1:
         inputs:
-        - connection: apple_id
+        - connection: api_key
     - deploy-to-bitrise-io@2: {}
     - cache-push@2: {}
     - slack@3:
