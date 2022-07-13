@@ -190,18 +190,18 @@ class ChannelDialog extends StatelessWidget {
         children: [channelForm],
       ),
       actions: [
-        PlatformButton(
+        PlatformIconButton(
           key: Key("cancel_channel"),
-          child: Text(LocaleKeys.actions_cancel.tr()),
+          icon: Text(LocaleKeys.actions_cancel.tr()),
           onPressed: () {
             Fimber.i("Cancel pressed");
 
             Navigator.pop(context);
           },
         ),
-        PlatformButton(
+        PlatformIconButton(
             key: Key("submit_channel"),
-            child: Text(submitText),
+            icon: Text(submitText),
             onPressed: () {
               Fimber.i("Submit pressed");
               channelForm.submit();
@@ -246,10 +246,10 @@ class _ChannelSettingsState extends State<ChannelSettings> {
       ),
     );
     if (channels.length < 3) {
-      children.add(PlatformButton(
+      children.add(PlatformIconButton(
         key: Key("add_channel"),
-        child: Icon(context.platformIcons.add),
-        materialFlat: (_, __) => MaterialFlatButtonData(),
+        icon: Icon(context.platformIcons.add),
+        material: (_, __) => MaterialIconButtonData(),
         onPressed: () {
           showPlatformDialog(
               context: context,
@@ -281,16 +281,16 @@ class _ChannelSettingsState extends State<ChannelSettings> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-              child: PlatformButton(
+              child: PlatformIconButton(
                   key: Key("edit_channel_$i"),
-                  materialFlat: (_, __) => MaterialFlatButtonData(),
-                  child: ChannelView(channel),
+                  material: (_, __) => MaterialIconButtonData(),
+                  icon: ChannelView(channel),
                   padding: EdgeInsets.all(2.0),
                   onPressed: () => editChannel(i))),
-          PlatformButton(
+          PlatformIconButton(
               key: Key("delete_channel_$i"),
-              materialFlat: (_, __) => MaterialFlatButtonData(),
-              child: Icon(context.platformIcons.delete),
+              material: (_, __) => MaterialIconButtonData(),
+              icon: Icon(context.platformIcons.delete),
               padding: EdgeInsets.all(2.0),
               onPressed: () => removeChannel(channel))
         ],

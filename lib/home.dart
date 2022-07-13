@@ -40,11 +40,10 @@ class Home extends StatelessWidget {
                             Navigator.of(context).pushNamed('/settings'),
                       ),
                     ],
-                    leading: PlatformButton(
+                    leading: PlatformIconButton(
                       key: Key('AppBarWizardButton'),
-                      materialFlat: (context, platform) =>
-                          MaterialFlatButtonData(),
-                      child: Icon(context.platformIcons.add),
+                      materialIcon: Icon(context.platformIcons.add),
+                      cupertinoIcon: Icon(context.platformIcons.add),
                       onPressed: () =>
                           Navigator.of(context).pushNamed('/wizard'),
                     ),

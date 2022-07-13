@@ -188,17 +188,17 @@ class _ChannelWizardState extends State<ChannelWizard> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: mediaQuerySize.height * 0.03),
-                child: PlatformButton(
+                child: PlatformIconButton(
                   key: Key('wizardUseLocationButton'),
-                  cupertino: (context, platform) => CupertinoButtonData(
+                  cupertino: (context, platform) => CupertinoIconButtonData(
                     padding: EdgeInsets.zero,
                     color: useLocation() ? Colors.blue : Colors.white,
                   ),
-                  material: (context, platform) => MaterialRaisedButtonData(
+                  material: (context, platform) => MaterialIconButtonData(
                     padding: EdgeInsets.zero,
                     color: useLocation() ? Colors.blue : Colors.white,
                   ),
-                  child: Row(
+                  icon: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       useLocation()
@@ -490,10 +490,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget cancelButton() {
-    return PlatformButton(
+    return PlatformIconButton(
       key: Key("wizardCancel"),
-      materialFlat: (context, platform) => MaterialFlatButtonData(),
-      child: Text(LocaleKeys.actions_cancel.tr()),
+      material: (context, platform) => MaterialIconButtonData(),
+      icon: Text(LocaleKeys.actions_cancel.tr()),
       onPressed: () {
         Fimber.i("Cancel pressed");
 
@@ -504,14 +504,14 @@ class _ChannelWizardState extends State<ChannelWizard> {
 
   Widget saveButton() {
     final Version? version = getIt<Version>();
-    return PlatformButton(
+    return PlatformIconButton(
         key: Key("wizardSave"),
-        materialFlat: (context, platform) => MaterialFlatButtonData(
+        material: (context, platform) => MaterialIconButtonData(
               color: Colors.black,
-              textColor: Colors.white,
+              focusColor: Colors.white,
             ),
-        child: Text(LocaleKeys.actions_save.tr()),
-        cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
+        icon: Text(LocaleKeys.actions_save.tr()),
+        cupertino: (_, __) => CupertinoIconButtonData(),
         onPressed: () {
           Fimber.i("Save pressed");
           if (submit()) {
@@ -535,10 +535,10 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget backButton() {
-    return PlatformButton(
+    return PlatformIconButton(
         key: Key("wizardBack"),
-        materialFlat: (context, platform) => MaterialFlatButtonData(),
-        child: Text(LocaleKeys.actions_back.tr()),
+        material: (context, platform) => MaterialIconButtonData(),
+        icon: Text(LocaleKeys.actions_back.tr()),
         onPressed: () {
           Fimber.i("Back pressed");
           setState(() {
@@ -548,14 +548,14 @@ class _ChannelWizardState extends State<ChannelWizard> {
   }
 
   Widget continueButton() {
-    return PlatformButton(
+    return PlatformIconButton(
         key: Key("wizardContinue"),
-        material: (context, platform) => MaterialRaisedButtonData(
+        material: (context, platform) => MaterialIconButtonData(
               color: Colors.black,
-              textColor: Colors.white,
+              focusColor: Colors.white,
             ),
-        child: Text(LocaleKeys.actions_continue.tr()),
-        cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
+        icon: Text(LocaleKeys.actions_continue.tr()),
+        cupertino: (_, __) => CupertinoIconButtonData(),
         onPressed: () {
           Fimber.i("Continue pressed");
           if (submit()) {

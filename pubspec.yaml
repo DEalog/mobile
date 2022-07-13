@@ -31,8 +31,8 @@ dependencies:
   easy_localization: ^3.0.0
   fimber: ^0.6.1
   flutter_animator: ^3.1.1
-  flutter_platform_widgets: ^1.0.1-nullsafety.2
-  flutter_typeahead: ^3.2.0
+  flutter_platform_widgets: ^2.0.0
+  flutter_typeahead: ^4.0.0
   get_it: ^7.2.0
   http: ^0.13.0
   infinite_scroll_pagination: ^3.0.1
